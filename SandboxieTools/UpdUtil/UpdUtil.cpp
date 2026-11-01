@@ -1736,6 +1736,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 // Driver API
 
 #define SANDBOXIE		L"Sandboxie"
+#define SBIEDRV			L"CrashDrv"
 
 #define SBIESVC_PORT	L"\\RPC Control\\CrashSvcPort"
 #define MAX_REQUEST_LENGTH      (2048 * 1024)
