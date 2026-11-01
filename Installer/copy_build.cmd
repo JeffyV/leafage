@@ -216,5 +216,10 @@ IF EXIST %~dp0pack\License.dat copy /y %~dp0pack\License.dat %instPath%\
 IF EXIST %~dp0pack\wtsapi32.dll copy /y %~dp0pack\wtsapi32.dll %instPath%\
 IF EXIST %~dp0pack\addons xcopy /E /I /Y /Q %~dp0pack\addons %instPath%\addons\
 
+REM Helper scripts (driver/service repair). Not part of the mirrored release, but
+REM without them a moved folder cannot re-register: "KmdUtil install" is a no-op
+REM for an existing service, so the stale ImagePath never gets replaced.
+IF EXIST %~dp0pack\tools xcopy /E /I /Y /Q %~dp0pack\tools %instPath%\
+
 
 
