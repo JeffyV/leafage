@@ -1,84 +1,28 @@
-# CI build for this fork - portable ("green") package only.
+# CI: build a portable ("green") x64 sandbox package.
 #
-# The output mirrors a hand-built release folder: whatever copy_build.cmd puts
-# into Installer/SbiePlus_x64, with debug symbols stripped and the config files
-# sitting next to the binaries. No Inno Setup installer is produced, nothing
-# needs signing, and the result can be unzipped and run as-is.
+# Output shape is the same as a hand-made release folder: the content of
+# Installer/SbiePlus_x64 after copy_build.cmd, with debug symbols stripped and
+# the config files sitting next to the binaries, packed into one zip.
+# No installer, no signing, no ARM64, no other workflows.
 #
-# IMPORTANT: this file must stay pure ASCII.
-#   - GitHub parses workflow files as UTF-8; a file saved by a Chinese Windows
-#     editor as GBK/ANSI fails with "Invalid workflow file ... invalid leading
-#     UTF-8 octet".
-#   - cmd.exe on the runner uses the OEM code page, so Chinese comments inside
-#     .cmd/.bat break label parsing and produce bogus "not recognized" errors.
-#   The "config-lint" job below enforces this rule for all .cmd/.bat/.yml files.
-#
-# Produces:
-#   - Sandboxie-Plus-green-x64          portable folder, ready to run
-#   - Sandboxie-Plus-green-x64-v<ver>.zip
-#   - same two artifacts for ARM64 when requested
+# ASCII ONLY in this file and in every .cmd/.bat/.yml:
+#   - GitHub parses workflow files as UTF-8, so a file saved as GBK/ANSI fails
+#     with "Invalid workflow file ... invalid leading UTF-8 octet".
+#   - cmd.exe on the runner uses the OEM code page, so Chinese text inside a
+#     .cmd breaks parsing. The first step below enforces this.
 
-name: Build
+name: Build x64
 
 on:
   workflow_dispatch:
-    inputs:
-      arm64:
-        description: "Also build ARM64"
-        type: boolean
-        default: false
-
   push:
-    branches: [master, main, experimental]
-    paths-ignore:
-      - "**/*.md"
-      - "**/*.png"
-      - "**/*.bmp"
-      - "**/*.html"
-      - "**/LICENSE*"
-      - "**/license*"
-      - "**/README*"
-      - "**/ReadMe*"
-      - ".editorconfig"
-      - ".gitattributes"
-      - ".gitignore"
-      - ".github/ISSUE_TEMPLATE/**"
-      - ".github/FUNDING.yml"
-      - ".github/dependabot.yml"
-      - ".github/workflows/codeql.yml"
-      - ".github/workflows/codespell.yml"
-      - ".github/workflows/hash.yml"
-      - ".github/workflows/lupdate.yml"
-      - ".github/workflows/main.yml"
-      - ".github/workflows/main_old.yml"
-      - ".github/workflows/stale.yml"
-      - ".github/workflows/winget.yml"
-      - "MergeDbg.cmd"
-      - "TestCI.cmd"
-
   pull_request:
-    branches: [master, main, experimental]
-    paths-ignore:
-      - "**/*.md"
-      - "**/*.png"
-      - "**/*.bmp"
-      - "**/*.html"
-      - "**/LICENSE*"
-      - "**/license*"
-      - "**/README*"
-      - "**/ReadMe*"
-      - ".editorconfig"
-      - ".gitattributes"
-      - ".gitignore"
-      - ".github/**"
-      - "MergeDbg.cmd"
-      - "TestCI.cmd"
 
 permissions:
   contents: read
 
 concurrency:
-  group: build-${{ github.workflow }}-${{ github.ref }}
+  group: build-x64-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -86,56 +30,32 @@ env:
   SEVEN_ZIP: "C:\\Program Files\\7-Zip\\7z.exe"
 
 jobs:
-  # ---------------------------------------------------------------- lint
-  config-lint:
-    name: Config lint
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Reject non-ASCII bytes in build configs
-        run: |
-          python3 - <<'PY'
-          import pathlib
-          import sys
-
-          exts = {'.cmd', '.bat', '.yml', '.yaml'}
-          skip_dirs = {'.git', '.workbuddy-ai', '.idea'}
-          offenders = []
-
-          for path in pathlib.Path('.').rglob('*'):
-              if not path.is_file() or path.suffix.lower() not in exts:
-                  continue
-              if any(part in skip_dirs for part in path.parts):
-                  continue
-              try:
-                  path.read_bytes().decode('ascii')
-              except UnicodeDecodeError:
-                  offenders.append(str(path))
-
-          if offenders:
-              print('These build config files contain non-ASCII bytes:')
-              for name in offenders:
-                  print('  ' + name)
-              print('')
-              print('Rewrite them as ASCII (or UTF-8 without BOM and no CJK text).')
-              print('Chinese text belongs only in Languages.iss / *.isl / *.ts / *.md.')
-              sys.exit(1)
-
-          print('OK: every .cmd/.bat/.yml/.yaml file is pure ASCII.')
-          PY
-
-  # ---------------------------------------------------------------- x64
-  build-x64:
-    name: Build x64
-    needs: config-lint
+  build:
+    name: Build x64 green package
     runs-on: windows-2022
     timeout-minutes: 90
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Check config encoding
+        shell: pwsh
+        run: |
+          $bad = @()
+          Get-ChildItem -Path . -Recurse -File |
+            Where-Object { $_.Extension -in '.cmd', '.bat', '.yml', '.yaml' } |
+            Where-Object { $_.FullName -notmatch '\\\.workbuddy-ai\\|\\\.idea\\' } |
+            ForEach-Object {
+              if ([System.IO.File]::ReadAllText($_.FullName) -match '[^\x00-\x7F]') {
+                $bad += $_.FullName
+              }
+            }
+          if ($bad.Count -gt 0) {
+            $bad | ForEach-Object { Write-Host "non-ASCII: $_" }
+            throw 'Non-ASCII text found in build config files.'
+          }
+          Write-Host 'OK: build config files are pure ASCII.'
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
@@ -148,7 +68,7 @@ jobs:
           echo qt6_version=%qt6_version% >> %GITHUB_ENV%
           echo openssl_version=%openssl_version% >> %GITHUB_ENV%
 
-      # Qt is unpacked to <workspace>\..\..\Qt by install_qt.cmd, i.e. D:\a\Qt
+      # install_qt.cmd unpacks to <workspace>\..\..\Qt, i.e. D:\a\Qt
       - name: Cache Qt and jom
         uses: actions/cache@v4
         with:
@@ -225,145 +145,9 @@ jobs:
         run: |
           "%SEVEN_ZIP%" a -tzip -mx=7 "Installer\Sandboxie-Plus-green-x64-v%APPVER%.zip" ".\Installer\Sandboxie-Plus"
 
-      - name: Upload portable build
+      - name: Upload green package
         uses: actions/upload-artifact@v4
         with:
           name: Sandboxie-Plus-green-x64
-          path: Installer/Sandboxie-Plus
-          retention-days: 30
-
-      - name: Upload zip
-        uses: actions/upload-artifact@v4
-        with:
-          name: Sandboxie-Plus-green-x64-zip
           path: Installer/Sandboxie-Plus-green-x64-*.zip
-          retention-days: 30
-
-  # ---------------------------------------------------------------- arm64
-  build-arm64:
-    name: Build ARM64
-    needs: config-lint
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.arm64 }}
-    runs-on: windows-2022
-    timeout-minutes: 90
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
-
-      - name: Load build variables
-        shell: cmd
-        run: |
-          call "%GITHUB_WORKSPACE%\Installer\buildVariables.cmd"
-          echo qt_version=%qt_version% >> %GITHUB_ENV%
-          echo qt6_version=%qt6_version% >> %GITHUB_ENV%
-          echo openssl_version=%openssl_version% >> %GITHUB_ENV%
-
-      - name: Cache Qt and jom
-        uses: actions/cache@v4
-        with:
-          path: D:\a\Qt
-          key: qt-${{ env.qt_version }}-jom114-arm64-win2022
-
-      - name: Build Sandboxie core - x86 dll and svc
-        run: msbuild /t:build Sandboxie\SandboxDll.sln /p:Configuration="SbieRelease" /p:Platform=Win32 ${{ env.MSBUILD_ARGS }}
-
-      - name: Build Sandboxie core - ARM64 all
-        run: msbuild /t:build Sandboxie\Sandbox.sln /p:Configuration="SbieRelease" /p:Platform=ARM64 ${{ env.MSBUILD_ARGS }}
-
-      - name: Build Sandboxie core - ARM64EC dll
-        run: msbuild /t:build Sandboxie\SandboxDll.sln /p:Configuration="SbieRelease" /p:Platform=ARM64EC ${{ env.MSBUILD_ARGS }}
-
-      - name: Build Sandboxie core - ARM64 driver
-        run: msbuild /t:build Sandboxie\SandboxDrv.sln /p:Configuration="SbieRelease" /p:Platform=ARM64 ${{ env.MSBUILD_ARGS }}
-
-      # install_qt.cmd has no ARM64 package, so both Qt trees come from the
-      # installer action: the x64 host tools plus the arm64 target.
-      - name: Install Qt6 x64 host tools
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: ${{ env.qt_version }}
-          arch: win64_msvc2022_64
-          tools: tools_opensslv3_x64
-          dir: D:\a\Qt
-          cache: false
-
-      - name: Install Qt6 ARM64
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: ${{ env.qt_version }}
-          arch: win64_msvc2022_arm64_cross_compiled
-          tools: tools_opensslv3_x64
-          dir: D:\a\Qt
-          cache: false
-
-      - name: Install jom
-        shell: cmd
-        run: SandboxiePlus\install_jom.cmd
-
-      - name: Build SandMan and libraries - ARM64
-        shell: cmd
-        run: SandboxiePlus\qmake_plus.cmd ARM64 build_qt6
-
-      - name: Build SbieShell - ARM64
-        run: msbuild /t:restore,build -p:RestorePackagesConfig=true SandboxiePlus\SbieShell\SbieShell.sln /p:Configuration="Release" /p:Platform=ARM64 ${{ env.MSBUILD_ARGS }}
-
-      - name: Build Sandboxie Tools - ARM64
-        run: msbuild /t:build SandboxieTools\SandboxieTools.sln /p:Configuration="Release" /p:Platform=ARM64 ${{ env.MSBUILD_ARGS }}
-
-      - name: Prepare Qt translations
-        shell: cmd
-        run: Installer\fix_qt5_languages.cmd x64 build_qt6
-
-      - name: Fetch OpenSSL
-        shell: cmd
-        run: Installer\get_openssl.cmd
-
-      - name: Fetch 7-Zip
-        shell: cmd
-        run: Installer\get_7zip.cmd
-
-      - name: Merge build output
-        shell: cmd
-        run: Installer\copy_build.cmd ARM64 build_qt6
-
-      - name: Read version numbers
-        shell: pwsh
-        run: |
-          $app = Get-Content SandboxiePlus\version.h -Raw
-          $pick = {
-            param($text, $name)
-            [regex]::Match($text, "$name\s+(\d+)").Groups[1].Value
-          }
-          $ver = "{0}.{1}.{2}" -f (& $pick $app 'VERSION_MJR'), (& $pick $app 'VERSION_MIN'), (& $pick $app 'VERSION_REV')
-          "APPVER=$ver" >> $env:GITHUB_ENV
-          Write-Host "app version: $ver"
-
-      - name: Prepare green package
-        shell: cmd
-        run: |
-          del /s /q Installer\SbiePlus_a64\*.pdb
-          copy /y Installer\Sandboxie.ini Installer\SbiePlus_a64\
-          move Installer\SbiePlus_a64 Installer\Sandboxie-Plus
-          dir Installer\Sandboxie-Plus
-
-      - name: Create zip
-        shell: cmd
-        run: |
-          "%SEVEN_ZIP%" a -tzip -mx=7 "Installer\Sandboxie-Plus-green-arm64-v%APPVER%.zip" ".\Installer\Sandboxie-Plus"
-
-      - name: Upload portable build
-        uses: actions/upload-artifact@v4
-        with:
-          name: Sandboxie-Plus-green-arm64
-          path: Installer/Sandboxie-Plus
-          retention-days: 30
-
-      - name: Upload zip
-        uses: actions/upload-artifact@v4
-        with:
-          name: Sandboxie-Plus-green-arm64-zip
-          path: Installer/Sandboxie-Plus-green-arm64-*.zip
           retention-days: 30
