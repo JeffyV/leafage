@@ -393,3 +393,6 @@ SandboxiePlus/Build_*
 
 # Local analysis scratch space
 .workbuddy-ai/tmp/
+
+# wtsapi32 proxy build output (SbieKey sources are vendored, binaries are not)
+/SbieKey/Bin/

@@ -1,18 +1,15 @@
 @echo off
-REM Build the WTS proxy (wtsapi32.dll) from ..\..\SbieKey and drop it into pack\.
-REM Requires Visual Studio 2022 (MSVC + Windows SDK) on this machine.
-REM Usage:  Installer\pack\build_wtsapi32.cmd [x64|Win32]
+REM Build the WTS proxy (wtsapi32.dll) from the vendored sources in ..\..\SbieKey
+REM and drop the result into pack\, so copy_build.cmd ships it in the green package.
+REM Needs Visual Studio 2022 (MSVC + Windows SDK + MASM) - CI does this automatically.
+REM Usage:  Installer\pack\build_wtsapi32.cmd [x64]
 
 setlocal
 set CFG=%1
 if "%CFG%"=="" set CFG=x64
 
-set SBIEKEY=%~dp0..\..\..\SbieKey
-pushd "%SBIEKEY%"
-if errorlevel 1 (
-    echo ERROR: SbieKey source not found at "%SBIEKEY%"
-    exit /b 1
-)
+set PROJ=%~dp0..\..\SbieKey\wtsapi32.vcxproj
+set OUT=%~dp0..\..\SbieKey\Bin\%CFG%\Release\wtsapi32.dll
 
 set VCVARS=
 for %%R in (
@@ -23,25 +20,21 @@ for %%R in (
 ) do if not defined VCVARS if exist %%R set VCVARS=%%R
 
 if not defined VCVARS (
-    echo ERROR: vcvars64.bat not found, install the MSVC build tools.
-    popd
+    echo ERROR: vcvars64.bat not found - install the MSVC build tools, or let CI build it.
     exit /b 1
 )
+call %VCVARS% >nul || exit /b 1
 
-call %VCVARS% >nul || (popd & exit /b 1)
+msbuild "%PROJ%" /t:build /p:Configuration=Release /p:Platform=%CFG% /m || exit /b 1
 
-msbuild sbiekey.sln /t:build /p:Configuration=Release /p:Platform=%CFG% /m || (popd & exit /b 1)
-
-if not exist "%CFG%\Release\wtsapi32.dll" (
-    echo ERROR: build finished but %CFG%\Release\wtsapi32.dll is missing.
-    popd
+if not exist "%OUT%" (
+    echo ERROR: build finished but %OUT% is missing.
     exit /b 1
 )
-copy /y "%CFG%\Release\wtsapi32.dll" "%~dp0wtsapi32.dll" || (popd & exit /b 1)
+copy /y "%OUT%" "%~dp0wtsapi32.dll" || exit /b 1
 
 echo.
-echo Built: %SBIEKEY%\%CFG%\Release\wtsapi32.dll
-echo Copied to: %~dp0wtsapi32.dll
+echo Built:  %OUT%
+echo Copied: %~dp0wtsapi32.dll
 dir /b "%~dp0wtsapi32.dll"
-popd
 endlocal

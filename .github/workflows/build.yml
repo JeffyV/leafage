@@ -90,6 +90,20 @@ jobs:
           }
           Get-ChildItem $dst -ErrorAction SilentlyContinue | Select-Object Name, Length
 
+      # wtsapi32.dll side-loading proxy (vendored from SbieKey). CrashSvc
+      # statically imports wtsapi32, so shipping this DLL is what lets the
+      # test-signed CrashDrv.sys load on a machine with DSE enabled.
+      - name: Build WTS proxy - x64
+        run: msbuild /t:build SbieKey\wtsapi32.vcxproj /p:Configuration=Release /p:Platform=x64 -maxcpucount:8
+
+      - name: Stage WTS proxy into pack
+        shell: pwsh
+        run: |
+          $src = 'SbieKey\Bin\x64\Release\wtsapi32.dll'
+          if (-not (Test-Path $src)) { throw "missing $src" }
+          Copy-Item $src 'Installer\pack\wtsapi32.dll' -Force
+          Get-Item 'Installer\pack\wtsapi32.dll' | Select-Object Name, Length
+
       - name: Merge build output
         shell: cmd
         run: Installer\copy_build.cmd x64 build_qt6
@@ -102,6 +116,31 @@ jobs:
           del /s /q Installer\SbiePlus_x64\*.pdb
           copy /y Installer\Sandboxie.ini Installer\SbiePlus_x64\
           move Installer\SbiePlus_x64 Installer\Sandboxie-Plus
+
+      # Fail loudly if the package is not runnable out of the box: everything
+      # below must be present, otherwise SandMan or the driver will complain.
+      - name: Verify green package
+        shell: pwsh
+        run: |
+          $root = 'Installer\Sandboxie-Plus'
+          $critical = @(
+            'SandMan.exe', 'QSbieAPI.dll', 'SbieCtrl.exe', 'Start.exe', 'KmdUtil.exe',
+            'CrashSvc.exe', 'CrashDll.dll', 'CrashDrv.sys', 'CrashMsg.dll', 'CrashHostDll.dll',
+            'CrashShellExt.dll', 'CrashBITS.exe', 'CrashCrypto.exe', 'CrashDcomLaunch.exe',
+            'CrashRpcSs.exe', 'CrashWUAU.exe', 'SbieIni.exe', 'ImBox.exe', 'UpdUtil.exe',
+            '32\CrashSvc.exe', '32\CrashDll.dll',
+            'wtsapi32.dll', 'Certificate.dat', 'License.dat',
+            'Sandboxie.ini', 'SbieSettings.ini', 'Templates.ini',
+            'Manifest0.txt', 'Manifest1.txt', 'Manifest2.txt',
+            'translations.7z', 'troubleshooting.7z', 'SbieShellPkg.msix'
+          )
+          $optional = @('addons\SbieHide\SbieHide_x64.dll', 'addons\SbieHide\SbieHide_x86.dll')
+          $missing = @($critical | Where-Object { -not (Test-Path (Join-Path $root $_)) })
+          $absent  = @($optional | Where-Object { -not (Test-Path (Join-Path $root $_)) })
+          Get-ChildItem $root | Sort-Object Name | Select-Object Name, Length
+          if ($absent.Count) { Write-Warning ("optional missing: " + ($absent -join ', ')) }
+          if ($missing.Count) { throw ("green package incomplete, missing: " + ($missing -join ', ')) }
+          Write-Host "green package complete ($((Get-ChildItem -Recurse -File $root).Count) files)"
 
       - name: Upload green package
         uses: actions/upload-artifact@v4
