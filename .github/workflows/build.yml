@@ -76,7 +76,7 @@ jobs:
           move Installer\SbiePlus_x64 Installer\Sandboxie-Plus
 
       - name: Upload green package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Sandboxie-Plus-green-x64
           path: Installer/Sandboxie-Plus
