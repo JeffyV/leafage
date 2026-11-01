@@ -1,37 +1,21 @@
-# CI: build a portable ("green") x64 sandbox package.
+# Build a portable ("green") x64 sandbox package.
 #
-# Output shape is the same as a hand-made release folder: the content of
-# Installer/SbiePlus_x64 after copy_build.cmd, with debug symbols stripped and
-# the config files sitting next to the binaries, packed into one zip.
-# No installer, no signing, no ARM64, no other workflows.
+# Produces one artifact: Sandboxie-Plus-green-x64.zip
+#   = Installer/SbiePlus_x64 after copy_build.cmd, minus *.pdb, plus the config
+#     files next to the binaries. Unzip and it runs (driver/service still need
+#     the one-time KmdUtil install, same as a hand-built release folder).
 #
-# ASCII ONLY in this file and in every .cmd/.bat/.yml:
-#   - GitHub parses workflow files as UTF-8, so a file saved as GBK/ANSI fails
-#     with "Invalid workflow file ... invalid leading UTF-8 octet".
-#   - cmd.exe on the runner uses the OEM code page, so Chinese text inside a
-#     .cmd breaks parsing. The first step below enforces this.
+# ASCII ONLY here and in every .cmd/.bat/.yml: GitHub reads workflows as UTF-8,
+# and cmd.exe uses the OEM code page, so non-ASCII text breaks both.
 
 name: Build x64
 
 on:
   workflow_dispatch:
   push:
-  pull_request:
-
-permissions:
-  contents: read
-
-concurrency:
-  group: build-x64-${{ github.ref }}
-  cancel-in-progress: true
-
-env:
-  MSBUILD_ARGS: "-maxcpucount:8 -verbosity:minimal -nodeReuse:false"
-  SEVEN_ZIP: "C:\\Program Files\\7-Zip\\7z.exe"
 
 jobs:
   build:
-    name: Build x64 green package
     runs-on: windows-2022
     timeout-minutes: 90
 
@@ -39,50 +23,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check config encoding
-        shell: pwsh
-        run: |
-          $bad = @()
-          Get-ChildItem -Path . -Recurse -File |
-            Where-Object { $_.Extension -in '.cmd', '.bat', '.yml', '.yaml' } |
-            Where-Object { $_.FullName -notmatch '\\\.workbuddy-ai\\|\\\.idea\\' } |
-            ForEach-Object {
-              if ([System.IO.File]::ReadAllText($_.FullName) -match '[^\x00-\x7F]') {
-                $bad += $_.FullName
-              }
-            }
-          if ($bad.Count -gt 0) {
-            $bad | ForEach-Object { Write-Host "non-ASCII: $_" }
-            throw 'Non-ASCII text found in build config files.'
-          }
-          Write-Host 'OK: build config files are pure ASCII.'
-
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
-
-      - name: Load build variables
-        shell: cmd
-        run: |
-          call "%GITHUB_WORKSPACE%\Installer\buildVariables.cmd"
-          echo qt_version=%qt_version% >> %GITHUB_ENV%
-          echo qt6_version=%qt6_version% >> %GITHUB_ENV%
-          echo openssl_version=%openssl_version% >> %GITHUB_ENV%
-
-      # install_qt.cmd unpacks to <workspace>\..\..\Qt, i.e. D:\a\Qt
-      - name: Cache Qt and jom
-        uses: actions/cache@v4
-        with:
-          path: D:\a\Qt
-          key: qt-${{ env.qt_version }}-jom114-win2022
-
       - name: Build Sandboxie core - x86 dll and svc
-        run: msbuild /t:build Sandboxie\SandboxDll.sln /p:Configuration="SbieRelease" /p:Platform=Win32 ${{ env.MSBUILD_ARGS }}
+        run: msbuild /t:build Sandboxie\SandboxDll.sln /p:Configuration="SbieRelease" /p:Platform=Win32 -maxcpucount:8
 
       - name: Build Sandboxie core - x64 all
-        run: msbuild /t:build Sandboxie\Sandbox.sln /p:Configuration="SbieRelease" /p:Platform=x64 ${{ env.MSBUILD_ARGS }}
+        run: msbuild /t:build Sandboxie\Sandbox.sln /p:Configuration="SbieRelease" /p:Platform=x64 -maxcpucount:8
 
       - name: Build Sandboxie core - x64 driver
-        run: msbuild /t:build Sandboxie\SandboxDrv.sln /p:Configuration="SbieRelease" /p:Platform=x64 ${{ env.MSBUILD_ARGS }}
+        run: msbuild /t:build Sandboxie\SandboxDrv.sln /p:Configuration="SbieRelease" /p:Platform=x64 -maxcpucount:8
 
       - name: Install Qt6 x64
         shell: cmd
@@ -97,10 +45,10 @@ jobs:
         run: SandboxiePlus\qmake_plus.cmd x64 build_qt6
 
       - name: Build SbieShell - x64
-        run: msbuild /t:restore,build -p:RestorePackagesConfig=true SandboxiePlus\SbieShell\SbieShell.sln /p:Configuration="Release" /p:Platform=x64 ${{ env.MSBUILD_ARGS }}
+        run: msbuild /t:restore,build -p:RestorePackagesConfig=true SandboxiePlus\SbieShell\SbieShell.sln /p:Configuration="Release" /p:Platform=x64 -maxcpucount:8
 
       - name: Build Sandboxie Tools - x64
-        run: msbuild /t:build SandboxieTools\SandboxieTools.sln /p:Configuration="Release" /p:Platform=x64 ${{ env.MSBUILD_ARGS }}
+        run: msbuild /t:build SandboxieTools\SandboxieTools.sln /p:Configuration="Release" /p:Platform=x64 -maxcpucount:8
 
       - name: Prepare Qt translations
         shell: cmd
@@ -118,36 +66,18 @@ jobs:
         shell: cmd
         run: Installer\copy_build.cmd x64 build_qt6
 
-      - name: Read version numbers
-        shell: pwsh
-        run: |
-          $app = Get-Content SandboxiePlus\version.h -Raw
-          $pick = {
-            param($text, $name)
-            [regex]::Match($text, "$name\s+(\d+)").Groups[1].Value
-          }
-          $ver = "{0}.{1}.{2}" -f (& $pick $app 'VERSION_MJR'), (& $pick $app 'VERSION_MIN'), (& $pick $app 'VERSION_REV')
-          "APPVER=$ver" >> $env:GITHUB_ENV
-          Write-Host "app version: $ver"
-
-      # Green package: drop debug symbols, then place the config files next to
-      # the binaries so the driver finds Sandboxie.ini in its home directory.
+      # Green package: drop debug symbols, then put the config next to the
+      # binaries so the driver finds Sandboxie.ini in its home directory.
       - name: Prepare green package
         shell: cmd
         run: |
           del /s /q Installer\SbiePlus_x64\*.pdb
           copy /y Installer\Sandboxie.ini Installer\SbiePlus_x64\
           move Installer\SbiePlus_x64 Installer\Sandboxie-Plus
-          dir Installer\Sandboxie-Plus
-
-      - name: Create zip
-        shell: cmd
-        run: |
-          "%SEVEN_ZIP%" a -tzip -mx=7 "Installer\Sandboxie-Plus-green-x64-v%APPVER%.zip" ".\Installer\Sandboxie-Plus"
 
       - name: Upload green package
         uses: actions/upload-artifact@v4
         with:
           name: Sandboxie-Plus-green-x64
-          path: Installer/Sandboxie-Plus-green-x64-*.zip
+          path: Installer/Sandboxie-Plus
           retention-days: 30
