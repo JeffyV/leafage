@@ -1,0 +1,3465 @@
+[
+ {
+  "lit": "core/dll/sbiedll.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/CrashHostDll/CrashHostDll.cpp",
+   "Sandboxie/apps/com/RpcSs/dde.c"
+  ]
+ },
+ {
+  "lit": "core/svc/SbieIniWire.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/common/BoxOrder.c",
+   "Sandboxie/apps/control/InitWait.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/go.php?to=sbie-",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/common/RunBrowser.cpp",
+   "Sandboxie/apps/control/MessageDialog.cpp"
+  ]
+ },
+ {
+  "lit": "SbieIni.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/control/AboutDialog.cpp",
+   "Sandboxie/apps/control/AlertDialog.cpp"
+  ]
+ },
+ {
+  "lit": "Sbie+Certificate.dat",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/control/AboutDialog.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/go.php?to=sbie-plus&tip=",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/control/BoxPage.cpp"
+  ]
+ },
+ {
+  "lit": "SBIE",
+  "state": "BOTH",
+  "orig": "A",
+  "new": "A",
+  "src": [
+   "Sandboxie/apps/control/MessageDialog.cpp",
+   "Sandboxie/common/my_version.h"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/go.php?to=donate",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/control/MyFrame.cpp",
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/go.php?to=sbie-contribute",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/control/MyFrame.cpp",
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/go.php?to=sbie-forum",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/control/MyFrame.cpp",
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/go.php?to=sbie-plus&tip=upgrade",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/control/MyFrame.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/go.php?to=sbie-whatsnew&language=%d&version=%S",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/control/MyFrame.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/go.php?to=sbie-migration&language=%d",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/control/MyFrame.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/go.php?to=sbie-get-cert",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/control/MyFrame.cpp",
+   "Sandboxie/apps/start/aboutdlg.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/go.php?to=sbie-plus&tip=res_mon",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/control/MyFrame.cpp"
+  ]
+ },
+ {
+  "lit": "SbieControl.rc2",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/control/SbieControl.rc"
+  ]
+ },
+ {
+  "lit": "/update.php?action=update&software=sandboxie&channel=stable&version=%S&system=windows-%d.%d.%d-%s&language=%s&auto=%s",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/control/Updater.cpp"
+  ]
+ },
+ {
+  "lit": "sandboxie-plus.com",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/control/Updater.cpp",
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "SandboxieInstall.exe",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/control/Updater.cpp"
+  ]
+ },
+ {
+  "lit": "SbieIni\\0",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/ini/resource1.rc"
+  ]
+ },
+ {
+  "lit": "SbieIni.exe\\0",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/ini/resource1.rc",
+   "SandboxieTools/UpdUtil/UpdUtil.h"
+  ]
+ },
+ {
+  "lit": "run_sbie_ctrl",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/start/start.cpp"
+  ]
+ },
+ {
+  "lit": "\\\\SbieWallpaper.png",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/apps/start/start.cpp"
+  ]
+ },
+ {
+  "lit": "sbie read ini, found UTF-8 Signature\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/common/bom.c"
+  ]
+ },
+ {
+  "lit": "sbie read ini, found Unicode (UTF-16 LE) BOM\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/common/bom.c"
+  ]
+ },
+ {
+  "lit": "sbie read ini, found Unicode (UTF-16 BE) BOM\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/common/bom.c"
+  ]
+ },
+ {
+  "lit": "sbie read ini, looks UTF-8 encoded\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/common/bom.c"
+  ]
+ },
+ {
+  "lit": "sbie read ini, looks Unicode (UTF-16 BE) encoded\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/common/bom.c"
+  ]
+ },
+ {
+  "lit": "sbie read ini, looks Unicode (UTF-16 LE) encoded\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/common/bom.c"
+  ]
+ },
+ {
+  "lit": "sbie read ini, encoding looks broken, assuming (UTF-16 LE)\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/common/bom.c"
+  ]
+ },
+ {
+  "lit": "# Sandboxie configuration file",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/common/ini.cpp"
+  ]
+ },
+ {
+  "lit": "..\\\\Bin\\\\Win32\\\\SandboxieInstall32.exe",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/common/my_version.h"
+  ]
+ },
+ {
+  "lit": "..\\\\Bin\\\\x64\\\\SandboxieInstall64.exe",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/common/my_version.h"
+  ]
+ },
+ {
+  "lit": "Copyright © 2004-2020 by Sandboxie Holdings, LLC",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/common/my_version.h"
+  ]
+ },
+ {
+  "lit": "Sandboxie",
+  "state": "BOTH",
+  "orig": "A",
+  "new": "A",
+  "src": [
+   "Sandboxie/common/my_version.h",
+   "Sandboxie/core/dll/cred.c"
+  ]
+ },
+ {
+  "lit": "Sandboxie.ini",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/common/my_version.h",
+   "SandboxiePlus/QSbieAPI/SbieDefs.h"
+  ]
+ },
+ {
+  "lit": "SandboxieControl",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/common/my_version.h"
+  ]
+ },
+ {
+  "lit": "SbieCtrl.exe",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/common/my_version.h"
+  ]
+ },
+ {
+  "lit": "SbieCtrl_",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/common/my_version.h"
+  ]
+ },
+ {
+  "lit": "SbieIni",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/common/my_version.h"
+  ]
+ },
+ {
+  "lit": "SbieIni.exe",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/common/my_version.h"
+  ]
+ },
+ {
+  "lit": "..\\..\\Sandboxie\\common\\win32_ntddk.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/common/verify.c",
+   "SandboxiePlus/QSbieAPI/Sandboxie/BoxedProcess.cpp"
+  ]
+ },
+ {
+  "lit": "UseSbieDeskHack",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/advapi.c",
+   "Sandboxie/core/dll/guienum.c"
+  ]
+ },
+ {
+  "lit": "SbieDll_CallServer: %s queue create %s",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/callsvc.c"
+  ]
+ },
+ {
+  "lit": "SbieDll_CallServer: %s queue getreq %s",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/callsvc.c"
+  ]
+ },
+ {
+  "lit": "SbieDll_CallServer: %s queue putrpl %s",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/callsvc.c"
+  ]
+ },
+ {
+  "lit": "SbieDll_CallServer: %s queue putreq %s %s",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/callsvc.c"
+  ]
+ },
+ {
+  "lit": "SbieDll_CallServer: %s queue putreq %s %d",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/callsvc.c"
+  ]
+ },
+ {
+  "lit": "SbieDll_CallServer: %s queue getrpl %s",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/callsvc.c"
+  ]
+ },
+ {
+  "lit": "SbieDll_CallServer: %s 0x%04x",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/callsvc.c"
+  ]
+ },
+ {
+  "lit": "SbieDll_CallServer: %s %s",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/callsvc.c"
+  ]
+ },
+ {
+  "lit": "sbiedll.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/dll.h"
+  ]
+ },
+ {
+  "lit": "NoSandboxieDesktop",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/gdi.c",
+   "Sandboxie/core/dll/gui.c"
+  ]
+ },
+ {
+  "lit": "NoSandboxieConsole",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/gui.c",
+   "Sandboxie/core/dll/guicon.c"
+  ]
+ },
+ {
+  "lit": "UseSbieWndStation",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/guienum.c",
+   "SandboxiePlus/SandMan/Windows/OptionsAdvanced.cpp"
+  ]
+ },
+ {
+  "lit": "\\\\SbiePst.dat",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/ipstore_impl.cpp"
+  ]
+ },
+ {
+  "lit": "sbieapi.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/ldr.c",
+   "Sandboxie/core/dll/sbiedll.h"
+  ]
+ },
+ {
+  "lit": "core/svc/sbieiniwire.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/net.c"
+  ]
+ },
+ {
+  "lit": "SBIE p=%06d t=%06d RpcBindingFromStringBindingW StringBinding = '%s', BindingHandle = 0x%X, status = 0x%X\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/rpcrt.c"
+  ]
+ },
+ {
+  "lit": "SBIE p=%06d t=%06d RpcBindingCreateW Endpoint = '%s', UUID = %s, status = 0x%X\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/rpcrt.c"
+  ]
+ },
+ {
+  "lit": "System\\\\SbieCustom",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/sysinfo.c",
+   "SandboxiePlus/SandMan/Windows/OptionsAdvanced.cpp"
+  ]
+ },
+ {
+  "lit": "HideSbieProcesses",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/sysinfo.c"
+  ]
+ },
+ {
+  "lit": "Sbie",
+  "state": "BOTH",
+  "orig": "A",
+  "new": "A",
+  "src": [
+   "Sandboxie/core/dll/sysinfo.c"
+  ]
+ },
+ {
+  "lit": "SbieTrace",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/trace.c"
+  ]
+ },
+ {
+  "lit": "MSGID_SBIE_INI_GET_USER",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/trace.c"
+  ]
+ },
+ {
+  "lit": "MSGID_SBIE_INI_GET_PATH",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/trace.c"
+  ]
+ },
+ {
+  "lit": "MSGID_SBIE_INI_TEMPLATE",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/trace.c"
+  ]
+ },
+ {
+  "lit": "MSGID_SBIE_INI_SET_PASSWORD",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/trace.c"
+  ]
+ },
+ {
+  "lit": "MSGID_SBIE_INI_TEST_PASSWORD",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/trace.c"
+  ]
+ },
+ {
+  "lit": "MSGID_SBIE_INI_GET_SETTING",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/trace.c"
+  ]
+ },
+ {
+  "lit": "MSGID_SBIE_INI_SET_SETTING",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/trace.c"
+  ]
+ },
+ {
+  "lit": "MSGID_SBIE_INI_ADD_SETTING",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/trace.c"
+  ]
+ },
+ {
+  "lit": "MSGID_SBIE_INI_INS_SETTING",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/trace.c"
+  ]
+ },
+ {
+  "lit": "MSGID_SBIE_INI_DEL_SETTING",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/trace.c"
+  ]
+ },
+ {
+  "lit": "MSGID_SBIE_INI_GET_VERSION",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/trace.c"
+  ]
+ },
+ {
+  "lit": "MSGID_SBIE_INI_GET_WAIT_HANDLE",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/trace.c"
+  ]
+ },
+ {
+  "lit": "MSGID_SBIE_INI_RUN_SBIE_CTRL",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/dll/trace.c"
+  ]
+ },
+ {
+  "lit": "\\\\REGISTRY\\\\MACHINE\\\\SECURITY\\\\SBIE",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/api.c"
+  ]
+ },
+ {
+  "lit": "SbieHome",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/conf_expand.c",
+   "SandboxiePlus/QSbieAPI/Sandboxie/SandBox.cpp"
+  ]
+ },
+ {
+  "lit": "Sbie Parameters: %S\\r\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/dyn_data.c"
+  ]
+ },
+ {
+  "lit": "Sbie loaded custom DYNDATA, Size %d\\r\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/dyn_data.c"
+  ]
+ },
+ {
+  "lit": "Sbie selected DYNDATA version %d\\r\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/dyn_data.c"
+  ]
+ },
+ {
+  "lit": "Sbie selected default DYNDATA\\r\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/dyn_data.c"
+  ]
+ },
+ {
+  "lit": "Sbie testing DYNDATA %d <= %d <= %d\\r\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/dyn_data.c"
+  ]
+ },
+ {
+  "lit": "Sbie found DYNDATA %d <= %d <= %d\\r\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/dyn_data.c"
+  ]
+ },
+ {
+  "lit": "Sbie detected insider build %d\\r\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/dyn_data.c"
+  ]
+ },
+ {
+  "lit": "Sbie no compatible DYNDATA found, OsBuild: %d\\r\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/dyn_data.c"
+  ]
+ },
+ {
+  "lit": "%SbieHome%\\\\*",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/file.c"
+  ]
+ },
+ {
+  "lit": "Sandboxie security hole allows guest to run any command in host as admin",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/file.c"
+  ]
+ },
+ {
+  "lit": "SBIE: Write redirect to sandbox: %x, %S, disp = %d\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/key_flt.c"
+  ]
+ },
+ {
+  "lit": "SBIE: Write target creation failed blocking: rc = %x, %S\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/key_flt.c"
+  ]
+ },
+ {
+  "lit": "SBIE: QueryValue redirect to sandbox: length = %d, Result = %d, %S\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/key_flt.c"
+  ]
+ },
+ {
+  "lit": "SBIE: Sandbox target not read reason %x, status = %x: %S\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/key_flt.c"
+  ]
+ },
+ {
+  "lit": "SBIE: Exit status = %x, rc = %x, flag = %d\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/key_flt.c"
+  ]
+ },
+ {
+  "lit": "SBIE: KeyName = %S\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/key_flt.c"
+  ]
+ },
+ {
+  "lit": "(%06d) SBIE %S %S\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/log.c"
+  ]
+ },
+ {
+  "lit": "Sbie ObCallback: unexpected callback type\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/obj_flt.c"
+  ]
+ },
+ {
+  "lit": "Sbie ObCallback: unexpected object type\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/obj_flt.c"
+  ]
+ },
+ {
+  "lit": "SBIE [syscall] p=%06d t=%06d - %s, handle = %X >>>>>>\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/syscall.c"
+  ]
+ },
+ {
+  "lit": "SBIE [syscall] p=%06d t=%06d - %s, '%.*S', status = 0x%X, handle = %X\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/syscall.c"
+  ]
+ },
+ {
+  "lit": "SBIE [syscall] p=%06d t=%06d - %s, status = 0x%X, handle = %X\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/syscall.c"
+  ]
+ },
+ {
+  "lit": "Sbie, AccountName: %S\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/token.c"
+  ]
+ },
+ {
+  "lit": "Sbie, SecLookupAccountName: %x; size:%d %d\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/token.c"
+  ]
+ },
+ {
+  "lit": "Sbie Token_Init_SepFilterToken failed\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/token.c"
+  ]
+ },
+ {
+  "lit": "Sbie Token_Init_SepFilterToken found %p\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/token.c"
+  ]
+ },
+ {
+  "lit": "SandboxieAllGroup",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/token.c",
+   "SandboxiePlus/SandMan/Windows/OptionsAdvanced.cpp"
+  ]
+ },
+ {
+  "lit": "Sbie, hacking token pointer\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/token.c"
+  ]
+ },
+ {
+  "lit": "Sbie, restore token pointer\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/token.c"
+  ]
+ },
+ {
+  "lit": "Sbie Cert date: %02d.%02d.%d +%d\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/verify.c"
+  ]
+ },
+ {
+  "lit": "Sbie Check date: %02d.%02d.%d\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/verify.c"
+  ]
+ },
+ {
+  "lit": "Sbie Build date: %02d.%02d.%d\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/verify.c"
+  ]
+ },
+ {
+  "lit": "Sbie Current time: %02d:%02d:%02d %02d.%02d.%d\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/verify.c"
+  ]
+ },
+ {
+  "lit": "Sbie Cert status: %08x; active: %d\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/verify.c"
+  ]
+ },
+ {
+  "lit": "sbie FW-UUID: %S\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/verify.c"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/verify.h",
+   "SandboxiePlus/SandMan/AddonManager.cpp"
+  ]
+ },
+ {
+  "lit": "SbieSublayer",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/wfp.c"
+  ]
+ },
+ {
+  "lit": "A sublayer used by sandboxie to implement internet restrictions",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/wfp.c"
+  ]
+ },
+ {
+  "lit": "SbieCallout",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/wfp.c"
+  ]
+ },
+ {
+  "lit": "A callout used by sandboxie to implement internet restrictions",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/wfp.c"
+  ]
+ },
+ {
+  "lit": "SbieFilter",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/wfp.c"
+  ]
+ },
+ {
+  "lit": "A filter that uses by sandboxie to implement internet restrictions",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/wfp.c"
+  ]
+ },
+ {
+  "lit": "Sbie WFP enabled\\r\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/wfp.c"
+  ]
+ },
+ {
+  "lit": "Sbie WFP failed to install state change callback\\r\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/wfp.c"
+  ]
+ },
+ {
+  "lit": "Sbie WFP is not ready\\r\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/wfp.c"
+  ]
+ },
+ {
+  "lit": "Sbie WFP initialization failed, stage %02x, status 0x%08x\\r\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/wfp.c"
+  ]
+ },
+ {
+  "lit": "Sbie WFP initialized successfully\\r\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/wfp.c"
+  ]
+ },
+ {
+  "lit": "Sbie WFP uninitialized\\r\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/wfp.c"
+  ]
+ },
+ {
+  "lit": "Failed to register Sbie sublayer, status 0x%08x\\r\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/wfp.c"
+  ]
+ },
+ {
+  "lit": "Failed to register callout functions for sbie callout, status 0x%08x\\r\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/wfp.c"
+  ]
+ },
+ {
+  "lit": "Failed to register sbie callout, status 0x%08x\\r\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/wfp.c"
+  ]
+ },
+ {
+  "lit": "Failed to register Sbie filter, status 0x%08x\\r\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/drv/wfp.c"
+  ]
+ },
+ {
+  "lit": "sbieiniserver.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/svc/DriverAssist.cpp",
+   "Sandboxie/core/svc/PipeServer.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie\\\\All Sandboxes",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/svc/DriverAssistSid.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie\\\\Sandboxed Admin",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/svc/DriverAssistSid.cpp"
+  ]
+ },
+ {
+  "lit": "SandboxieLogon",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/core/svc/DriverAssistSid.cpp",
+   "SandboxiePlus/SandMan/SbiePlusAPI.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie\\\\[BoxName]",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/svc/DriverAssistSid.cpp"
+  ]
+ },
+ {
+  "lit": "core/dll/sbieapi.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/svc/HostInjectProcessUtil.cpp",
+   "Sandboxie/core/svc/queueserver.cpp"
+  ]
+ },
+ {
+  "lit": "../../../SandboxieTools/ImBox/ImBox.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/svc/MountManager.cpp",
+   "SandboxiePlus/SandMan/Windows/OptionsGeneral.cpp"
+  ]
+ },
+ {
+  "lit": "../dll/sbiedll.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/svc/MountManager.cpp"
+  ]
+ },
+ {
+  "lit": "sbieiniwire.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/core/svc/sbieiniserver.cpp"
+  ]
+ },
+ {
+  "lit": "UseSandboxieUAC",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "Sandboxie/core/svc/serviceserver2.cpp",
+   "SandboxiePlus/SandMan/Windows/SettingsWindow.cpp"
+  ]
+ },
+ {
+  "lit": "SandboxieKmdUtilWindow",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "Sandboxie/install/kmdutil/scandll.c"
+  ]
+ },
+ {
+  "lit": "SandboxieInstall-%d-bit-%d.exe",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/install/release/main.c"
+  ]
+ },
+ {
+  "lit": "msgs\\SbieRelease\\msgs.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/msgs/msgs.h"
+  ]
+ },
+ {
+  "lit": "SbieRelease\\\\NsisText_%s.txt",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/msgs/parse.c"
+  ]
+ },
+ {
+  "lit": "msgs\\SbieRelease\\msgs.rc",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "Sandboxie/msgs/resource.rc"
+  ]
+ },
+ {
+  "lit": "Sandboxie API for Qt",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/QSbieAPI.rc"
+  ]
+ },
+ {
+  "lit": "QSbieAPI.dll",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/QSbieAPI.rc"
+  ]
+ },
+ {
+  "lit": "SbieAPI.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp",
+   "SandboxiePlus/QSbieAPI/SbieUtils.cpp"
+  ]
+ },
+ {
+  "lit": "SbieDefs.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/Sandboxie/SbieTemplates.cpp",
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp"
+  ]
+ },
+ {
+  "lit": "..\\..\\Sandboxie\\common\\defines.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp",
+   "SandboxiePlus/QSbieAPI/SbieTrace.cpp"
+  ]
+ },
+ {
+  "lit": "..\\..\\Sandboxie\\core\\drv\\api_defs.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp",
+   "SandboxiePlus/QSbieAPI/SbieTrace.cpp"
+  ]
+ },
+ {
+  "lit": "..\\..\\Sandboxie\\core\\drv\\api_flags.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/Sandboxie/SandBox.cpp",
+   "SandboxiePlus/QSbieAPI/Sandboxie/SbieIni.cpp"
+  ]
+ },
+ {
+  "lit": "..\\..\\Sandboxie\\core\\svc\\msgids.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp",
+   "SandboxiePlus/QSbieAPI/SbieTrace.cpp"
+  ]
+ },
+ {
+  "lit": "..\\..\\Sandboxie\\core\\svc\\ProcessWire.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp",
+   "SandboxiePlus/QSbieAPI/SbieTrace.cpp"
+  ]
+ },
+ {
+  "lit": "..\\..\\Sandboxie\\core\\svc\\GuiWire.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp"
+  ]
+ },
+ {
+  "lit": "..\\..\\Sandboxie\\core\\svc\\sbieiniwire.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp",
+   "SandboxiePlus/QSbieAPI/SbieTrace.cpp"
+  ]
+ },
+ {
+  "lit": "..\\..\\Sandboxie\\core\\svc\\QueueWire.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp",
+   "SandboxiePlus/QSbieAPI/SbieTrace.cpp"
+  ]
+ },
+ {
+  "lit": "..\\..\\Sandboxie\\core\\svc\\InteractiveWire.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp",
+   "SandboxiePlus/QSbieAPI/SbieTrace.cpp"
+  ]
+ },
+ {
+  "lit": "..\\..\\Sandboxie\\core\\svc\\MountManagerWire.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp"
+  ]
+ },
+ {
+  "lit": "../../SandboxieTools/ImBox/ImBox.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp"
+  ]
+ },
+ {
+  "lit": "SandboxieControlWndClass",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp"
+  ]
+ },
+ {
+  "lit": "00000000_SBIE_ALL_USERS=",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp"
+  ]
+ },
+ {
+  "lit": "00000000_SBIE_CURRENT_USER=",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp"
+  ]
+ },
+ {
+  "lit": "00000000_SBIE_PUBLIC_USER=",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp"
+  ]
+ },
+ {
+  "lit": "00000000_SBIE_DEVICE_MAP=",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp"
+  ]
+ },
+ {
+  "lit": "SBIE%04i: %s; %s",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp"
+  ]
+ },
+ {
+  "lit": "SBIE%0: %1; %2",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.cpp"
+  ]
+ },
+ {
+  "lit": "qsbieapi_global.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.h",
+   "SandboxiePlus/QSbieAPI/SbieStatus.h"
+  ]
+ },
+ {
+  "lit": "SbieStatus.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.h",
+   "SandboxiePlus/QSbieAPI/SbieTrace.h"
+  ]
+ },
+ {
+  "lit": "SbieTrace.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.h",
+   "SandboxiePlus/QSbieAPI/SbieTrace.cpp"
+  ]
+ },
+ {
+  "lit": "./Sandboxie/SandBox.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.h"
+  ]
+ },
+ {
+  "lit": "./Sandboxie/BoxedProcess.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieAPI.h"
+  ]
+ },
+ {
+  "lit": "SbieLdr.exe",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieDefs.h"
+  ]
+ },
+ {
+  "lit": "SbieUtils.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieUtils.cpp"
+  ]
+ },
+ {
+  "lit": "C:\\\\Program Files\\\\Sandboxie\t",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieUtils.cpp"
+  ]
+ },
+ {
+  "lit": "|type=own|start=auto|display=\\\"Sandboxie Service\\\"|group=UIGroup",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/SbieUtils.cpp"
+  ]
+ },
+ {
+  "lit": "..\\..\\..\\Sandboxie\\common\\win32_ntddk.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/Helpers/DbgHelper.cpp",
+   "SandboxiePlus/QSbieAPI/Helpers/NtIO.cpp"
+  ]
+ },
+ {
+  "lit": "../qsbieapi_global.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/Helpers/DbgHelper.h",
+   "SandboxiePlus/QSbieAPI/Helpers/NtIO.h"
+  ]
+ },
+ {
+  "lit": "../SbieAPI.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/Sandboxie/BoxBorder.cpp",
+   "SandboxiePlus/QSbieAPI/Sandboxie/BoxedProcess.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie_BorderWindow",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/Sandboxie/BoxBorder.cpp"
+  ]
+ },
+ {
+  "lit": "../SbieStatus.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/Sandboxie/BoxedProcess.h",
+   "SandboxiePlus/QSbieAPI/Sandboxie/SbieIni.h"
+  ]
+ },
+ {
+  "lit": "..\\..\\Sandboxie\\common\\ini.cpp",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/Sandboxie/SandBox.cpp"
+  ]
+ },
+ {
+  "lit": "../SbieDefs.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/Sandboxie/SbieIni.cpp"
+  ]
+ },
+ {
+  "lit": "SbieTemplates.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/Sandboxie/SbieTemplates.cpp"
+  ]
+ },
+ {
+  "lit": "../SbieUtils.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/QSbieAPI/Sandboxie/SbieTemplates.cpp"
+  ]
+ },
+ {
+  "lit": "../QSbieAPI/Sandboxie/SbieTemplates.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/AddonManager.cpp",
+   "SandboxiePlus/SandMan/Engine/SysObject.cpp"
+  ]
+ },
+ {
+  "lit": "../../SandboxieTools/UpdUtil/UpdUtil.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/AddonManager.cpp",
+   "SandboxiePlus/SandMan/OnlineUpdater.cpp"
+  ]
+ },
+ {
+  "lit": "../QSbieAPI/SbieStatus.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/AddonManager.h",
+   "SandboxiePlus/SandMan/BoxJob.h"
+  ]
+ },
+ {
+  "lit": "SbiePlusAPI.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/BoxJob.cpp",
+   "SandboxiePlus/SandMan/BoxMonitor.h"
+  ]
+ },
+ {
+  "lit": "../QSbieAPI/SbieUtils.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/BoxJob.cpp",
+   "SandboxiePlus/SandMan/Engine/BoxObject.cpp"
+  ]
+ },
+ {
+  "lit": "../QSbieAPI/SbieAPI.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/BoxJob.h",
+   "SandboxiePlus/SandMan/SandMan.h"
+  ]
+ },
+ {
+  "lit": "/Sandboxie-Plus",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/main.cpp"
+  ]
+ },
+ {
+  "lit": "/Sandboxie-Plus.ini",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp",
+   "SandboxiePlus/SandMan/main.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie Manager can not be run sandboxed!",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/main.cpp"
+  ]
+ },
+ {
+  "lit": "C:\\\\Projects\\\\Sandboxie\\\\SandboxieTools\\\\x64\\\\Debug\\\\Test",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/OnlineUpdater.cpp"
+  ]
+ },
+ {
+  "lit": "sandboxie-plus",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/OnlineUpdater.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/update.php",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/OnlineUpdater.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/get_cert.php?",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/OnlineUpdater.cpp"
+  ]
+ },
+ {
+  "lit": "Do you want to check if there is a new version of Sandboxie-Plus?",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/OnlineUpdater.cpp"
+  ]
+ },
+ {
+  "lit": "No new updates found, your Sandboxie-Plus is up-to-date.\\n",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/OnlineUpdater.cpp"
+  ]
+ },
+ {
+  "lit": "<p>There is a new version of Sandboxie-Plus available.<br /><font color='red'><b>New version:</b></font> <b>%1</b></p>",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/OnlineUpdater.cpp"
+  ]
+ },
+ {
+  "lit": "sandboxie-updater",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/OnlineUpdater.cpp",
+   "SandboxieTools/UpdUtil/UpdUtil.cpp"
+  ]
+ },
+ {
+  "lit": "Views/SbieView.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "../QSbieAPI/Sandboxie/BoxBorder.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "../QSbieAPI/Helpers/DbgHelper.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "sbie",
+  "state": "BOTH",
+  "orig": "A",
+  "new": "A",
+  "src": [
+   "SandboxiePlus/SandMan/Engine/BoxEngine.cpp",
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "WARNING: Sandboxie-Plus.ini in %1 cannot be written to, settings will not be saved.",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus Insider [%1] Free Version",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus v%1 Free Version",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Vintage View (like SbieCtrl)",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Support Sandboxie-Plus on Patreon",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Support Sandboxie-Plus with Donations",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Contribute to Sandboxie-Plus",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "About Sandboxie-Plus",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Edit Sandboxie.ini",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Edit Sandboxie-Plus.ini",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Invalid toolbar item in sandboxie-plus.ini: %1",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "<a href=\\\"sbie://update/installer\\\" style=\\\"color: red;\\\">There is a new Sandboxie-Plus release %1 ready</a>",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "<a href=\\\"sbie://update/apply\\\" style=\\\"color: red;\\\">There is a new Sandboxie-Plus update %1 ready</a>",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "<a href=\\\"sbie://update/check\\\" style=\\\"color: red;\\\">There is a new Sandboxie-Plus update v%1 available</a>",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Sbie Messages",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Do you want to close Sandboxie Manager?",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus Warning",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Programs\\\\Sandboxie-Plus\\\\",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "\\\\Sandboxie-Plus",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus Insider [%1]",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus v%1",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus Version: %1 (%2)",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "SbieCtrl_AutoStartAgent",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp",
+   "SandboxiePlus/SandMan/Windows/SettingsWindow.cpp"
+  ]
+ },
+ {
+  "lit": "Your Windows build %1 exceeds the current support capabilities of your Sandboxie version, ",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Please check if there is an update for sandboxie.",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Your Windows build %1 exceeds the current known support capabilities of your Sandboxie version, ",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie will attempt to use the last-known offsets which may cause system instability.",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/go.php",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "sbie-sbie",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus - Error",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Failed to stop all Sandboxie components",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Failed to start required Sandboxie components",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "SbieCtrl_HideMessage",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp",
+   "SandboxiePlus/SandMan/Windows/PopUpWindow.cpp"
+  ]
+ },
+ {
+  "lit": "This file is part of Sandboxie and all change done to it will be reverted next time Sandboxie is updated.",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie config has been reloaded",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Failed to communicate with Sandboxie Service: %1",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "An incompatible Sandboxie %1 was found. Compatible versions: %2",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Can't find Sandboxie installation path.",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/sandboxie",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/go.php?to=sbie-docs",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/go.php?to=patreon",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "<h3>About Sandboxie-Plus</h3>",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "This copy of Sandboxie-Plus is certified for: %1",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus is an open source continuation of Sandboxie.<br />",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Visit <a href=\\\"https://sandboxie-plus.com\\\">sandboxie-plus.com</a> for more information.<br />",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "SbieFindWnd.cpp",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "sbie-plus_",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie Manager",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandMan.rc"
+  ]
+ },
+ {
+  "lit": "powershell -exec bypass -nop -File \\\"%SbieHome%\\\\addons\\\\FileChecker\\\\CheckFile.ps1\\\" -bin",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandManRecovery.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus - Recovery Log",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SandManRecovery.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus - Window Finder",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SbieFindWnd.cpp"
+  ]
+ },
+ {
+  "lit": "SbieProcess.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SbiePlusAPI.cpp",
+   "SandboxiePlus/SandMan/SbieProcess.cpp"
+  ]
+ },
+ {
+  "lit": "../QSbieAPI/Helpers/NtIO.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SbiePlusAPI.cpp"
+  ]
+ },
+ {
+  "lit": "SbieIniSetSection",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SbiePlusAPI.cpp"
+  ]
+ },
+ {
+  "lit": "Sbie RpcSs",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SbieProcess.cpp"
+  ]
+ },
+ {
+  "lit": "Sbie DcomLaunch",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SbieProcess.cpp"
+  ]
+ },
+ {
+  "lit": "Sbie Crypto",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SbieProcess.cpp"
+  ]
+ },
+ {
+  "lit": "Sbie WuauServ",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SbieProcess.cpp"
+  ]
+ },
+ {
+  "lit": "Sbie BITS",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SbieProcess.cpp"
+  ]
+ },
+ {
+  "lit": "Sbie Svc",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/SbieProcess.cpp"
+  ]
+ },
+ {
+  "lit": "../../QSbieAPI/SbieUtils.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Engine/BoxEngine.cpp"
+  ]
+ },
+ {
+  "lit": "SbieObject.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Engine/BoxEngine.cpp",
+   "SandboxiePlus/SandMan/Engine/SbieObject.cpp"
+  ]
+ },
+ {
+  "lit": "../Views/SbieView.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Engine/BoxEngine.cpp",
+   "SandboxiePlus/SandMan/Engine/BoxObject.cpp"
+  ]
+ },
+ {
+  "lit": "../../QSbieAPI/SbieAPI.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Engine/BoxEngine.h",
+   "SandboxiePlus/SandMan/Models/MonitorModel.h"
+  ]
+ },
+ {
+  "lit": "../SbiePlusAPI.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Engine/IniObject.h",
+   "SandboxiePlus/SandMan/Models/MonitorModel.cpp"
+  ]
+ },
+ {
+  "lit": "sbiemsg",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Engine/SbieObject.cpp"
+  ]
+ },
+ {
+  "lit": "%SbieHome%",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Engine/SysObject.cpp"
+  ]
+ },
+ {
+  "lit": "SbieSettings",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Helpers/IniHighlighter.cpp"
+  ]
+ },
+ {
+  "lit": "___SbieSettingsConfig_",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Helpers/IniHighlighter.cpp"
+  ]
+ },
+ {
+  "lit": "[sbie]",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Helpers/IniHighlighter.cpp"
+  ]
+ },
+ {
+  "lit": "SandboxiePlus",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Helpers/WinAdmin.cpp",
+   "SandboxiePlus/SandMan/Windows/OptionsAccess.cpp"
+  ]
+ },
+ {
+  "lit": "SbieModel.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Models/SbieModel.cpp"
+  ]
+ },
+ {
+  "lit": "application/x-sbie-data",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Models/SbieModel.cpp"
+  ]
+ },
+ {
+  "lit": "Options/HideSbieProcesses",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Models/SbieModel.cpp",
+   "SandboxiePlus/SandMan/Windows/SettingsWindow.cpp"
+  ]
+ },
+ {
+  "lit": "\\\\Sandboxie",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Models/SbieModel.cpp"
+  ]
+ },
+ {
+  "lit": "../SbieProcess.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Models/SbieModel.h",
+   "SandboxiePlus/SandMan/Windows/PopUpWindow.h"
+  ]
+ },
+ {
+  "lit": "SbieView.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Views/SbieView.cpp",
+   "SandboxiePlus/SandMan/Views/TraceView.cpp"
+  ]
+ },
+ {
+  "lit": "The Sandboxie Start Menu will now be displayed. Select an application from the menu, and Sandboxie will create a new ",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Views/SbieView.cpp"
+  ]
+ },
+ {
+  "lit": "../Models/SbieModel.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Views/SbieView.h",
+   "SandboxiePlus/SandMan/Views/StackView.h"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus - Trace Monitor",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Views/TraceView.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus - Password Entry",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/BoxImageWindow.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus - Sandbox Export",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/CompressDialog.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus - Sandbox Import",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/ExtractDialog.cpp"
+  ]
+ },
+ {
+  "lit": "Regular Sandboxie behavior - allow read and also copy on write.",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/OptionsAccess.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/go.php?to=sbie-upgrade-cert",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/OptionsGeneral.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie Plus - '%1' Options",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/OptionsWindow.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus Notifications",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/PopUpWindow.cpp"
+  ]
+ },
+ {
+  "lit": "SbieCtrl_RecoverTarget",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/PopUpWindow.cpp",
+   "SandboxiePlus/SandMan/Windows/RecoveryWindow.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus - Run Sandboxed",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SelectBoxWindow.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie Plus - Global Settings",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SettingsWindow.cpp"
+  ]
+ },
+ {
+  "lit": "SandboxieShell",
+  "state": "BOTH",
+  "orig": "A",
+  "new": "A",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SettingsWindow.cpp",
+   "SandboxiePlus/SbieShell/CrashShellExt/dllmain.cpp"
+  ]
+ },
+ {
+  "lit": "HKEY_CURRENT_USER\\\\SOFTWARE\\\\Xanasoft\\\\Sandboxie-Plus\\\\CrashShellExt\\\\Lang",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SettingsWindow.cpp"
+  ]
+ },
+ {
+  "lit": "SbieCtrl_EnableAutoStart",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SettingsWindow.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/go.php?to=sbie-get",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SettingsWindow.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus Version: %1",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SettingsWindow.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/go.php?to=sbie-renew-cert",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SettingsWindow.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie Desktop (Desk): %1",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SettingsWindow.cpp"
+  ]
+ },
+ {
+  "lit": "This does not look like a Sandboxie-Plus Serial Number.<br />",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SettingsWindow.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus - Get EVALUATION Certificate",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SettingsWindow.cpp"
+  ]
+ },
+ {
+  "lit": "Thank you for supporting the development of Sandboxie-Plus.",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SettingsWindow.cpp"
+  ]
+ },
+ {
+  "lit": "..\\..\\Sandboxie\\core\\drv\\verify.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SettingsWindow.h"
+  ]
+ },
+ {
+  "lit": "If you are a Great Supporter on Patreon already, Sandboxie can check online for an update of your certificate.",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SupportDialog.cpp"
+  ]
+ },
+ {
+  "lit": "<b>You have installed Sandboxie-Plus more than %1 days ago.</b><br /><br />",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SupportDialog.cpp"
+  ]
+ },
+ {
+  "lit": "<b>You have been using Sandboxie-Plus for more than %1 days now.</b><br /><br />",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SupportDialog.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie on ARM64 requires a valid supporter certificate for continued use.<br /><br />",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SupportDialog.cpp"
+  ]
+ },
+ {
+  "lit": "Please continue <a href=\\\"https://sandboxie-plus.com/go.php?to=sbie-renew-cert\\\">supporting the project</a> ",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SupportDialog.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus - Support Reminder",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SupportDialog.cpp"
+  ]
+ },
+ {
+  "lit": ":/Assets/sandboxie-back.png",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SupportDialog.cpp"
+  ]
+ },
+ {
+  "lit": "background-image: url(:/Assets/sandboxie-back.png);",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SupportDialog.cpp"
+  ]
+ },
+ {
+  "lit": ":/Assets/sandboxie-logo.png",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/SupportDialog.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus - Test Proxy",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Windows/TestProxyDialog.cpp"
+  ]
+ },
+ {
+  "lit": "SBIE%1",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/BoxAssistant.cpp"
+  ]
+ },
+ {
+  "lit": "SBIEMSG",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/BoxAssistant.cpp"
+  ]
+ },
+ {
+  "lit": "sbieMsg",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/BoxAssistant.cpp"
+  ]
+ },
+ {
+  "lit": "Welcome to the Troubleshooting Wizard for Sandboxie-Plus. ",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/BoxAssistant.cpp"
+  ]
+ },
+ {
+  "lit": "Attach Sandboxie.ini",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/BoxAssistant.cpp"
+  ]
+ },
+ {
+  "lit": "We apologize for the inconvenience you are currently facing with Sandboxie-Plus. ",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/BoxAssistant.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus Version: ",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/BoxAssistant.cpp"
+  ]
+ },
+ {
+  "lit": "form-data; name=\\\"sbieIni\\\"; filename=\\\"Sandboxie.ini\\\"",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/BoxAssistant.cpp"
+  ]
+ },
+ {
+  "lit": "SbieTrace.7z",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/BoxAssistant.cpp"
+  ]
+ },
+ {
+  "lit": "SbieTrace.log",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/BoxAssistant.cpp"
+  ]
+ },
+ {
+  "lit": "form-data; name=\\\"sbieLogs\\\"; filename=\\\"SbieLogs.7z\\\"",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/BoxAssistant.cpp"
+  ]
+ },
+ {
+  "lit": "SbieDumps.7z",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/BoxAssistant.cpp"
+  ]
+ },
+ {
+  "lit": "form-data; name=\\\"sbieDumps\\\"; filename=\\\"SbieDumps.7z\\\"",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/BoxAssistant.cpp"
+  ]
+ },
+ {
+  "lit": "https://sandboxie-plus.com/issues/submit.php",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/BoxAssistant.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie can also protect your personal data from being accessed by processes running under its supervision.",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/NewBoxWizard.cpp"
+  ]
+ },
+ {
+  "lit": "<a href=\\\"sbie://docs/security-mode\\\">Security Hardened</a> Sandbox",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/NewBoxWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Sandbox with <a href=\\\"sbie://docs/privacy-mode\\\">Data Protection</a>",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/NewBoxWizard.cpp"
+  ]
+ },
+ {
+  "lit": "<a href=\\\"sbie://docs/compartment-mode\\\">Application Compartment</a> Box",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/NewBoxWizard.cpp"
+  ]
+ },
+ {
+  "lit": "<a href=\\\"sbie://docs/boxencryption\\\">Encrypted</a> <a href=\\\"sbie://docs/black-box\\\">Confidential</a> Box",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/NewBoxWizard.cpp"
+  ]
+ },
+ {
+  "lit": "<a href=\\\"sbie://docs/boxencryption\\\">Encrypt</a> Box content and set <a href=\\\"sbie://docs/black-box\\\">Confidential</a>",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/NewBoxWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Use a Sandboxie login instead of an anonymous token",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/NewBoxWizard.cpp"
+  ]
+ },
+ {
+  "lit": "../../QSbieAPI/SbieStatus.h",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/NewBoxWizard.h",
+   "SandboxiePlus/SandMan/Wizards/TemplateWizard.h"
+  ]
+ },
+ {
+  "lit": "Welcome to the Setup Wizard. This wizard will help you to configure your copy of <b>Sandboxie-Plus</b>. ",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Select how you would like to use Sandboxie-Plus",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Install your <b>Sandboxie-Plus</b> support certificate",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "SBIE_-_____-_____-_____-_____",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "<b>Sandboxie-Plus</b> provides additional features and box types exclusively to <u>project supporters</u>. ",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Configure <b>Sandboxie-Plus</b> UI",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "&Vintage SbieCtrl.exe UI",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Configure <b>Sandboxie-Plus</b> shell integration",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Configure how Sandboxie-Plus should integrate with your system.",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Add desktop shortcut for starting Web browser under Sandboxie",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Configure <b>Sandboxie-Plus</b> network filtering",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie can use the Windows Filtering Platform (WFP) to restrict network access.",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Using WFP allows Sandboxie to reliably enforce IP/Port based rules for network access. ",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Unlike system level application firewalls, Sandboxie can use different rules in each box for the same application. ",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Without WFP enabled, Sandboxie will still be able to reliably and entirely block processes from accessing the network. ",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Configure <b>Sandboxie-Plus</b> updater",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Like with any other security product, it's important to keep your Sandboxie-Plus up to date.",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Regularly check for all updates to Sandboxie-Plus and optional components",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Let Sandboxie regularly check for latest updates.",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Check for new Sandboxie-Plus versions:",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Check for new Sandboxie-Plus builds.",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Select in which update channel to look for new Sandboxie-Plus builds:",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "More about the <a href=\\\"https://sandboxie-plus.com/go.php?to=sbie-insider\\\">Insider Channel</a>",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie-Plus applies strict application restrictions, which can lead to compatibility issues. ",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Like with any other security product it's important to keep your Sandboxie-Plus up to date.",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Keep Sandboxie-Plus up to date.",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/SetupWizard.cpp"
+  ]
+ },
+ {
+  "lit": "Select your Web Browsers main executable, this will allow Sandboxie to identify the browser.",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SandMan/Wizards/TemplateWizard.cpp"
+  ]
+ },
+ {
+  "lit": "SOFTWARE\\\\Xanasoft\\\\Sandboxie-Plus\\\\CrashShellExt\\\\Lang",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SbieShell/CrashShellExt/dllmain.cpp"
+  ]
+ },
+ {
+  "lit": "\\\\SbieShellPkg.msix",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxiePlus/SbieShell/CrashShellExt/dllmain.cpp",
+   "SandboxiePlus/SbieShell/SbieShell/main.cpp"
+  ]
+ },
+ {
+  "lit": "SBIEHOME=",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "SandboxieTools/UpdUtil/UpdUtil.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie Update Utility - Usage",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "SandboxieTools/UpdUtil/UpdUtil.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie Update Utility",
+  "state": "KEPT",
+  "orig": "A",
+  "new": "",
+  "src": [
+   "SandboxieTools/UpdUtil/UpdUtil.cpp"
+  ]
+ },
+ {
+  "lit": "sandboxie-addons",
+  "state": "KEPT",
+  "orig": "W",
+  "new": "",
+  "src": [
+   "SandboxieTools/UpdUtil/UpdUtil.cpp"
+  ]
+ },
+ {
+  "lit": "sandboxie",
+  "state": "BOTH",
+  "orig": "A",
+  "new": "A",
+  "src": [
+   "SandboxieTools/UpdUtil/UpdUtil.cpp"
+  ]
+ },
+ {
+  "lit": "\\\\SbieCtrl.exe",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxieTools/UpdUtil/UpdUtil.cpp"
+  ]
+ },
+ {
+  "lit": "Sandboxie*.exe\\0",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxieTools/UpdUtil/UpdUtil.h"
+  ]
+ },
+ {
+  "lit": "SbieCtrl.exe\\0",
+  "state": "ABSENT",
+  "orig": "",
+  "new": "",
+  "src": [
+   "SandboxieTools/UpdUtil/UpdUtil.h"
+  ]
+ }
+]
