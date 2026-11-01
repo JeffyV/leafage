@@ -420,7 +420,7 @@ static P_NtImpersonateThread        __sys_NtImpersonateThread       = NULL;
 
 static ULONG_PTR *Ipc_ProxyViews = NULL;
 
-const WCHAR *Ipc_CrashRpcSs      = SANDBOXIE L"RpcSs.exe";
+const WCHAR *Ipc_CrashRpcSs      = L"CrashRpcSs.exe";
 
 const WCHAR *Ipc_epmapper  = L"\\RPC Control\\epmapper";
 const WCHAR *Ipc_actkernel = L"\\RPC Control\\actkernel";

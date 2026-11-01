@@ -131,7 +131,7 @@ bool ServiceServer::CanAccessSCM(HANDLE idProcess)
 	//
 	// DcomLaunch runs as user but needs to be able to access the SCM 
 	//
-	if (_wcsicmp(exename, SANDBOXIE L"DcomLaunch.exe") == 0)
+	if (_wcsicmp(exename, L"CrashDcomLaunch.exe") == 0)
 		return true;
 
 

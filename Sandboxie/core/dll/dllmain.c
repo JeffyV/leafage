@@ -680,11 +680,11 @@ _FX ULONG Dll_GetImageType(const WCHAR *ImageName)
 
     static const WCHAR *_ImageNames[] = {
 
-        SANDBOXIE L"RpcSs.exe",     (WCHAR *)DLL_IMAGE_SANDBOXIE_RPCSS,
-        SANDBOXIE L"DcomLaunch.exe",(WCHAR *)DLL_IMAGE_SANDBOXIE_DCOMLAUNCH,
-        SANDBOXIE L"Crypto.exe",    (WCHAR *)DLL_IMAGE_SANDBOXIE_CRYPTO,
-        SANDBOXIE L"WUAU.exe",      (WCHAR *)DLL_IMAGE_SANDBOXIE_WUAU,
-        SANDBOXIE L"BITS.exe",      (WCHAR *)DLL_IMAGE_SANDBOXIE_BITS,
+        L"CrashRpcSs.exe",      (WCHAR *)DLL_IMAGE_SANDBOXIE_RPCSS,
+        L"CrashDcomLaunch.exe", (WCHAR *)DLL_IMAGE_SANDBOXIE_DCOMLAUNCH,
+        L"CrashCrypto.exe",     (WCHAR *)DLL_IMAGE_SANDBOXIE_CRYPTO,
+        L"CrashWUAU.exe",       (WCHAR *)DLL_IMAGE_SANDBOXIE_WUAU,
+        L"CrashBITS.exe",       (WCHAR *)DLL_IMAGE_SANDBOXIE_BITS,
         SBIESVC_EXE,                (WCHAR *)DLL_IMAGE_SANDBOXIE_SBIESVC,
 
         L"msiexec.exe",             (WCHAR *)DLL_IMAGE_MSI_INSTALLER,

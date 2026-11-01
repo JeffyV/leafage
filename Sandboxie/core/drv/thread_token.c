@@ -641,7 +641,7 @@ _FX void *Thread_SetInformationProcess_PrimaryToken_3(
     //
 
     if (proc->image_sbie &&
-            _wcsicmp(proc->image_name, SANDBOXIE L"DcomLaunch.exe") == 0) {
+            _wcsicmp(proc->image_name, L"CrashDcomLaunch.exe") == 0) {
 
         return TokenObject2;
     }

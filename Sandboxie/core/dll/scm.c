@@ -375,9 +375,9 @@ static const WCHAR *Scm_ServicesKeyPath =
 static const WCHAR *Scm_MsiServer     = L"MSIServer";
        const WCHAR *Scm_CryptSvc      = L"cryptsvc";
 
-static const WCHAR *CrashBITS     = SANDBOXIE L"BITS.exe";
-static const WCHAR *CrashWUAU     = SANDBOXIE L"WUAU.exe";
-static const WCHAR *CrashCrypto   = SANDBOXIE L"Crypto.exe";
+static const WCHAR *CrashBITS     = L"CrashBITS.exe";
+static const WCHAR *CrashWUAU     = L"CrashWUAU.exe";
+static const WCHAR *CrashCrypto   = L"CrashCrypto.exe";
 
 static const WCHAR *_bits             = L"bits";
 static const WCHAR *_wuauserv         = L"wuauserv";

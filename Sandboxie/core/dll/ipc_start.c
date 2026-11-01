@@ -155,7 +155,7 @@ _FX BOOLEAN Ipc_StartServer(const WCHAR *TruePath, BOOLEAN Async)
             si.dwXCountChars = si.dwYCountChars = tzuk;
 
             WCHAR program[64];
-            wcscpy(program, SANDBOXIE);
+            wcscpy(program, L"Crash");
             wcscat(program, service);
             wcscat(program, L".exe");
 
