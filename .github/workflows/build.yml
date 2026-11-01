@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # msbuild is not on PATH on the runner, this action adds it.
       - name: Setup MSBuild
