@@ -3145,7 +3145,7 @@ const QVector<CTraceEntryPtr>& CSbieAPI::GetTrace()
 // Other 
 //
 
-QString CSbieAPI::GetCrashMsgStr(quint32 code, quint32 Lang)
+QString CSbieAPI::GetSbieMsgStr(quint32 code, quint32 Lang)
 {
 	ULONG FormatFlags = FORMAT_MESSAGE_FROM_HMODULE | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_ALLOCATE_BUFFER;
 	WCHAR* ret_str = NULL;

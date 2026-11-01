@@ -2875,7 +2875,7 @@ QString CSandMan::FormatSbieMessage(quint32 MsgCode, const QStringList& MsgData,
 {
 	QString Message;
 	if (MsgCode != 0) {
-		Message = theAPI->GetCrashMsgStr(MsgCode, m_LanguageId);
+		Message = theAPI->GetSbieMsgStr(MsgCode, m_LanguageId);
 		if (pLink) {
 			Message.insert(8, "</a>");
 			*pLink = MakeCrashMsgLink(MsgCode, MsgData, ProcessName);

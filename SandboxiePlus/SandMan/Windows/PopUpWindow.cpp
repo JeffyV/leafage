@@ -263,7 +263,7 @@ void CPopUpWindow::OnHideMessage()
 {
 	CPopUpMessage* pEntry = qobject_cast<CPopUpMessage*>(sender());
 	
-	if (QMessageBox("Sandboxie-Plus", theAPI->GetCrashMsgStr(3647, theGUI->m_LanguageId).arg(pEntry->GetMsgId()).arg("")
+	if (QMessageBox("Sandboxie-Plus", theAPI->GetSbieMsgStr(3647, theGUI->m_LanguageId).arg(pEntry->GetMsgId()).arg("")
 		, QMessageBox::Question, QMessageBox::Yes | QMessageBox::Default, QMessageBox::No | QMessageBox::Escape, QMessageBox::NoButton, this).exec() != QMessageBox::Yes)
 		return;
 

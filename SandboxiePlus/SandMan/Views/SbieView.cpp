@@ -1385,7 +1385,7 @@ void CSbieView::OnSandBoxAction(QAction* Action, const QList<CSandBoxPtr>& SandB
 		{
 			bool State = false;
 			CCheckableMessageBox::question(this, "Sandboxie-Plus",
-				theAPI->GetCrashMsgStr(0x00000DCDL, theGUI->m_LanguageId) // MSG_3533
+				theAPI->GetSbieMsgStr(0x00000DCDL, theGUI->m_LanguageId) // MSG_3533
 				, tr("Don't show this message again."), &State, QDialogButtonBox::Ok, QDialogButtonBox::Ok, QMessageBox::Information);
 
 			if (State)
@@ -1455,7 +1455,7 @@ void CSbieView::OnSandBoxAction(QAction* Action, const QList<CSandBoxPtr>& SandB
 		{
 			bool State = false;
 			CCheckableMessageBox::question(this, "Sandboxie-Plus",
-				theAPI->GetCrashMsgStr(0x00000DCEL, theGUI->m_LanguageId) // MSG_3534
+				theAPI->GetSbieMsgStr(0x00000DCEL, theGUI->m_LanguageId) // MSG_3534
 				, tr("Don't show this message again."), &State, QDialogButtonBox::Ok, QDialogButtonBox::Ok, QMessageBox::Information);
 
 			if (State)

@@ -41,7 +41,7 @@ void COptionsWindow::LoadTemplates()
 			int End = Title.mid(1).indexOf(",");
 			if (End == -1) End = Title.length() - 1;
 			int MsgNum = Title.mid(1, End).toInt();
-			Title = m_pBox->GetAPI()->GetCrashMsgStr(MsgNum, theGUI->m_LanguageId).arg(Title.mid(End + 2)).arg("");
+			Title = m_pBox->GetAPI()->GetSbieMsgStr(MsgNum, theGUI->m_LanguageId).arg(Title.mid(End + 2)).arg("");
 		}
 		if (Title.isEmpty()) Title = Name;
 		//else Title += " (" + Name + ")";

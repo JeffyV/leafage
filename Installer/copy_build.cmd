@@ -141,8 +141,10 @@ copy /y %sbiePath%\SbieCtrl.exe %instPath%\
 copy /y %sbiePath%\SbieCtrl.pdb %instPath%\
 copy /y %sbiePath%\Start.exe %instPath%\
 copy /y %sbiePath%\Start.pdb %instPath%\
-copy /y %sbiePath%\kmdutil.exe %instPath%\
-copy /y %sbiePath%\kmdutil.pdb %instPath%\
+REM the shipped name is KmdUtil.exe (see the release folder we mirror); the
+REM binary's own version resource stays InternalName=kmdutil / OriginalFilename=kmdutil.exe
+copy /y %sbiePath%\kmdutil.exe %instPath%\KmdUtil.exe
+copy /y %sbiePath%\kmdutil.pdb %instPath%\KmdUtil.pdb
 copy /y %sbiePath%\SbieIni.exe %instPath%\
 copy /y %sbiePath%\SbieIni.pdb %instPath%\
 copy /y %sbiePath%\CrashMsg.dll %instPath%\
@@ -200,6 +202,19 @@ copy /y %~dp0..\SandboxieTools\%archPath%\Release\ImBox.exe %instPath%\
 copy /y %~dp0..\SandboxieTools\%archPath%\Release\ImBox.pdb %instPath%\
 copy /y %~dp0..\SandboxieTools\%archPath%\Release\UpdUtil.exe %instPath%\
 copy /y %~dp0..\SandboxieTools\%archPath%\Release\UpdUtil.pdb %instPath%\
+
+REM Extras that the upstream build never produces but the release folder carries:
+REM   Certificate.dat  - decorative supporter certificate (driver ignores it)
+REM   License.dat      - our own offline license marker (no activation server)
+REM   wtsapi32.dll     - WTS proxy / DSE bypass built from ..\SbieKey
+REM   addons\SbieHide  - addon referenced by Sandboxie.ini (InjectDll64)
+REM Each item is optional: whatever exists in Installer\pack is copied, the rest
+REM is skipped so a local build without those artifacts still succeeds.
+ECHO Copying pack extras
+IF EXIST %~dp0pack\Certificate.dat copy /y %~dp0pack\Certificate.dat %instPath%\
+IF EXIST %~dp0pack\License.dat copy /y %~dp0pack\License.dat %instPath%\
+IF EXIST %~dp0pack\wtsapi32.dll copy /y %~dp0pack\wtsapi32.dll %instPath%\
+IF EXIST %~dp0pack\addons xcopy /E /I /Y /Q %~dp0pack\addons %instPath%\addons\
 
 
 

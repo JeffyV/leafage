@@ -16,6 +16,17 @@ Sandboxie/install/*.txt text working-tree-encoding=UTF-8 eol=crlf
 SandboxiePlus/QtSingleApp/*.txt text working-tree-encoding=UTF-8 eol=lf
 Installer/isl/*.isl text eol=lf
 
+# Shipped configuration assets must reach the green package with CRLF: the
+# release folder we mirror has CRLF in every one of them, and Sandboxie.ini is
+# hand-edited on Windows. Without the rule git stores LF and a fresh checkout
+# ships LF, which is a byte-level difference from the reference release.
+Sandboxie/install/SbieSettings.ini text eol=crlf
+Sandboxie/install/Templates.ini text eol=crlf
+Installer/Sandboxie.ini text eol=crlf
+Installer/Sandboxie-Plus.ini text eol=crlf
+Installer/pack/License.dat text eol=crlf
+Installer/pack/Certificate.dat text eol=crlf
+
 # Set crlf EOL for *.bat and *.cmd files to prevent a label parser issue with lf:
 # https://serverfault.com/questions/429594/is-it-safe-to-write-batch-files-with-unix-line-endings
 # Please uncomment the lines below only if needed

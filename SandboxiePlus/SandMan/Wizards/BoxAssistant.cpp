@@ -958,7 +958,7 @@ bool CSubmitPage::validatePage()
         QBuffer* pMessageLog = new QBuffer();
         pMessageLog->open(QIODevice::ReadWrite);
         theGUI->SaveMessageLog(pMessageLog);
-        int ArcIndex = Archive.AddFile("CrashMsg.log");
+        int ArcIndex = Archive.AddFile("SbieMsg.log");
         pMessageLog->seek(0);
 	    Files.insert(ArcIndex, pMessageLog);
 

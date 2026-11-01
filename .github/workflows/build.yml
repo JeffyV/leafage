@@ -67,6 +67,29 @@ jobs:
         shell: cmd
         run: Installer\get_7zip.cmd
 
+      # The release folder we mirror ships addons\SbieHide\SbieHide_{x64,x86}.dll
+      # (Sandboxie.ini injects it). Pull them from the addon's own release.
+      # A missing addon is not fatal: copy_build copies whatever exists in pack\.
+      - name: Fetch SbieHide addon
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $dst = 'Installer\pack\addons\SbieHide'
+          New-Item -ItemType Directory -Force -Path $dst | Out-Null
+          $rel = Invoke-RestMethod 'https://api.github.com/repos/sandboxie-plus/SbieHide/releases/latest' -Headers @{ 'User-Agent' = 'leafage-build' }
+          $zip = $rel.assets | Where-Object { $_.name -like '*.zip' } | Select-Object -First 1
+          if (-not $zip) { throw 'no zip asset in the latest SbieHide release' }
+          $tmp = Join-Path $env:RUNNER_TEMP 'sbiehide.zip'
+          $out = Join-Path $env:RUNNER_TEMP 'sbiehide'
+          Invoke-WebRequest $zip.browser_download_url -OutFile $tmp
+          Expand-Archive $tmp -DestinationPath $out -Force
+          foreach ($n in 'SbieHide_x64.dll', 'SbieHide_x86.dll') {
+              $f = Get-ChildItem -Recurse -File -Filter $n $out | Select-Object -First 1
+              if ($f) { Copy-Item $f.FullName (Join-Path $dst $n) -Force }
+          }
+          Get-ChildItem $dst -ErrorAction SilentlyContinue | Select-Object Name, Length
+
       - name: Merge build output
         shell: cmd
         run: Installer\copy_build.cmd x64 build_qt6

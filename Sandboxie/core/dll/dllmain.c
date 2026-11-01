@@ -398,7 +398,7 @@ _FX void Dll_InitInjected(void)
 
 
 #ifdef WITH_DEBUG
-    if (CrashApi_QueryConfBool(NULL, L"DisableCrashDll", FALSE)) {
+    if (CrashApi_QueryConfBool(NULL, L"DisableSbieDll", FALSE)) {
         Dll_InitComplete = TRUE;
         return;
     }

@@ -146,7 +146,7 @@ public:
 	// Other
 	virtual quint64			QueryProcessInfo(quint32 ProcessId, quint32 InfoClass = 0);
 
-	virtual QString			GetCrashMsgStr(quint32 code, quint32 Lang = 1033);
+	virtual QString			GetSbieMsgStr(quint32 code, quint32 Lang = 1033);
 
 	enum EStartFlags
 	{

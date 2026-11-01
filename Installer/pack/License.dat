@@ -1,0 +1,7 @@
+MY-LICENSE/1
+PRODUCT: My
+ISSUER: leafage
+SCOPE: perpetual
+CAPS: eternal,maxlevel,desk,net,enc,sec
+ACTIVATION: offline
+NOTE: no license server, no network request, no machine binding

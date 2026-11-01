@@ -69,7 +69,7 @@ _FX BOOLEAN Ipc_StartServer(const WCHAR *TruePath, BOOLEAN Async)
     BOOLEAN event_created = FALSE;
     BOOLEAN bRet = TRUE;
 
-    if (CrashApi_QueryConfBool(NULL, L"NoCrashRpcSs", FALSE))
+    if (CrashApi_QueryConfBool(NULL, L"NoSandboxieRpcSs", FALSE))
         return FALSE;
 
     //
