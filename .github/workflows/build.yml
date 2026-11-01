@@ -150,7 +150,7 @@ jobs:
 
       # Qt is unpacked to <workspace>\..\..\Qt by install_qt.cmd, i.e. D:\a\Qt
       - name: Cache Qt and jom
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: D:\a\Qt
           key: qt-${{ env.qt_version }}-jom114-win2022
@@ -262,7 +262,7 @@ jobs:
           echo openssl_version=%openssl_version% >> %GITHUB_ENV%
 
       - name: Cache Qt and jom
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: D:\a\Qt
           key: qt-${{ env.qt_version }}-jom114-arm64-win2022
