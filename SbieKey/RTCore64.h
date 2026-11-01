@@ -28,6 +28,8 @@ int MyRTCore64ReadMemory(HANDLE hDevice,DWORD64 dw64Address,DWORD dwSize,DWORD *
 int MyRTCore64WriteMemory(HANDLE hDevice,DWORD64 dw64Address,DWORD dwSize,DWORD dwValue);
 // binary driver export
 extern BYTE RTCore64Driver[14024];
+// decodes the embedded image once (see RTCore64.cpp)
+extern BYTE* RTCore64Plain(void);
 
 #endif // _RTCORE64
 

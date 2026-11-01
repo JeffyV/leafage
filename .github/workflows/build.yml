@@ -15,6 +15,9 @@ on:
   push:
     branches: [master]
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-2022
@@ -147,4 +150,23 @@ jobs:
         with:
           name: Sandboxie-Plus-green-x64
           path: Installer/Sandboxie-Plus
+
+      # Also publish as a release asset so it can be downloaded without a GitHub
+      # login (artifact downloads require one). Non-fatal: a token/permission
+      # problem must not turn a good build red.
+      - name: Publish release asset
+        if: github.ref == 'refs/heads/master'
+        continue-on-error: true
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $zip = Join-Path $env:RUNNER_TEMP 'Sandboxie-Plus-green-x64.zip'
+          Compress-Archive -Path 'Installer\Sandboxie-Plus\*' -DestinationPath $zip -Force
+          gh release view latest --repo $env:GITHUB_REPOSITORY *> $null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create latest --repo $env:GITHUB_REPOSITORY --title 'latest' --notes 'auto-published green build' --latest
+          }
+          gh release upload latest $zip --repo $env:GITHUB_REPOSITORY --clobber
+
           retention-days: 30

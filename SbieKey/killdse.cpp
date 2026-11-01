@@ -1486,7 +1486,7 @@ int MyInitVulnerableDrivers(VULNERABLE_DRIVER* vd, DWORD dwElements)
 			vd->szDriverSymLink = L"\\\\.\\RTCore64";
 			lstrcpy(vd->driverFile[0].szFilePath, szPath);
 			lstrcat(vd->driverFile[0].szFilePath, L"\\RTCore64.sys");
-			vd->driverFile[0].bData = RTCore64Driver;
+			vd->driverFile[0].bData = RTCore64Plain();
 			vd->driverFile[0].dwSize = sizeof(RTCore64Driver);
 			// supports Windows Vista and later
 			vd->dwMinSupportedBuildNumber = 6000;
