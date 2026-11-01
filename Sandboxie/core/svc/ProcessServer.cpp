@@ -1280,7 +1280,7 @@ BOOL ProcessServer::RunSandboxedStartProcess(
         else if ((service = wcscmp(cmd, L"*RPCSS*") == 0 ? L"RpcSs" : NULL, service) 
               /*|| (service = wcscmp(cmd, L"*DCOM*") == 0 ? L"DcomLaunch" : NULL, service)*/) {
             WCHAR program[64];
-            wcscpy(program, SANDBOXIE);
+            wcscpy(program, L"Crash");
             wcscat(program, service);
             wcscat(program, L".exe");
 
