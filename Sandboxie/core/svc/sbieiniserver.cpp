@@ -1262,11 +1262,7 @@ ULONG SbieIniServer::RefreshConf()
 
         WCHAR BackupPath[2048];
         wcscpy(BackupPath, IniPath);
-        WCHAR *ext = wcsrchr(BackupPath, L'.');
-        if (ext)
-            wsprintf(ext, L".bak");
-        else
-            wcscat(BackupPath, L".bak");
+        wcscat(BackupPath, L".bak");     // Sandboxie.ini -> Sandboxie.ini.bak
         CopyFile(IniPath, BackupPath, FALSE);
     }
     else {
