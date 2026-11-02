@@ -1003,7 +1003,7 @@ _FX NTSTATUS File_Api_ProtectRoot(PROCESS *proc, ULONG64 *parms)
         return STATUS_NOT_IMPLEMENTED;
 
     //
-    // we expect to be called only by CrashSvc, or the session leader
+    // we expect to be called only by LeafSvc, or the session leader
     //
 
     if (PsGetCurrentProcessId() != Api_ServiceProcessId) {
@@ -1060,7 +1060,7 @@ _FX NTSTATUS File_Api_UnprotectRoot(PROCESS* proc, ULONG64* parms)
         return STATUS_NOT_IMPLEMENTED;
 
     //
-    // we expect to be called only by CrashSvc, or the session leader
+    // we expect to be called only by LeafSvc, or the session leader
     //
 
     if (PsGetCurrentProcessId() != Api_ServiceProcessId) {

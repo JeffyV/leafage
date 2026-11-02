@@ -158,7 +158,7 @@ BOOL CAboutDialog::OnInitDialog()
     GetDlgItem(ID_ABOUT_COPYRIGHT)->SetWindowText(text);
 
     SCertInfo CertInfo = { 0 };
-    CrashApi_QueryDrvInfo(-1, &CertInfo, sizeof(CertInfo));
+    LeafApi_QueryDrvInfo(-1, &CertInfo, sizeof(CertInfo));
     if (CertInfo.active)
         GetDlgItem(ID_ABOUT_INFO)->SetWindowText(CMyMsg(MSG_7988));
     else if (CertInfo.expired) // expired && !active -> outdated
@@ -225,7 +225,7 @@ void ApplyCertificate()
     }
 
     WCHAR HomePath[MAX_PATH];
-    CrashApi_GetHomePath(NULL, 0, HomePath, MAX_PATH);
+    LeafApi_GetHomePath(NULL, 0, HomePath, MAX_PATH);
     wcscat(HomePath, L"\\Certificate.dat");
 
     SHFILEOPSTRUCT SHFileOp;
@@ -237,7 +237,7 @@ void ApplyCertificate()
     SHFileOp.fFlags = NULL;    
     SHFileOperation(&SHFileOp);
 
-    NTSTATUS status = CrashApi_Call(API_RELOAD_CONF, 2, -1, SBIE_CONF_FLAG_RELOAD_CERT);
+    NTSTATUS status = LeafApi_Call(API_RELOAD_CONF, 2, -1, SBIE_CONF_FLAG_RELOAD_CERT);
     if (!NT_SUCCESS(status)) {
         CMyApp::MsgBox(NULL, MSG_7992, MB_OK | MB_ICONWARNING);
         return;

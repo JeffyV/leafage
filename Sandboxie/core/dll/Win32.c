@@ -32,11 +32,11 @@
 #ifndef _WIN64
 #include "common\dllimport.h"
 
-NTSTATUS CrashApi_ProtectVirtualMemory(HANDLE hProcess, DWORD64 lpAddress, SIZE_T dwSize, ULONG flNewProtect, ULONG* lpflOldProtect);
-NTSTATUS CrashApi_ReadVirtualMemory(HANDLE hProcess, DWORD64 lpBaseAddress, LPVOID lpBuffer, SIZE_T nSize, ULONG64* lpNumberOfBytesRead);
-NTSTATUS CrashApi_WriteVirtualMemory(HANDLE hProcess, DWORD64 lpBaseAddress, LPVOID lpBuffer, SIZE_T nSize, ULONG64* lpNumberOfBytesWritten);
-NTSTATUS CrashApi_FlushInstructionCache(HANDLE hProcess, DWORD64 lpBaseAddress, SIZE_T nSize);
-NTSTATUS CrashApi_QueryVirtualMemory(HANDLE hProcess, DWORD64 BaseAddress, MEMORY_INFORMATION_CLASS MemoryInformationClass, PVOID MemoryInformation, SIZE_T MemoryInformationLength, PSIZE_T ReturnLength);
+NTSTATUS LeafApi_ProtectVirtualMemory(HANDLE hProcess, DWORD64 lpAddress, SIZE_T dwSize, ULONG flNewProtect, ULONG* lpflOldProtect);
+NTSTATUS LeafApi_ReadVirtualMemory(HANDLE hProcess, DWORD64 lpBaseAddress, LPVOID lpBuffer, SIZE_T nSize, ULONG64* lpNumberOfBytesRead);
+NTSTATUS LeafApi_WriteVirtualMemory(HANDLE hProcess, DWORD64 lpBaseAddress, LPVOID lpBuffer, SIZE_T nSize, ULONG64* lpNumberOfBytesWritten);
+NTSTATUS LeafApi_FlushInstructionCache(HANDLE hProcess, DWORD64 lpBaseAddress, SIZE_T nSize);
+NTSTATUS LeafApi_QueryVirtualMemory(HANDLE hProcess, DWORD64 BaseAddress, MEMORY_INFORMATION_CLASS MemoryInformationClass, PVOID MemoryInformation, SIZE_T MemoryInformationLength, PSIZE_T ReturnLength);
 
 BOOLEAN Win32_HookWin32WoW64();
 #endif
@@ -49,7 +49,7 @@ void* SbieDll_GetEcExitThunk(void* HandleStubHijack);
 
 ULONG SbieDll_GetSysCallOffset(const ULONG *SyscallPtr, ULONG syscall_index);
 
-extern SBIELOW_DATA* CrashApi_data;
+extern SBIELOW_DATA* LeafApi_data;
 #define SBIELOW_CALL(x) ((P_##x)&data->x##_code)
 
 
@@ -67,14 +67,14 @@ _FX BOOLEAN Win32_HookWin32SysCalls(HMODULE win32u_base)
     SIZE_T RegionSize;
     ULONG OldProtect;
     
-    SBIELOW_DATA* data = CrashApi_data;
+    SBIELOW_DATA* data = LeafApi_data;
     SystemServiceAsm = (UCHAR*)data->pSystemService;
 
 	UCHAR* syscall_data = (UCHAR *)HeapAlloc(GetProcessHeap(), 0, 16384); // enough room for over 2000 syscalls
 	if (!syscall_data)
 		return FALSE;
 
-    if (!NT_SUCCESS(CrashApi_Call(API_QUERY_SYSCALLS, 2, (ULONG_PTR)syscall_data, 1))) {
+    if (!NT_SUCCESS(LeafApi_Call(API_QUERY_SYSCALLS, 2, (ULONG_PTR)syscall_data, 1))) {
         HeapFree(GetProcessHeap(), 0, syscall_data);
         return FALSE;
     }
@@ -250,10 +250,10 @@ _FX BOOLEAN Win32_Init(HMODULE hmodule)
     Dll_Win32u = hmodule;
 
 	// In Windows 10 all Win32k.sys calls are located in win32u.dll
-    if (Dll_OsBuild < 10041 || (Dll_ProcessFlags & SBIE_FLAG_WIN32K_HOOKABLE) == 0 || !CrashApi_QueryConfBool(NULL, L"EnableWin32kHooks", TRUE))
+    if (Dll_OsBuild < 10041 || (Dll_ProcessFlags & SBIE_FLAG_WIN32K_HOOKABLE) == 0 || !LeafApi_QueryConfBool(NULL, L"EnableWin32kHooks", TRUE))
         return TRUE; // just return on older builds, or not enabled
 
-    if (Dll_CompartmentMode || CrashApi_data->flags.bNoSysHooks)
+    if (Dll_CompartmentMode || LeafApi_data->flags.bNoSysHooks)
         return TRUE; // no syscall hooking in comaprtment mode
 
     //
@@ -364,7 +364,7 @@ _FX BOOLEAN Win32_HookWin32WoW64()
 
     extern void* NtQueryVirtualMemory64;
     if (!NtQueryVirtualMemory64)
-        NtQueryVirtualMemory64 = CrashApi_QueryVirtualMemory;
+        NtQueryVirtualMemory64 = LeafApi_QueryVirtualMemory;
 
     //
     // get the 64-bit address of the wow64win.dll
@@ -374,19 +374,19 @@ _FX BOOLEAN Win32_HookWin32WoW64()
 
     SIZE_T SizeOfImage = 0x00100000; // 1 MB should be more than enough
     if (!BaseAddress) {
-        CrashApi_Log(2303, L"win32k, wow64win.dll base not found");
+        LeafApi_Log(2303, L"win32k, wow64win.dll base not found");
         return FALSE;
     }
 
     dll_data = (UCHAR *)HeapAlloc(GetProcessHeap(), 0, (SIZE_T)SizeOfImage);
     if (!dll_data) {
-        CrashApi_Log(2303, L"win32k, alloc failed (1)");
+        LeafApi_Log(2303, L"win32k, alloc failed (1)");
         goto finish;
     }
 
     ULONG64 SizeRead;
-    if (!NT_SUCCESS(CrashApi_ReadVirtualMemory(NtCurrentProcess(), (PVOID64)BaseAddress, dll_data, SizeOfImage, &SizeRead))) {
-        CrashApi_Log(2303, L"win32k, wow64win.dll read failed");
+    if (!NT_SUCCESS(LeafApi_ReadVirtualMemory(NtCurrentProcess(), (PVOID64)BaseAddress, dll_data, SizeOfImage, &SizeRead))) {
+        LeafApi_Log(2303, L"win32k, wow64win.dll read failed");
         goto finish;
     }
 
@@ -397,17 +397,17 @@ _FX BOOLEAN Win32_HookWin32WoW64()
     SIZE_T RegionSize;
     ULONG OldProtect;
 
-    SBIELOW_DATA* data = CrashApi_data;
+    SBIELOW_DATA* data = LeafApi_data;
     SystemServiceAsm = data->pSystemService;
 
     syscall_data = (UCHAR*)HeapAlloc(GetProcessHeap(), 0, 16384); // enough room for over 2000 syscalls
     if (!syscall_data) {
-        CrashApi_Log(2303, L"win32k, alloc failed (2)");
+        LeafApi_Log(2303, L"win32k, alloc failed (2)");
         goto finish;
     }
 
-    if (!NT_SUCCESS(CrashApi_Call(API_QUERY_SYSCALLS, 2, (ULONG_PTR)syscall_data, 1))) {
-        CrashApi_Log(2303, L"win32k, syscall query failed");
+    if (!NT_SUCCESS(LeafApi_Call(API_QUERY_SYSCALLS, 2, (ULONG_PTR)syscall_data, 1))) {
+        LeafApi_Log(2303, L"win32k, syscall query failed");
         goto finish;
     }
 
@@ -425,7 +425,7 @@ _FX BOOLEAN Win32_HookWin32WoW64()
 		}
 
 	    if ((DWORD64)aCode >= (DWORD64)dll_data + SizeRead) {
-            CrashApi_Log(2303, L"win32k, get first syscall wrapper failed");
+            LeafApi_Log(2303, L"win32k, get first syscall wrapper failed");
             goto finish;
 	    }
 
@@ -461,23 +461,23 @@ _FX BOOLEAN Win32_HookWin32WoW64()
                 // and then restore the original page protection
                 //
 
-                if (!NT_SUCCESS(CrashApi_ProtectVirtualMemory(NtCurrentProcess(), RegionBase, RegionSize, PAGE_EXECUTE_READWRITE, &OldProtect))) {
-                    CrashApi_Log(2303, L"win32k %d (1)", SyscallNum);
+                if (!NT_SUCCESS(LeafApi_ProtectVirtualMemory(NtCurrentProcess(), RegionBase, RegionSize, PAGE_EXECUTE_READWRITE, &OldProtect))) {
+                    LeafApi_Log(2303, L"win32k %d (1)", SyscallNum);
                     goto finish;
                 }
 
-                if (!NT_SUCCESS(CrashApi_WriteVirtualMemory(NtCurrentProcess(), RegionBase, ZwXxxPtr, RegionSize, &SizeRead))) {
-                    CrashApi_Log(2303, L"win32k %d (2)", SyscallNum);
+                if (!NT_SUCCESS(LeafApi_WriteVirtualMemory(NtCurrentProcess(), RegionBase, ZwXxxPtr, RegionSize, &SizeRead))) {
+                    LeafApi_Log(2303, L"win32k %d (2)", SyscallNum);
                     goto finish;
                 }
                 
-                if (!NT_SUCCESS(CrashApi_FlushInstructionCache(NtCurrentProcess(), RegionBase, RegionSize))) {
-                    CrashApi_Log(2303, L"win32k %d (3)", SyscallNum);
+                if (!NT_SUCCESS(LeafApi_FlushInstructionCache(NtCurrentProcess(), RegionBase, RegionSize))) {
+                    LeafApi_Log(2303, L"win32k %d (3)", SyscallNum);
                     goto finish;
                 }
 
-                if (!NT_SUCCESS(CrashApi_ProtectVirtualMemory(NtCurrentProcess(), RegionBase, RegionSize, OldProtect, &OldProtect))) {
-                    CrashApi_Log(2303, L"win32k %d (4)", SyscallNum);
+                if (!NT_SUCCESS(LeafApi_ProtectVirtualMemory(NtCurrentProcess(), RegionBase, RegionSize, OldProtect, &OldProtect))) {
+                    LeafApi_Log(2303, L"win32k %d (4)", SyscallNum);
                     goto finish;
                 }
 
@@ -504,7 +504,7 @@ _FX BOOLEAN Win32_HookWin32WoW64()
         }
 
         if (FuncTable == 0) {
-            CrashApi_Log(2303, L"win32k, wow64win.dll sys call table not found");
+            LeafApi_Log(2303, L"win32k, wow64win.dll sys call table not found");
             goto finish;
         }
 
@@ -550,18 +550,18 @@ _FX BOOLEAN Win32_HookWin32WoW64()
                     // and then restore the original page protection
                     //
 
-                    if (!NT_SUCCESS(CrashApi_ProtectVirtualMemory(NtCurrentProcess(), RegionBase, RegionSize, PAGE_EXECUTE_READWRITE, &OldProtect))) {
-                        CrashApi_Log(2303, L"win32k %d (1)", SyscallNum);
+                    if (!NT_SUCCESS(LeafApi_ProtectVirtualMemory(NtCurrentProcess(), RegionBase, RegionSize, PAGE_EXECUTE_READWRITE, &OldProtect))) {
+                        LeafApi_Log(2303, L"win32k %d (1)", SyscallNum);
                         goto finish;
                     }
 
-                    if (!NT_SUCCESS(CrashApi_WriteVirtualMemory(NtCurrentProcess(), RegionBase, ZwXxxPtr, RegionSize, &SizeRead))) {
-                        CrashApi_Log(2303, L"win32k %d (2)", SyscallNum);
+                    if (!NT_SUCCESS(LeafApi_WriteVirtualMemory(NtCurrentProcess(), RegionBase, ZwXxxPtr, RegionSize, &SizeRead))) {
+                        LeafApi_Log(2303, L"win32k %d (2)", SyscallNum);
                         goto finish;
                     }
 
-                    if (!NT_SUCCESS(CrashApi_ProtectVirtualMemory(NtCurrentProcess(), RegionBase, RegionSize, OldProtect, &OldProtect))) {
-                        CrashApi_Log(2303, L"win32k %d (3)", SyscallNum);
+                    if (!NT_SUCCESS(LeafApi_ProtectVirtualMemory(NtCurrentProcess(), RegionBase, RegionSize, OldProtect, &OldProtect))) {
+                        LeafApi_Log(2303, L"win32k %d (3)", SyscallNum);
                         goto finish;
                     }
                 }
@@ -599,11 +599,11 @@ finish:
 
 
 //---------------------------------------------------------------------------
-// CrashApi_ProtectVirtualMemory
+// LeafApi_ProtectVirtualMemory
 //---------------------------------------------------------------------------
 
 
-NTSTATUS CrashApi_ProtectVirtualMemory(HANDLE hProcess, DWORD64 lpAddress, SIZE_T dwSize, ULONG flNewProtect, ULONG* lpflOldProtect)
+NTSTATUS LeafApi_ProtectVirtualMemory(HANDLE hProcess, DWORD64 lpAddress, SIZE_T dwSize, ULONG flNewProtect, ULONG* lpflOldProtect)
 {
     ULONG64 BaseAddress = lpAddress;
     ULONG64 NumberOfBytesToProtect = dwSize;
@@ -625,17 +625,17 @@ NTSTATUS CrashApi_ProtectVirtualMemory(HANDLE hProcess, DWORD64 lpAddress, SIZE_
     parms[3] = (ULONG64)(ULONG_PTR)"ProtectVirtualMemory";
     parms[4] = (ULONG64)(ULONG_PTR)&syscall_index;
 
-    NTSTATUS status = CrashApi_Ioctl(parms);
+    NTSTATUS status = LeafApi_Ioctl(parms);
     return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_ReadVirtualMemory
+// LeafApi_ReadVirtualMemory
 //---------------------------------------------------------------------------
 
 
-NTSTATUS CrashApi_ReadVirtualMemory(HANDLE hProcess, DWORD64 lpBaseAddress, LPVOID lpBuffer, SIZE_T nSize, ULONG64 *lpNumberOfBytesRead)
+NTSTATUS LeafApi_ReadVirtualMemory(HANDLE hProcess, DWORD64 lpBaseAddress, LPVOID lpBuffer, SIZE_T nSize, ULONG64 *lpNumberOfBytesRead)
 {
     static SHORT syscall_index = 0xFFF;
 
@@ -654,7 +654,7 @@ NTSTATUS CrashApi_ReadVirtualMemory(HANDLE hProcess, DWORD64 lpBaseAddress, LPVO
     parms[3] = (ULONG64)(ULONG_PTR)"ReadVirtualMemory";
     parms[4] = (ULONG64)(ULONG_PTR)&syscall_index;
 
-    NTSTATUS status = CrashApi_Ioctl(parms);
+    NTSTATUS status = LeafApi_Ioctl(parms);
     if (status == STATUS_PARTIAL_COPY)
         status = STATUS_SUCCESS;
     return status;
@@ -662,11 +662,11 @@ NTSTATUS CrashApi_ReadVirtualMemory(HANDLE hProcess, DWORD64 lpBaseAddress, LPVO
 
 
 //---------------------------------------------------------------------------
-// CrashApi_WriteVirtualMemory
+// LeafApi_WriteVirtualMemory
 //---------------------------------------------------------------------------
 
 
-NTSTATUS CrashApi_WriteVirtualMemory(HANDLE hProcess, DWORD64 lpBaseAddress, LPVOID lpBuffer, SIZE_T nSize, ULONG64 *lpNumberOfBytesWritten)
+NTSTATUS LeafApi_WriteVirtualMemory(HANDLE hProcess, DWORD64 lpBaseAddress, LPVOID lpBuffer, SIZE_T nSize, ULONG64 *lpNumberOfBytesWritten)
 {
     static SHORT syscall_index = 0xFFF;
 
@@ -685,17 +685,17 @@ NTSTATUS CrashApi_WriteVirtualMemory(HANDLE hProcess, DWORD64 lpBaseAddress, LPV
     parms[3] = (ULONG64)(ULONG_PTR)"WriteVirtualMemory";
     parms[4] = (ULONG64)(ULONG_PTR)&syscall_index;
 
-    NTSTATUS status = CrashApi_Ioctl(parms);
+    NTSTATUS status = LeafApi_Ioctl(parms);
     return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_FlushInstructionCache
+// LeafApi_FlushInstructionCache
 //---------------------------------------------------------------------------
 
 
-NTSTATUS CrashApi_FlushInstructionCache(HANDLE hProcess, DWORD64 lpBaseAddress, SIZE_T nSize)
+NTSTATUS LeafApi_FlushInstructionCache(HANDLE hProcess, DWORD64 lpBaseAddress, SIZE_T nSize)
 {
     static SHORT syscall_index = 0xFFF;
 
@@ -712,17 +712,17 @@ NTSTATUS CrashApi_FlushInstructionCache(HANDLE hProcess, DWORD64 lpBaseAddress, 
     parms[3] = (ULONG64)(ULONG_PTR)"FlushInstructionCache";
     parms[4] = (ULONG64)(ULONG_PTR)&syscall_index;
 
-    NTSTATUS status = CrashApi_Ioctl(parms);
+    NTSTATUS status = LeafApi_Ioctl(parms);
     return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_QueryVirtualMemory
+// LeafApi_QueryVirtualMemory
 //---------------------------------------------------------------------------
 
 
-NTSTATUS CrashApi_QueryVirtualMemory(HANDLE hProcess, DWORD64 BaseAddress, MEMORY_INFORMATION_CLASS MemoryInformationClass, PVOID MemoryInformation, SIZE_T MemoryInformationLength, PSIZE_T ReturnLength)
+NTSTATUS LeafApi_QueryVirtualMemory(HANDLE hProcess, DWORD64 BaseAddress, MEMORY_INFORMATION_CLASS MemoryInformationClass, PVOID MemoryInformation, SIZE_T MemoryInformationLength, PSIZE_T ReturnLength)
 {
     DWORD64 ReturnLength64 = 0;
 
@@ -744,7 +744,7 @@ NTSTATUS CrashApi_QueryVirtualMemory(HANDLE hProcess, DWORD64 BaseAddress, MEMOR
     parms[3] = (ULONG64)(ULONG_PTR)"QueryVirtualMemory";
     parms[4] = (ULONG64)(ULONG_PTR)&syscall_index;
 
-    NTSTATUS status = CrashApi_Ioctl(parms);
+    NTSTATUS status = LeafApi_Ioctl(parms);
 
     if(ReturnLength) *ReturnLength = (SIZE_T)ReturnLength64;
 

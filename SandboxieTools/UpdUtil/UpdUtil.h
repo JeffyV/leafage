@@ -7,20 +7,20 @@
 #define ADDONS_PATH			"\\addons\\"
 
 
-#define SCOPE_CORE_FILES	L"32\\CrashDll.dll\0"\
-							L"32\\CrashSvc.exe\0"\
-							L"64\\CrashDll.dll\0"\
+#define SCOPE_CORE_FILES	L"32\\LeafDll.dll\0"\
+							L"32\\LeafSvc.exe\0"\
+							L"64\\LeafDll.dll\0"\
 							L"KmdUtil.exe\0"\
 							L"Sandboxie*.exe\0"\
 							L"SbieCtrl.exe\0"\
 							L"SbieIni.exe\0"\
-							L"CrashSvc.exe\0"\
+							L"LeafSvc.exe\0"\
 							L"Start.exe\0"\
-							L"CrashDll.dll\0"\
-							L"CrashHostDll.dll\0"\
-							L"CrashDrv.sys\0"\
+							L"LeafDll.dll\0"\
+							L"LeafHostDll.dll\0"\
+							L"LeafDrv.sys\0"\
 							L"Manifest?.txt\0"
-#define SCOPE_LANG_FILES	L"CrashMsg.dll\0"\
+#define SCOPE_LANG_FILES	L"LeafMsg.dll\0"\
 							L"translations.7z\0"
 #define SCOPE_TMPL_FILES	L"Templates.ini\0"
 

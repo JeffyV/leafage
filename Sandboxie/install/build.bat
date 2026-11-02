@@ -27,22 +27,22 @@ set OBJDIR=obj\amd64
 call :SignFile "core\dll\obj\i386\%SBIEDLL%.dll" "" "+DYNAMIC_BASE"
 
 :SignNow
-c:\work\tools\EditPE\EditPE.exe +FORCE_INTEGRITY "%SRC_ROOT%\core\drv\%OBJDIR%\CrashDrv.sys"
+c:\work\tools\EditPE\EditPE.exe +FORCE_INTEGRITY "%SRC_ROOT%\core\drv\%OBJDIR%\LeafDrv.sys"
 set DRV_FLAG=/ph /ac "%SRC_ROOT%\common\certs\MSCV-GlobalSign.cer"
-call :SignFile "core\drv\%OBJDIR%\CrashDrv.sys" "%DRV_FLAG%"
+call :SignFile "core\drv\%OBJDIR%\LeafDrv.sys" "%DRV_FLAG%"
 
-call :SignFile "msgs\%OBJDIR%\CrashMsg.dll"
+call :SignFile "msgs\%OBJDIR%\LeafMsg.dll"
 call :SignFile "core\dll\%OBJDIR%\%SBIEDLL%.dll" "" "+DYNAMIC_BASE"
-call :SignFile "core\svc\%OBJDIR%\CrashSvc.exe" "" "+DYNAMIC_BASE"
+call :SignFile "core\svc\%OBJDIR%\LeafSvc.exe" "" "+DYNAMIC_BASE"
 call :SignFile "apps\start\%OBJDIR%\Start.exe" "" "+DYNAMIC_BASE"
 call :SignFile "apps\control\%OBJDIR%\SbieCtrl.exe" "" "+DYNAMIC_BASE"
 call :SignFile "apps\license\%OBJDIR%\License.exe" "" "+DYNAMIC_BASE"
 call :SignFile "apps\ini\%OBJDIR%\SbieIni.exe" "" "+DYNAMIC_BASE"
-call :SignFile "apps\com\RpcSs\%OBJDIR%\CrashRpcSs.exe" "" "+DYNAMIC_BASE"
-call :SignFile "apps\com\DcomLaunch\%OBJDIR%\CrashDcomLaunch.exe" "" "+DYNAMIC_BASE"
-call :SignFile "apps\com\Crypto\%OBJDIR%\CrashCrypto.exe" "" "+DYNAMIC_BASE"
-call :SignFile "apps\com\BITS\%OBJDIR%\CrashBITS.exe" "" "+DYNAMIC_BASE"
-call :SignFile "apps\com\WUAU\%OBJDIR%\CrashWUAU.exe" "" "+DYNAMIC_BASE"
+call :SignFile "apps\com\RpcSs\%OBJDIR%\LeafRpcSs.exe" "" "+DYNAMIC_BASE"
+call :SignFile "apps\com\DcomLaunch\%OBJDIR%\LeafDcomLaunch.exe" "" "+DYNAMIC_BASE"
+call :SignFile "apps\com\Crypto\%OBJDIR%\LeafCrypto.exe" "" "+DYNAMIC_BASE"
+call :SignFile "apps\com\BITS\%OBJDIR%\LeafBITS.exe" "" "+DYNAMIC_BASE"
+call :SignFile "apps\com\WUAU\%OBJDIR%\LeafWUAU.exe" "" "+DYNAMIC_BASE"
 call :SignFile "install\kmdutil\%OBJDIR%\KmdUtil.exe" "" "+DYNAMIC_BASE"
 
 goto :PostSign

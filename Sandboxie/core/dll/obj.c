@@ -75,7 +75,7 @@ _FX BOOLEAN Obj_Init(void)
 #endif
 
     if (!Dll_CompartmentMode) // NoDriverAssist
-    obj_use_driver_obj_lookup = CrashApi_QueryConfBool(NULL, L"UseDriverObjLookup", FALSE);
+    obj_use_driver_obj_lookup = LeafApi_QueryConfBool(NULL, L"UseDriverObjLookup", FALSE);
 
     return TRUE;
 }
@@ -149,7 +149,7 @@ _FX NTSTATUS Obj_GetObjectName(
         wchar_t* NameBuf = (UCHAR*)ObjectName + sizeof(OBJECT_NAME_INFORMATION);
         ULONG NameLen = *Length - sizeof(OBJECT_NAME_INFORMATION);
 
-        status = CrashApi_GetFileName(ObjectHandle, NameBuf, &NameLen, NULL);
+        status = LeafApi_GetFileName(ObjectHandle, NameBuf, &NameLen, NULL);
 
         if (NT_SUCCESS(status)) {
             info->Name.Buffer = NameBuf;

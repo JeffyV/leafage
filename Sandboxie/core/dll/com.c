@@ -305,7 +305,7 @@ static const GUID IID_INetFwRule = {
 _FX void Com_LoadClsidList(const WCHAR* setting, GUID** pClsids, ULONG* pNumClsids, const WCHAR* BoxName)
 {
     //
-    // for CrashSvc, re-create the list every time, in case
+    // for LeafSvc, re-create the list every time, in case
     // the configuration was reloaded
     //
     if (BoxName) {
@@ -334,7 +334,7 @@ _FX void Com_LoadClsidList(const WCHAR* setting, GUID** pClsids, ULONG* pNumClsi
 
     counter = 0;
     for (index = 0; ; ++index) {
-        status = CrashApi_QueryConfAsIs(
+        status = LeafApi_QueryConfAsIs(
             BoxName, setting, index, buf, 190 * sizeof(WCHAR));
         if (!NT_SUCCESS(status))
             break;
@@ -365,7 +365,7 @@ _FX void Com_LoadClsidList(const WCHAR* setting, GUID** pClsids, ULONG* pNumClsi
 
         for (index = 0; counter > 0; ++index) {
 
-            status = CrashApi_QueryConfAsIs(
+            status = LeafApi_QueryConfAsIs(
                 BoxName, setting, index, buf, 190 * sizeof(WCHAR));
             if (!NT_SUCCESS(status))
                 break;
@@ -389,7 +389,7 @@ _FX void Com_LoadClsidList(const WCHAR* setting, GUID** pClsids, ULONG* pNumClsi
             guid = &(*pClsids)[index];
 
             if (!__sys_IIDFromString) {
-                // if called from CrashSvc
+                // if called from LeafSvc
                 HMODULE module =
                     GetModuleHandle(DllName_ole32_or_combase);
                 GETPROCADDR_SYS(IIDFromString);
@@ -514,7 +514,7 @@ _FX BOOLEAN Com_IsFirewallClsid(REFCLSID rclsid, const WCHAR *BoxName)
             if (! File_IsBlockedNetParam(BoxName))
                 return TRUE;
             /*if ((! BoxName) && (*(ULONG *)rclsid != 0xE2B3C97F))
-                CrashApi_Log(1314, Dll_ImageName);*/
+                LeafApi_Log(1314, Dll_ImageName);*/
             break;
         }
     }
@@ -959,7 +959,7 @@ _FX BOOLEAN Com_Hook_CoUnmarshalInterface_W8(UCHAR *code, HMODULE module)
 
 #endif _WIN64
 
-    CrashApi_Log(2205, L"CoUnmarshalInterface (W8)");
+    LeafApi_Log(2205, L"CoUnmarshalInterface (W8)");
     return FALSE;
 }
 
@@ -1021,7 +1021,7 @@ _FX HRESULT __fastcall Com_CoUnmarshalInterface_W8(
 
     //
     // first invoke the COM unmarshaller.  it returns OR_INVALID_OXID
-    // when the interface was marshalled in CrashSvc, because CrashSvc
+    // when the interface was marshalled in LeafSvc, because LeafSvc
     // uses a different epmapper than the sandboxed epmapper
     //
 
@@ -1069,7 +1069,7 @@ _FX HRESULT __fastcall Com_CoUnmarshalInterface_W81(
 
     //
     // first invoke the COM unmarshaller.  it returns OR_INVALID_OXID
-    // when the interface was marshalled in CrashSvc, because CrashSvc
+    // when the interface was marshalled in LeafSvc, because LeafSvc
     // uses a different epmapper than the sandboxed epmapper
     //
 
@@ -1107,7 +1107,7 @@ _FX HRESULT Com_CoUnmarshalInterface(
 
     //
     // first invoke the COM unmarshaller.  it returns OR_INVALID_OXID
-    // when the interface was marshalled in CrashSvc, because CrashSvc
+    // when the interface was marshalled in LeafSvc, because LeafSvc
     // uses a different epmapper than the sandboxed epmapper
     //
 
@@ -1174,7 +1174,7 @@ _FX HRESULT Com_CoUnmarshalInterface_Common(
     }
 
     //
-    // construct a request to unmarshal the interface in CrashSvc,
+    // construct a request to unmarshal the interface in LeafSvc,
     // where the real epmapper is accessible
     //
 
@@ -1188,7 +1188,7 @@ _FX HRESULT Com_CoUnmarshalInterface_Common(
 
     //
     // execute request and build our specialized proxy which
-    // can invoke the remote interface unmarshalled in CrashSvc
+    // can invoke the remote interface unmarshalled in LeafSvc
     //
 
     rpl = (COM_UNMARSHAL_INTERFACE_RPL *)SbieDll_CallServer(&req->h);
@@ -1258,7 +1258,7 @@ static HRESULT Com_CoMarshalInterface(
     } else {
 
         //
-        // create a dummy object in CrashSvc, marshal it in CrashSvc,
+        // create a dummy object in LeafSvc, marshal it in LeafSvc,
         // and write the marshal buffer into the stream
         //
 
@@ -1333,7 +1333,7 @@ _FX BOOLEAN Com_Init_ComBase(HMODULE module)
 
     if (SbieDll_IsOpenCOM()
     // DisableComProxy BEGIN
-    || CrashApi_QueryConfBool(NULL, L"DisableComProxy", FALSE))
+    || LeafApi_QueryConfBool(NULL, L"DisableComProxy", FALSE))
     // DisableComProxy END
         Ipc_OpenCOM = TRUE;
     
@@ -1371,7 +1371,7 @@ _FX BOOLEAN Com_Init_ComBase(HMODULE module)
 
     // If there are any ClsidTrace options set, then output this debug string
     WCHAR wsTraceOptions[4];
-    if (CrashApi_QueryConf(NULL, L"ClsidTrace", 0, wsTraceOptions, sizeof(wsTraceOptions)) == STATUS_SUCCESS && wsTraceOptions[0] != L'\0')
+    if (LeafApi_QueryConf(NULL, L"ClsidTrace", 0, wsTraceOptions, sizeof(wsTraceOptions)) == STATUS_SUCCESS && wsTraceOptions[0] != L'\0')
         Com_TraceFlag = TRUE;
 
     if (!__sys_RegOpenKeyExW) {
@@ -1459,7 +1459,7 @@ _FX HRESULT Com_CreateProxyStubFactoryBuffer(
         ||  (! __sys_RegOpenKeyExW)
         ||  (! __sys_RegCloseKey)) {
 
-        CrashApi_Log(2205, L"CreateProxyStubFactoryBuffer");
+        LeafApi_Log(2205, L"CreateProxyStubFactoryBuffer");
         return E_FAIL;
     }
 
@@ -1633,7 +1633,7 @@ _FX HRESULT Com_CreateTypeInfo(REFIID riid, ITypeInfo **pTypeInfo)
         ||  (! __sys_CreateProxyFromTypeInfo)
         ||  (! __sys_CreateStubFromTypeInfo)) {
 
-        CrashApi_Log(2205, L"CreateTypeInfo");
+        LeafApi_Log(2205, L"CreateTypeInfo");
         return E_FAIL;
     }
 
@@ -1874,7 +1874,7 @@ _FX HRESULT SbieDll_ComCreateProxy(
                 *ppUnknown = pUnknown;
 
                 if (! pUnknown)
-                    CrashApi_Log(2205, L"Zero Proxy");
+                    LeafApi_Log(2205, L"Zero Proxy");
 
             } else {
 
@@ -2048,7 +2048,7 @@ _FX HRESULT SbieDll_ComCreateStub(
                     *ppChannel = pChannel;
 
                     if (! pStub)
-                        CrashApi_Log(2205, L"Zero Stub");
+                        LeafApi_Log(2205, L"Zero Stub");
 
                 } else
                     IRpcChannelBuffer_Release(pChannel);
@@ -2225,7 +2225,7 @@ _FX HRESULT Com_IClassFactory_CreateInstance(
     ULONG hr;
 
     if (pUnkOuter)
-        CrashApi_Log(2205, L"IClassFactory::CreateInstance");
+        LeafApi_Log(2205, L"IClassFactory::CreateInstance");
 
     *ppv = NULL;
 
@@ -2276,7 +2276,7 @@ _FX HRESULT Com_IClassFactory_CreateInstance(
 _FX HRESULT Com_IClassFactory_LockServer(
     COM_IUNKNOWN *This, BOOL fLock)
 {
-    CrashApi_Log(2205, L"IClassFactory::LockServer");
+    LeafApi_Log(2205, L"IClassFactory::LockServer");
     return 0;
 }
 
@@ -2316,8 +2316,8 @@ _FX HRESULT Com_IClassFactory_New(
         if (hr != S_OK) {
             Com_Free(rpl);
             if (hr == ERROR_ELEVATION_REQUIRED && StringGUID) {
-                CrashApi_Log(2214, StringGUID);
-                CrashApi_Log(2219, L"%S [%S]", Dll_ImageName, Dll_BoxName);
+                LeafApi_Log(2214, StringGUID);
+                LeafApi_Log(2219, L"%S [%S]", Dll_ImageName, Dll_BoxName);
                 hr = RPC_S_SERVER_UNAVAILABLE;
             }
         }
@@ -2395,7 +2395,7 @@ _FX HRESULT Com_OuterIUnknown_QueryInterface(
         // IID_IStdIdentity is an internal COM interface used by
         // IGlobalInterfaceTable::RegisterInterfaceInGlobal and
         // perhaps other places.  if we issue a "query interface"
-        // request to CrashSvc for this interface, it fails during
+        // request to LeafSvc for this interface, it fails during
         // SbieDll_ComCreateStub and might mess up the proxy object.
         //
 
@@ -2763,7 +2763,7 @@ _FX HRESULT Com_IMarshal_MarshalInterface(
 _FX HRESULT Com_IMarshal_UnmarshalInterface(
     COM_IUNKNOWN *This, IStream *pStm, REFIID riid, void **pv)
 {
-    CrashApi_Log(2205, L"IMarshal::UnmarshalInterface");
+    LeafApi_Log(2205, L"IMarshal::UnmarshalInterface");
     return E_NOTIMPL;
 }
 
@@ -2776,7 +2776,7 @@ _FX HRESULT Com_IMarshal_UnmarshalInterface(
 _FX HRESULT Com_IMarshal_ReleaseMarshalData(
     COM_IUNKNOWN *This, IStream *pStm)
 {
-    CrashApi_Log(2205, L"IMarshal::ReleaseMarshalData");
+    LeafApi_Log(2205, L"IMarshal::ReleaseMarshalData");
     return S_OK;
 }
 
@@ -2789,7 +2789,7 @@ _FX HRESULT Com_IMarshal_ReleaseMarshalData(
 _FX HRESULT Com_IMarshal_DisconnectObject(
     COM_IUNKNOWN *This, ULONG dwReserved)
 {
-    CrashApi_Log(2205, L"IMarshal::DisconnectObject");
+    LeafApi_Log(2205, L"IMarshal::DisconnectObject");
     return S_OK;
 }
 
@@ -3360,7 +3360,7 @@ _FX void Com_Trace2(
     //ptr[1] = L'\0';
     //OutputDebugString(text);
     *ptr = L'\0';
-    CrashApi_MonitorPut2(MONITOR_COMCLASS | monflag, text, FALSE);
+    LeafApi_MonitorPut2(MONITOR_COMCLASS | monflag, text, FALSE);
 
     Com_Free(text);
 }
@@ -3377,7 +3377,7 @@ _FX void Com_Monitor(REFCLSID rclsid, ULONG monflag)
 
         WCHAR text[160];
         Com_Trace_Guid(text, rclsid, L"CLSID");
-        CrashApi_MonitorPut2(MONITOR_COMCLASS | monflag, text, FALSE);
+        LeafApi_MonitorPut2(MONITOR_COMCLASS | monflag, text, FALSE);
     }
 }
 
@@ -3402,7 +3402,7 @@ _FX void Com_LoadRTList(const WCHAR* setting, WCHAR** pNames)
 
     total_len = 1;
     for (index = 0; ; ++index) {
-        status = CrashApi_QueryConfAsIs(
+        status = LeafApi_QueryConfAsIs(
             NULL, setting, index, buf, 190 * sizeof(WCHAR));
         if (!NT_SUCCESS(status))
             break;
@@ -3431,7 +3431,7 @@ _FX void Com_LoadRTList(const WCHAR* setting, WCHAR** pNames)
     cur_pos = 0;
     for (index = 0; total_len > cur_pos; ++index) {
 
-        status = CrashApi_QueryConfAsIs(
+        status = LeafApi_QueryConfAsIs(
             NULL, setting, index, buf, 190 * sizeof(WCHAR));
         if (!NT_SUCCESS(status))
             break;
@@ -3466,7 +3466,7 @@ _FX BOOLEAN Com_IsClosedRT(const wchar_t* strClassId)
     // Even in compartment mode, these things are functional only in combination with open COM
     //
 
-    if (!(Ipc_OpenCOM && Dll_CompartmentMode) && !CrashApi_QueryConfBool(NULL, L"DisableRTBlacklist", FALSE)) {
+    if (!(Ipc_OpenCOM && Dll_CompartmentMode) && !LeafApi_QueryConfBool(NULL, L"DisableRTBlacklist", FALSE)) {
 
         //
         // Chrome uses the FindAppUriHandlersAsync, which fails returning a NULL value when we don't have com open and more rights
@@ -3514,11 +3514,11 @@ _FX HRESULT Com_RoGetActivationFactory(HSTRING activatableClassId, REFIID  iid, 
     const wchar_t* strClassId = __sys_WindowsGetStringRawBuffer(activatableClassId, NULL);
 
     if (Com_IsClosedRT(strClassId)) {
-        CrashApi_MonitorPut2(MONITOR_RTCLASS | MONITOR_DENY, strClassId, FALSE);
+        LeafApi_MonitorPut2(MONITOR_RTCLASS | MONITOR_DENY, strClassId, FALSE);
         return E_ACCESSDENIED;
     }
 
-    CrashApi_MonitorPut2(MONITOR_RTCLASS, strClassId, FALSE);
+    LeafApi_MonitorPut2(MONITOR_RTCLASS, strClassId, FALSE);
     return __sys_RoGetActivationFactory(activatableClassId, iid, factory);
 }
 
@@ -3531,7 +3531,7 @@ _FX HRESULT Com_RoGetActivationFactory(HSTRING activatableClassId, REFIID  iid, 
 _FX HRESULT Com_OuterIUnknown_QueryInterface_NotImpl(
     COM_IUNKNOWN* This, REFIID riid, void** ppv)
 {
-    CrashApi_Log(2205, L"IUnknown::QueryInterface");
+    LeafApi_Log(2205, L"IUnknown::QueryInterface");
     return E_NOTIMPL;
 }
 
@@ -3563,7 +3563,7 @@ _FX HRESULT Com_IClassFactoryEx_CreateInstance(
     COM_IUNKNOWN *pUnknown;
 
     if (pUnkOuter)
-        CrashApi_Log(2205, L"IClassFactory::CreateInstance");
+        LeafApi_Log(2205, L"IClassFactory::CreateInstance");
 
     for (ULONG i = 0; i < ARRAYSIZE(Com_Interfaces); i++) {
 

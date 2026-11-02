@@ -82,7 +82,7 @@ _FX BOOLEAN Gui_InitConsole1(void)
     HMODULE module = Dll_Kernel32;
 
     // NoSbieCons BEGIN
-    if (Dll_CompartmentMode || CrashApi_QueryConfBool(NULL, L"NoSandboxieConsole", FALSE)) {
+    if (Dll_CompartmentMode || LeafApi_QueryConfBool(NULL, L"NoSandboxieConsole", FALSE)) {
 
         //
         // We need to set Gui_ConsoleHwnd in order for Gui_InitConsole2 to start up properly,
@@ -173,7 +173,7 @@ _FX BOOL Gui_ConnectConsole(ULONG ShowFlag)
     // during kernel32.dll initialization, and mark the process with the
     // flag SBIE_FLAG_CREATE_CONSOLE_SHOW or SBIE_FLAG_CREATE_CONSOLE_HIDE.
     //
-    // control then reaches here, where we ask the CrashSvc GUI Proxy to
+    // control then reaches here, where we ask the LeafSvc GUI Proxy to
     // create a console for us, by starting a console helper process, and
     // then we connect to that console using the console helper process id.
     //
@@ -210,7 +210,7 @@ _FX BOOL Gui_ConnectConsole(ULONG ShowFlag)
             if (NT_SUCCESS(status)) {
 
                 //
-                // CrashSvc console helper process was successfully
+                // LeafSvc console helper process was successfully
                 // created, we can now connect to that console
                 //
 
@@ -255,7 +255,7 @@ _FX BOOL Gui_ConnectConsole(ULONG ShowFlag)
     if (! NT_SUCCESS(status)) {
         WCHAR errtxt[48];
         Sbie_snwprintf(errtxt, 48, L"ConsoleInit (%08X)", status);
-        CrashApi_Log(2205, errtxt);
+        LeafApi_Log(2205, errtxt);
         return FALSE;
     }
 
@@ -288,7 +288,7 @@ _FX void Gui_InitConsole2(void)
     //
     // hack:  the Kaspersky process klwtblfs.exe is protected from
     // termination through TerminateProcess, so make sure we terminate
-    // voluntarily when the parent ends (typically CrashDcomLaunch)
+    // voluntarily when the parent ends (typically LeafDcomLaunch)
     //
 
     if (_wcsicmp(Dll_ImageName, L"klwtblfs.exe") == 0) {

@@ -86,7 +86,7 @@ public:
 	CFileView*			GetFileView() { return m_pFileView; }
 
 	QString				FormatSbieMessage(quint32 MsgCode, const QStringList& MsgData, QString ProcessName, QString* pLink = NULL);
-	QString				MakeCrashMsgLink(quint32 MsgCode, const QStringList& MsgData, QString ProcessName);
+	QString				MakeLeafMsgLink(quint32 MsgCode, const QStringList& MsgData, QString ProcessName);
 
 	static void			SafeShow(QWidget* pWidget);
 	int					SafeExec(QDialog* pDialog);
@@ -171,13 +171,13 @@ protected:
 
 	bool				m_ImDiskReady;
 
-	struct SCrashMsg {
+	struct SLeafMsg {
 		QDateTime TimeStamp;
 		quint32 MsgCode;
 		QStringList MsgData;
 		QString ProcessName;
 	};
-	QVector<SCrashMsg>	m_MessageLog;
+	QVector<SLeafMsg>	m_MessageLog;
 
 public slots:
 	void				OnBoxSelected();

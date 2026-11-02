@@ -4218,8 +4218,8 @@ This file is part of Sandboxie and all change done to it will be reverted next t
     </message>
     <message>
         <location filename="SandMan.cpp" line="4471"/>
-        <source>Sandboxie-Plus is an open source continuation of Sandboxie.&lt;br /&gt;Visit &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; for more information.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Features: %3&lt;br /&gt;&lt;br /&gt;Installation: %1&lt;br /&gt;CrashDrv.sys: %4&lt;br /&gt; CrashSvc.exe: %5&lt;br /&gt; CrashDll.dll: %6&lt;br /&gt;&lt;br /&gt;Icons from &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</source>
-        <translation>Sandboxie-Plus, Sandboxie&apos;nin açık kaynaklı bir devamıdır.&lt;br /&gt;Daha fazla bilgi için &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; adresini ziyaret ediniz.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Özellikler: %3&lt;br /&gt;&lt;br /&gt;Kurulum: %1&lt;br /&gt;CrashDrv.sys: %4&lt;br /&gt; CrashSvc.exe: %5&lt;br /&gt; CrashDll.dll: %6&lt;br /&gt;&lt;br /&gt;Simgeler için &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</translation>
+        <source>Sandboxie-Plus is an open source continuation of Sandboxie.&lt;br /&gt;Visit &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; for more information.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Features: %3&lt;br /&gt;&lt;br /&gt;Installation: %1&lt;br /&gt;LeafDrv.sys: %4&lt;br /&gt; LeafSvc.exe: %5&lt;br /&gt; LeafDll.dll: %6&lt;br /&gt;&lt;br /&gt;Icons from &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</source>
+        <translation>Sandboxie-Plus, Sandboxie&apos;nin açık kaynaklı bir devamıdır.&lt;br /&gt;Daha fazla bilgi için &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; adresini ziyaret ediniz.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Özellikler: %3&lt;br /&gt;&lt;br /&gt;Kurulum: %1&lt;br /&gt;LeafDrv.sys: %4&lt;br /&gt; LeafSvc.exe: %5&lt;br /&gt; LeafDll.dll: %6&lt;br /&gt;&lt;br /&gt;Simgeler için &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="SandMan.cpp" line="3569"/>
@@ -8547,8 +8547,8 @@ Bu, korumalı alan içindeki haydut işlemlerin kendilerinin yeniden adlandırı
     </message>
     <message>
         <location filename="Forms/OptionsWindow.ui" line="4517"/>
-        <source>Sandboxie&apos;s functionality can be enhanced by using optional DLLs which can be loaded into each sandboxed process on start by the CrashDll.dll file, the add-on manager in the global settings offers a couple of useful extensions, once installed they can be enabled here for the current box.</source>
-        <translation>Sandboxie&apos;nin işlevselliği, korumalı alanda herhangi bir işlem başlatıldığında CrashDll.dll tarafından ona yüklenebilen, isteğe bağlı DLL&apos;ler kullanılarak genişletilebilir. Genel ayarlardaki Eklenti Yöneticisinde bazı yararlı uzantılar sunulmaktadır. Bunlar kurulduktan sonra geçerli korumalı alan için buradan etkinleştirilebilirler.</translation>
+        <source>Sandboxie&apos;s functionality can be enhanced by using optional DLLs which can be loaded into each sandboxed process on start by the LeafDll.dll file, the add-on manager in the global settings offers a couple of useful extensions, once installed they can be enabled here for the current box.</source>
+        <translation>Sandboxie&apos;nin işlevselliği, korumalı alanda herhangi bir işlem başlatıldığında LeafDll.dll tarafından ona yüklenebilen, isteğe bağlı DLL&apos;ler kullanılarak genişletilebilir. Genel ayarlardaki Eklenti Yöneticisinde bazı yararlı uzantılar sunulmaktadır. Bunlar kurulduktan sonra geçerli korumalı alan için buradan etkinleştirilebilirler.</translation>
     </message>
     <message>
         <location filename="Forms/OptionsWindow.ui" line="1876"/>

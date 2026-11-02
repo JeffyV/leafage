@@ -53,8 +53,8 @@ Sandboxie Classic builds under Visual Studio 2019, as it offers the widest compa
 
 [SboxDrv (\core\drv)](./core/drv). It creates the Sbie kernel-mode driver.
 
-[CrashHostDll (\CrashHostDll)](./CrashHostDll). It builds the Sbie host injection DLL, which is injected into host processes that must be redirected into the sandbox.
-Currently, the only app this is used for is MS Office. CrashHostDll.dll is injected into OfficeClickToRun.exe.
+[LeafHostDll (\LeafHostDll)](./LeafHostDll). It builds the Sbie host injection DLL, which is injected into host processes that must be redirected into the sandbox.
+Currently, the only app this is used for is MS Office. LeafHostDll.dll is injected into OfficeClickToRun.exe.
 
 [SboxMsg (\msgs)](./msgs). It creates SboxMsg.dll, which contains the Sbie user messages in various languages.
 

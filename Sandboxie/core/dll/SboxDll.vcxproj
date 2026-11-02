@@ -126,43 +126,43 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieDebug|Win32'">
     <TargetExt>.dll</TargetExt>
-    <TargetName>CrashDll</TargetName>
+    <TargetName>LeafDll</TargetName>
     <LibraryPath>$(WindowsSDK_LibraryPath_x86)</LibraryPath>
     <LinkIncremental />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieDebug|x64'">
     <TargetExt>.dll</TargetExt>
-    <TargetName>CrashDll</TargetName>
+    <TargetName>LeafDll</TargetName>
     <LibraryPath>$(WindowsSDK_LibraryPath_x64)</LibraryPath>
     <LinkIncremental />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieDebug|ARM64EC'">
     <TargetExt>.dll</TargetExt>
-    <TargetName>CrashDll</TargetName>
+    <TargetName>LeafDll</TargetName>
     <LinkIncremental />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieDebug|ARM64'">
     <TargetExt>.dll</TargetExt>
-    <TargetName>CrashDll</TargetName>
+    <TargetName>LeafDll</TargetName>
     <LinkIncremental />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|Win32'">
     <TargetExt>.dll</TargetExt>
-    <TargetName>CrashDll</TargetName>
+    <TargetName>LeafDll</TargetName>
     <LibraryPath>$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|x64'">
     <TargetExt>.dll</TargetExt>
-    <TargetName>CrashDll</TargetName>
+    <TargetName>LeafDll</TargetName>
     <LibraryPath>$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|ARM64EC'">
     <TargetExt>.dll</TargetExt>
-    <TargetName>CrashDll</TargetName>
+    <TargetName>LeafDll</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|ARM64'">
     <TargetExt>.dll</TargetExt>
-    <TargetName>CrashDll</TargetName>
+    <TargetName>LeafDll</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SbieDebug|Win32'">
     <ClCompile>

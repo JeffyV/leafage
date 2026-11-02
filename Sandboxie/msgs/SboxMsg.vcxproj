@@ -54,21 +54,21 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|Win32'">
     <TargetExt>.dll</TargetExt>
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
-    <TargetName>CrashMsg</TargetName>
+    <TargetName>LeafMsg</TargetName>
     <IntDir>Msg$(Configuration)\</IntDir>
     <IncludePath>$(ProjectDir)\$(Configuration);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|x64'">
     <TargetExt>.dll</TargetExt>
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
-    <TargetName>CrashMsg</TargetName>
+    <TargetName>LeafMsg</TargetName>
     <IntDir>$(Platform)\Msg$(Configuration)\</IntDir>
     <IncludePath>$(ProjectDir)\$(Configuration);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|ARM64'">
     <TargetExt>.dll</TargetExt>
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
-    <TargetName>CrashMsg</TargetName>
+    <TargetName>LeafMsg</TargetName>
     <IntDir>$(Platform)\Msg$(Configuration)\</IntDir>
     <IncludePath>$(ProjectDir)\$(Configuration);$(IncludePath)</IncludePath>
   </PropertyGroup>

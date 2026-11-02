@@ -686,10 +686,10 @@ void *ComServer::LockSlave(HANDLE idProcess, ULONG msgid)
 
     //
     // identify the calling sandboxed program so we can select or
-    // create the proper CrashSvc proxy COM server for it
+    // create the proper LeafSvc proxy COM server for it
     //
 
-    LONG rc = CrashApi_QueryProcess(
+    LONG rc = LeafApi_QueryProcess(
                     idProcess, u.s.boxname, NULL, u.s.sid, &session_id);
     if (rc != 0)
         return NULL;
@@ -928,7 +928,7 @@ RetryLockSlave:
         STARTUPINFO si;
         PROCESS_INFORMATION pi;
 
-        const WCHAR *_CrashSvc_Exe =
+        const WCHAR *_LeafSvc_Exe =
 #ifdef _WIN64
                         IsWow64 ? L"32\\" SBIESVC_EXE : SBIESVC_EXE;
 #else ! _WIN64
@@ -937,7 +937,7 @@ RetryLockSlave:
 
         wsprintf(u.path, _tmpl, slave->SidString, slave->BoxName,
                                 slave->SessionId, slave->IsWow64, L":");
-        ok = SbieDll_RunFromHome(_CrashSvc_Exe, u.path, &si, NULL);
+        ok = SbieDll_RunFromHome(_LeafSvc_Exe, u.path, &si, NULL);
         if (! ok) {
             error = 0x20;
             goto slave_create_done;
@@ -1306,7 +1306,7 @@ void ComServer::DeleteAllSlaves()
 
 void ComServer::LogErr(ULONG session, ULONG n1, ULONG n2)
 {
-    CrashApi_LogEx(session, 2327, L"[%02X / %d]", n1, n2);
+    LeafApi_LogEx(session, 2327, L"[%02X / %d]", n1, n2);
 }
 
 
@@ -1345,7 +1345,7 @@ void ComServer::RunSlave(const WCHAR *cmdline)
     } __debugbreak();*/
 
     //
-    // locate IPC objects set up by the parent process CrashSvc
+    // locate IPC objects set up by the parent process LeafSvc
     //
 
     if (wcslen(cmdline) > 128)
@@ -1355,7 +1355,7 @@ void ComServer::RunSlave(const WCHAR *cmdline)
 
         //
         // this is a request to run a simulated COM server,
-        // rather than a proxy slave for CrashSvc ComServer
+        // rather than a proxy slave for LeafSvc ComServer
         //
         // see also Custom_ComServer in core/dll/custom.c
         // and core/svc/ProcessServer.cpp
@@ -1430,7 +1430,7 @@ void ComServer::RunSlave(const WCHAR *cmdline)
     while (1) {
 
         //
-        // wait for a request or for the parent process CrashSvc to end
+        // wait for a request or for the parent process LeafSvc to end
         // (would get STATUS_ABANDONED on the mutex object)
         //
 
@@ -2025,7 +2025,7 @@ void ComServer::InvokeMethodSlave(void *_map, LIST *ObjectsList,
             //
             // issue error if IWbemServices method is not approved
             //
-            CrashApi_Log(2205, L"WMI IWbemServices %d", pMap->ProcNum);
+            LeafApi_Log(2205, L"WMI IWbemServices %d", pMap->ProcNum);
             *hr = 0x80041003;   // WBEM_E_ACCESS_DENIED
             return;
         }
@@ -2614,14 +2614,14 @@ BOOLEAN ComServer::CheckWmiExecMethod(UCHAR *BufPtr, ULONG BufLen)
             }
 
         if (! ok) {
-            CrashApi_Log(2205, L"WMI %S", CombinedName);
+            LeafApi_Log(2205, L"WMI %S", CombinedName);
             logged = TRUE;
         }
 
     } while (0);
 
     if ((! ok) && (! logged)) {
-        CrashApi_Log(2205, L"WMI ExecMethod Error");
+        LeafApi_Log(2205, L"WMI ExecMethod Error");
 #ifdef DEBUG_COMSERVER
         while (! IsDebuggerPresent()) Sleep(500);
         __debugbreak();

@@ -62,20 +62,20 @@ Name: "InstallImDisk"; Description: "{cm:InstallImDisk}"; MinVersion: 0.0,5.0; F
 Source: ".\Release\{#MyAppSrc}\*"; DestDir: "{app}"; MinVersion: 0.0,5.0; Flags: recursesubdirs ignoreversion; Excludes: "*.pdb"
 
 ; Include the .pdb files for all builds.
-Source: ".\Release\{#MyAppSrc}\CrashDrv.pdb"; DestDir: "{app}"; MinVersion: 0.0,5.0; Flags: ignoreversion
-Source: ".\Release\{#MyAppSrc}\CrashDll.pdb"; DestDir: "{app}"; MinVersion: 0.0,5.0; Flags: ignoreversion
+Source: ".\Release\{#MyAppSrc}\LeafDrv.pdb"; DestDir: "{app}"; MinVersion: 0.0,5.0; Flags: ignoreversion
+Source: ".\Release\{#MyAppSrc}\LeafDll.pdb"; DestDir: "{app}"; MinVersion: 0.0,5.0; Flags: ignoreversion
 
 ; Include 32-bit .pdb file only in x64 and ARM64 builds.
 #if MyAppArch == "x64"
-Source: ".\Release\{#MyAppSrc}\32\CrashDll.pdb"; DestDir: "{app}\32\"; MinVersion: 0.0,5.0; Flags: ignoreversion
+Source: ".\Release\{#MyAppSrc}\32\LeafDll.pdb"; DestDir: "{app}\32\"; MinVersion: 0.0,5.0; Flags: ignoreversion
 #endif
 #if MyAppArch == "arm64"
-Source: ".\Release\{#MyAppSrc}\32\CrashDll.pdb"; DestDir: "{app}\32\"; MinVersion: 0.0,5.0; Flags: ignoreversion
+Source: ".\Release\{#MyAppSrc}\32\LeafDll.pdb"; DestDir: "{app}\32\"; MinVersion: 0.0,5.0; Flags: ignoreversion
 #endif
 
 ; Include 64-bit .pdb file only in ARM64 builds.
 #if MyAppArch == "arm64"
-Source: ".\Release\{#MyAppSrc}\64\CrashDll.pdb"; DestDir: "{app}\64\"; MinVersion: 0.0,5.0; Flags: ignoreversion
+Source: ".\Release\{#MyAppSrc}\64\LeafDll.pdb"; DestDir: "{app}\64\"; MinVersion: 0.0,5.0; Flags: ignoreversion
 #endif
 
 ; Always deploy the config next to the binaries. The driver probes the program
@@ -111,8 +111,8 @@ Filename: "{app}\{#MyAppName}.ini"; Section: "Options"; Key: "UiLanguage"; Strin
 [InstallDelete]
 ; Delete obsolete files and folders as the first step of installation.
 Type: filesandordirs; Name: "{app}\translations"
-Type: files; Name: "{app}\CrashDrv.sys.w10"
-Type: files; Name: "{app}\CrashDrv.sys.rc4"
+Type: files; Name: "{app}\LeafDrv.sys.w10"
+Type: files; Name: "{app}\LeafDrv.sys.rc4"
 Type: files; Name: "{app}\SbieIni.exe.sig"
 Type: files; Name: "{app}\libcrypto-1_1-x64.dll"
 Type: files; Name: "{app}\libssl-1_1-x64.dll"
@@ -147,21 +147,21 @@ Type: files; Name: "{app}\Qt5WinExtras.dll"
 ;Root: HKCU; Subkey: "Software\Classes\Folder\shell\sandbox\command"; ValueName: ""; ValueType: string; ValueData: """{app}\SandMan.exe"" /box:__ask__ ""%1"" %*"; Tasks: AddRunSandboxed
 
 ; External manifest for Sbie service.
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\CrashSvc"; ValueName: "PreferExternalManifest"; ValueType: dword; ValueData: "1"; Check: not IsPortable
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\LeafSvc"; ValueName: "PreferExternalManifest"; ValueType: dword; ValueData: "1"; Check: not IsPortable
 
 ; Set language for Sbie service.
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\CrashSvc"; ValueType: dword; ValueName: "Language"; ValueData: "{code:SystemLanguage}"; Check: not IsPortable
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\LeafSvc"; ValueType: dword; ValueName: "Language"; ValueData: "{code:SystemLanguage}"; Check: not IsPortable
 
 ; Set IniPath for Sbie driver.
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\CrashDrv"; ValueType: string; ValueName: "IniPath"; ValueData: "{code:GetIniPath}"; Check: IsUpgrade and IsIniPathSet
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\LeafDrv"; ValueType: string; ValueName: "IniPath"; ValueData: "{code:GetIniPath}"; Check: IsUpgrade and IsIniPathSet
 
 
 [Run]
 ; Install the Sbie driver.
-Filename: "{app}\KmdUtil.exe"; Parameters: "install CrashDrv ""{app}\CrashDrv.sys"" type=kernel start=demand msgfile=""{app}\CrashMsg.dll"" altitude=86900"; StatusMsg: "KmdUtil install CrashDrv..."; Check: not IsPortable
+Filename: "{app}\KmdUtil.exe"; Parameters: "install LeafDrv ""{app}\LeafDrv.sys"" type=kernel start=demand msgfile=""{app}\LeafMsg.dll"" altitude=86900"; StatusMsg: "KmdUtil install LeafDrv..."; Check: not IsPortable
 
 ; Install the Sbie service.
-Filename: "{app}\KmdUtil.exe"; Parameters: "install CrashSvc ""{app}\CrashSvc.exe"" type=own start=auto msgfile=""{app}\CrashMsg.dll"" display=""Sandboxie Service"" group=UIGroup"; StatusMsg: "KmdUtil install CrashSvc..."; Check: not IsPortable
+Filename: "{app}\KmdUtil.exe"; Parameters: "install LeafSvc ""{app}\LeafSvc.exe"" type=own start=auto msgfile=""{app}\LeafMsg.dll"" display=""Sandboxie Service"" group=UIGroup"; StatusMsg: "KmdUtil install LeafSvc..."; Check: not IsPortable
 
 ; Update metadata (templates and translations)
 Filename: "{app}\UpdUtil.exe"; Parameters: {code:GetParams}; StatusMsg: "UpdUtill checking for updates..."; Check: IsRefresh
@@ -172,7 +172,7 @@ Filename: "{app}\imdisk_install.bat"; StatusMsg: "Installing ImDisk 3.0 Driver..
 #endif
 
 ; Start the Sbie service.
-Filename: "{app}\KmdUtil.exe"; Parameters: "start CrashSvc"; StatusMsg: "KmdUtil start CrashSvc"; Check: not IsPortable
+Filename: "{app}\KmdUtil.exe"; Parameters: "start LeafSvc"; StatusMsg: "KmdUtil start LeafSvc"; Check: not IsPortable
 
 ; Start the Sandman UI.
 Filename: "{app}\Start.exe"; Parameters: "open_agent:sandman.exe"; Description: "Start Sandboxie-Plus UI"; StatusMsg: "Launch SandMan UI..."; Flags: postinstall nowait; Check: IsOpenSandMan
@@ -261,7 +261,7 @@ begin
     if (ExpandConstant('{param:portable|0}') = '1') or Portable then begin
       SbiePath := ExpandConstant('{src}') + '\{#MyAppName}';
     end else begin
-      if RegQueryStringValue(HKLM, 'SYSTEM\CurrentControlSet\Services\CrashDrv', 'ImagePath', DrvPath) then begin
+      if RegQueryStringValue(HKLM, 'SYSTEM\CurrentControlSet\Services\LeafDrv', 'ImagePath', DrvPath) then begin
         IsInstalled := True;
         DrvPath := ExtractFilePath(DrvPath);
 
@@ -367,23 +367,23 @@ begin
     end;
 
     // Stop service and driver.
-    UpdateStatus(OutputProgressPage, 'KmdUtil stop CrashSvc', 55);
-    Exec(ExpandConstant('{app}\KmdUtil.exe'), 'stop CrashSvc', '', SW_SHOWNORMAL, ewWaitUntilTerminated, ExecRet);
+    UpdateStatus(OutputProgressPage, 'KmdUtil stop LeafSvc', 55);
+    Exec(ExpandConstant('{app}\KmdUtil.exe'), 'stop LeafSvc', '', SW_SHOWNORMAL, ewWaitUntilTerminated, ExecRet);
 
-    UpdateStatus(OutputProgressPage, 'KmdUtil stop CrashDrv', 85);
-    Exec(ExpandConstant('{app}\KmdUtil.exe'), 'stop CrashDrv', '', SW_SHOWNORMAL, ewWaitUntilTerminated, ExecRet);
+    UpdateStatus(OutputProgressPage, 'KmdUtil stop LeafDrv', 85);
+    Exec(ExpandConstant('{app}\KmdUtil.exe'), 'stop LeafDrv', '', SW_SHOWNORMAL, ewWaitUntilTerminated, ExecRet);
 
     // Uninstall service and driver.
-    UpdateStatus(OutputProgressPage, 'KmdUtil delete CrashSvc', 95);
-    Exec(ExpandConstant('{app}\KmdUtil.exe'), 'delete CrashSvc', '', SW_SHOWNORMAL, ewWaitUntilTerminated, ExecRet);
+    UpdateStatus(OutputProgressPage, 'KmdUtil delete LeafSvc', 95);
+    Exec(ExpandConstant('{app}\KmdUtil.exe'), 'delete LeafSvc', '', SW_SHOWNORMAL, ewWaitUntilTerminated, ExecRet);
 
-    UpdateStatus(OutputProgressPage, 'KmdUtil delete CrashDrv', 100);
-    Exec(ExpandConstant('{app}\KmdUtil.exe'), 'delete CrashDrv', '', SW_SHOWNORMAL, ewWaitUntilTerminated, ExecRet);
+    UpdateStatus(OutputProgressPage, 'KmdUtil delete LeafDrv', 100);
+    Exec(ExpandConstant('{app}\KmdUtil.exe'), 'delete LeafDrv', '', SW_SHOWNORMAL, ewWaitUntilTerminated, ExecRet);
 
-    // Query driver which can remove CrashDrv key if exist.
-    if RegKeyExists(HKLM, 'SYSTEM\CurrentControlSet\services\CrashDrv') then begin
-      UpdateStatus(OutputProgressPage, 'SC query CrashDrv', 100);
-      Exec(ExpandConstant('{sys}\sc.exe'), 'query CrashDrv', '', SW_HIDE, ewWaitUntilTerminated, ExecRet);
+    // Query driver which can remove LeafDrv key if exist.
+    if RegKeyExists(HKLM, 'SYSTEM\CurrentControlSet\services\LeafDrv') then begin
+      UpdateStatus(OutputProgressPage, 'SC query LeafDrv', 100);
+      Exec(ExpandConstant('{sys}\sc.exe'), 'query LeafDrv', '', SW_HIDE, ewWaitUntilTerminated, ExecRet);
     end;
   finally
 
@@ -529,7 +529,7 @@ begin
   begin
 
     // Return the path to use for the value of IniPath.
-    if RegQueryStringValue(HKLM, 'SYSTEM\CurrentControlSet\Services\CrashDrv', 'IniPath', IniPath) then
+    if RegQueryStringValue(HKLM, 'SYSTEM\CurrentControlSet\Services\LeafDrv', 'IniPath', IniPath) then
     begin
       if Copy(IniPath, 1, 4) = '\??\' then
       begin

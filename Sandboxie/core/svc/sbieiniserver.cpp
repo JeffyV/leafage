@@ -123,7 +123,7 @@ MSG_HEADER *SbieIniServer::Handler2(MSG_HEADER *msg)
     m_session_id = PipeServer::GetCallerSessionId();
 
     NTSTATUS status =
-                CrashApi_QueryProcess(idProcess, NULL, NULL, NULL, NULL);
+                LeafApi_QueryProcess(idProcess, NULL, NULL, NULL, NULL);
 
     if (msg->msgid == MSGID_SBIE_INI_RUN_SBIE_CTRL) {
 
@@ -232,7 +232,7 @@ MSG_HEADER *SbieIniServer::Handler2(MSG_HEADER *msg)
             status = RefreshConf();
 
         if (status == STATUS_INSUFFICIENT_RESOURCES)
-            CrashApi_LogEx(m_session_id, 2305, NULL);
+            LeafApi_LogEx(m_session_id, 2305, NULL);
 
         return SHORT_REPLY(status);
     }
@@ -250,7 +250,7 @@ MSG_HEADER *SbieIniServer::Handler2(MSG_HEADER *msg)
             status = RefreshConf();
 
         if (status == STATUS_INSUFFICIENT_RESOURCES)
-            CrashApi_LogEx(m_session_id, 2305, NULL);
+            LeafApi_LogEx(m_session_id, 2305, NULL);
 
         return SHORT_REPLY(status);
     }
@@ -292,7 +292,7 @@ MSG_HEADER *SbieIniServer::Handler2(MSG_HEADER *msg)
         status = RefreshConf();
 
     if (status == STATUS_INSUFFICIENT_RESOURCES)
-        CrashApi_LogEx(m_session_id, 2305, NULL);
+        LeafApi_LogEx(m_session_id, 2305, NULL);
 
     return SHORT_REPLY(status);
 }
@@ -507,7 +507,7 @@ bool SbieIniServer::SetUserSettingsSectionName(HANDLE hToken, WCHAR* m_username,
 
     const WCHAR *_portable = L"UserSettings_Portable";
 
-    NTSTATUS status = CrashApi_QueryConfAsIs(
+    NTSTATUS status = LeafApi_QueryConfAsIs(
                         _portable, NULL, 0, info.value, sizeof(info.value));
     if (status == STATUS_SUCCESS || status == STATUS_BUFFER_TOO_SMALL) {
 
@@ -712,7 +712,7 @@ finish:
         CryptReleaseContext(hCryptProv, 0);
 
     if (! ok) {
-        CrashApi_LogEx(
+        LeafApi_LogEx(
             m_session_id, 2323, L"[%d / %08X]", ErrorLevel, LastError);
     }
 
@@ -733,7 +733,7 @@ ULONG SbieIniServer::IsCallerAuthorized(HANDLE hToken, const WCHAR *Password, co
     // check for Administrator-only access
     //
 
-    if (CrashApi_QueryConfBool(Section, L"EditAdminOnly", FALSE)) {
+    if (LeafApi_QueryConfBool(Section, L"EditAdminOnly", FALSE)) {
 
         if (! TokenIsAdmin(hToken)) {
             CloseHandle(hToken);
@@ -746,7 +746,7 @@ ULONG SbieIniServer::IsCallerAuthorized(HANDLE hToken, const WCHAR *Password, co
     //
 
     buf[41] = L'\0';
-    CrashApi_QueryConfAsIs(
+    LeafApi_QueryConfAsIs(
         NULL, L"EditPassword", 0, buf, 41 * sizeof(WCHAR));
     if (! buf[0])
         return STATUS_SUCCESS;
@@ -863,7 +863,7 @@ ULONG SbieIniServer::CacheConfig()
     if (attrs == INVALID_FILE_ATTRIBUTES) {
         ULONG LastError = GetLastError();
         if (LastError != ERROR_FILE_NOT_FOUND) {
-            CrashApi_LogEx(m_session_id, 2322, L"[21 / %d]", LastError);
+            LeafApi_LogEx(m_session_id, 2322, L"[21 / %d]", LastError);
             goto finish;
         }
     }
@@ -876,7 +876,7 @@ ULONG SbieIniServer::CacheConfig()
             FILE_ATTRIBUTE_OFFLINE);
 
         if (attrs & CONFLICTING_ATTRS) {
-            CrashApi_LogEx(m_session_id, 2322, L"[22 / %d]", GetLastError());
+            LeafApi_LogEx(m_session_id, 2322, L"[22 / %d]", GetLastError());
             goto finish;
         }
     }
@@ -890,7 +890,7 @@ ULONG SbieIniServer::CacheConfig()
 	m_pSbieIni = new CIniFile();
     status = m_pSbieIni->LoadIni(IniPath);
     if (!NT_SUCCESS(status)) {
-        CrashApi_LogEx(m_session_id, 2322, L"[99 / 0x%08X]", status);
+        LeafApi_LogEx(m_session_id, 2322, L"[99 / 0x%08X]", status);
     }
 
     m_iniStamp = 0;
@@ -1220,7 +1220,7 @@ ULONG SbieIniServer::RefreshConf()
         ULONG LastError = GetLastError();
         attrs = 0;
         if (LastError != ERROR_FILE_NOT_FOUND) {
-            CrashApi_LogEx(m_session_id, 2322, L"[11 / %d]", LastError);
+            LeafApi_LogEx(m_session_id, 2322, L"[11 / %d]", LastError);
             goto finish;
         }
     }
@@ -1232,7 +1232,7 @@ ULONG SbieIniServer::RefreshConf()
                                         FILE_ATTRIBUTE_OFFLINE);
 
     if (attrs & CONFLICTING_ATTRS) {
-        CrashApi_LogEx(m_session_id, 2322, L"[12 / %d]", GetLastError());
+        LeafApi_LogEx(m_session_id, 2322, L"[12 / %d]", GetLastError());
         attrs = 0;
         goto finish;
     }
@@ -1243,7 +1243,7 @@ ULONG SbieIniServer::RefreshConf()
 
     if (attrs & REMOVABLE_ATTRS) {
         if (! SetFileAttributes(IniPath, attrs & ~REMOVABLE_ATTRS)) {
-            CrashApi_LogEx(m_session_id, 2322, L"[13 / %d]", GetLastError());
+            LeafApi_LogEx(m_session_id, 2322, L"[13 / %d]", GetLastError());
             goto finish;
         }
     }
@@ -1267,7 +1267,7 @@ ULONG SbieIniServer::RefreshConf()
     }
     else {
         if (GetLastError() != ERROR_FILE_NOT_FOUND) {
-            CrashApi_LogEx(m_session_id, 2322, L"[14 / %d]", GetLastError());
+            LeafApi_LogEx(m_session_id, 2322, L"[14 / %d]", GetLastError());
             goto finish;
         }
     }
@@ -1280,20 +1280,20 @@ ULONG SbieIniServer::RefreshConf()
 
     status = m_pSbieIni->SaveIni(IniPath);
     if (!NT_SUCCESS(status)) {
-        CrashApi_LogEx(m_session_id, 2322, L"[99 / 0x%08X]", status);
+        LeafApi_LogEx(m_session_id, 2322, L"[99 / 0x%08X]", status);
     }
 
     //
     // apply new Sandboxie.ini into the driver
     //
 
-    status = CrashApi_ReloadConf(m_session_id, 0);
+    status = LeafApi_ReloadConf(m_session_id, 0);
 
 finish:
 
     if ((! NT_SUCCESS(status)) && RestoreOnError) {
         if (! CopyFile(TmpPath, IniPath, FALSE))
-            CrashApi_LogEx(m_session_id, 2322, L"[18 / %d]", GetLastError());
+            LeafApi_LogEx(m_session_id, 2322, L"[18 / %d]", GetLastError());
     }
 
     if (attrs & REMOVABLE_ATTRS)
@@ -1326,7 +1326,7 @@ bool SbieIniServer::GetIniPath(WCHAR **IniPath, BOOLEAN *IsHomePath)
     // program home directory or from the Windows directory, and
     // we use that information to select the output path
 
-    LONG rc = CrashApi_QueryConfAsIs(NULL, L"IniLocation", 0, path, 260 * sizeof(WCHAR));
+    LONG rc = LeafApi_QueryConfAsIs(NULL, L"IniLocation", 0, path, 260 * sizeof(WCHAR));
     if (rc == 0 && *path == L'\\') {
 
         if (wcsnicmp(path, L"\\??\\", 4) == 0)
@@ -1381,7 +1381,7 @@ void SbieIniServer::LockConf(WCHAR *IniPath)
     if (m_hLockFile != INVALID_HANDLE_VALUE)
         return;
 
-    rc = CrashApi_QueryConfAsIs(NULL, L"EditPassword", 0, buf, sizeof(buf));
+    rc = LeafApi_QueryConfAsIs(NULL, L"EditPassword", 0, buf, sizeof(buf));
     if (rc != 0) {
         m_hLockFile = INVALID_HANDLE_VALUE;
         return;
@@ -1457,7 +1457,7 @@ MSG_HEADER *SbieIniServer::RunSbieCtrl(MSG_HEADER *msg, HANDLE idProcess, bool i
     if (ok) {
 
         HANDLE SbieCtrlProcessId;
-        CrashApi_SessionLeader(m_session_id, &SbieCtrlProcessId);
+        LeafApi_SessionLeader(m_session_id, &SbieCtrlProcessId);
         if (SbieCtrlProcessId) {
             status = STATUS_IMAGE_ALREADY_LOADED;
             ok = FALSE;
@@ -1474,13 +1474,13 @@ MSG_HEADER *SbieIniServer::RunSbieCtrl(MSG_HEADER *msg, HANDLE idProcess, bool i
         WCHAR buf[10], ch = 0;
         bool ok2 = SetUserSettingsSectionName(hToken);
         if (ok2) {
-            CrashApi_QueryConfAsIs(
+            LeafApi_QueryConfAsIs(
                 m_sectionname, _Setting, 0, buf, sizeof(buf) - 2);
             ch = towlower(buf[0]);
         }
         if (! ch) {
             wcscpy(m_sectionname + 13, L"Default");   // UserSettings_Default
-            CrashApi_QueryConfAsIs(
+            LeafApi_QueryConfAsIs(
                 m_sectionname, _Setting, 0, buf, 8 * sizeof(WCHAR));
             ch = towlower(buf[0]);
         }
@@ -1528,12 +1528,12 @@ NTSTATUS SbieIniServer::RunSbieCtrl(HANDLE hToken, const WCHAR* DeskName, const 
         const WCHAR* _Setting2 = SBIECTRL_ L"AutoStartAgent";
         bool ok2 = SetUserSettingsSectionName(hToken, username, sectionname);
         if (ok2) {
-            CrashApi_QueryConfAsIs(
+            LeafApi_QueryConfAsIs(
                 sectionname, _Setting2, 0, ctrlCmd, sizeof(ctrlCmd) - 2);
         }
         else {
             wcscpy(sectionname + 13, L"Default");   // UserSettings_Default
-            CrashApi_QueryConfAsIs(
+            LeafApi_QueryConfAsIs(
                 sectionname, _Setting2, 0, ctrlCmd, sizeof(ctrlCmd) - 2);
         }
 
@@ -1616,7 +1616,7 @@ NTSTATUS SbieIniServer::RunSbieCtrl(HANDLE hToken, const WCHAR* DeskName, const 
 MSG_HEADER *SbieIniServer::SetDatFile(MSG_HEADER *msg, HANDLE idProcess)
 {
     HANDLE SessionLeaderPid;
-    CrashApi_SessionLeader(m_session_id, &SessionLeaderPid);
+    LeafApi_SessionLeader(m_session_id, &SessionLeaderPid);
     if (SessionLeaderPid != idProcess)
         return SHORT_REPLY(STATUS_ACCESS_DENIED);
 
@@ -1629,7 +1629,7 @@ MSG_HEADER *SbieIniServer::SetDatFile(MSG_HEADER *msg, HANDLE idProcess)
         return SHORT_REPLY(STATUS_INVALID_FILE_FOR_SECTION);
 
     WCHAR path[768];
-    NTSTATUS status = CrashApi_GetHomePath(path, 768, NULL, 0);
+    NTSTATUS status = LeafApi_GetHomePath(path, 768, NULL, 0);
     if (!NT_SUCCESS(status))
         return SHORT_REPLY(status);
     wcscat(path, L"\\");
@@ -1705,11 +1705,11 @@ MSG_HEADER *SbieIniServer::RC4Crypt(MSG_HEADER *msg, HANDLE idProcess, bool isSa
     memcpy(rpl->value, req->value, req->value_len);
 
     ULONG64 RandID = 0;
-    CrashApi_Call(API_GET_SECURE_PARAM, 3, L"RandID", (ULONG_PTR)&RandID, sizeof(RandID));
+    LeafApi_Call(API_GET_SECURE_PARAM, 3, L"RandID", (ULONG_PTR)&RandID, sizeof(RandID));
     if (RandID == 0) {
 		srand(GetTickCount());
         RandID = ULONG64(rand() & 0xFFFF) | (ULONG64(rand() & 0xFFFF) << 16) | (ULONG64(rand() & 0xFFFF) << 32) | (ULONG64(rand() & 0xFFFF) << 48);
-        CrashApi_Call(API_SET_SECURE_PARAM, 3, L"RandID", (ULONG_PTR)&RandID, sizeof(RandID));
+        LeafApi_Call(API_SET_SECURE_PARAM, 3, L"RandID", (ULONG_PTR)&RandID, sizeof(RandID));
     }
 
     rc4_crypt((BYTE*)&RandID, sizeof(RandID), 0x1000, rpl->value, rpl->value_len);

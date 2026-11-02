@@ -163,7 +163,7 @@ _FX DWORD Scm_NotifyServiceStatusChangeW(
 
     dwVersion = ((SERVICE_NOTIFY *)pNotifyBuffer)->dwVersion;
     if (dwVersion != 1 && dwVersion != 2) {
-        CrashApi_Log(2205, L"NotifyServiceStatusChange (%d)", dwVersion);
+        LeafApi_Log(2205, L"NotifyServiceStatusChange (%d)", dwVersion);
         return ERROR_INVALID_PARAMETER;
     }
 

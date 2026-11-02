@@ -1076,7 +1076,7 @@ _FX ACCESS_MASK Thread_CheckObject_CommonEx(
 
     //
     // This functionality allows to protect boxed processes from host processes
-    // we need to grant access to crashsvc.exe and csrss.exe
+    // we need to grant access to leafsvc.exe and csrss.exe
     // 
     // If the calling process is sandboxed the later common check will do the blocking
     //
@@ -1115,12 +1115,12 @@ _FX ACCESS_MASK Thread_CheckObject_CommonEx(
 						BOOLEAN admin_only = Process_GetConfEx_bool(proc2->box, nptr, L"ProtectAdminOnly", FALSE);
 
                         //
-                        // in case use specified wildcard "*" always grant access to crashsvc.exe and csrss.exe
+                        // in case use specified wildcard "*" always grant access to leafsvc.exe and csrss.exe
                         // and a few others
                         //
 
                         if (protect_process /*&& MyIsProcessRunningAsSystemAccount(cur_pid)*/) {
-                            if (Util_IsSystemProcess(cur_pid, "crashsvc.exe")
+                            if (Util_IsSystemProcess(cur_pid, "leafsvc.exe")
                                 || Util_IsSystemProcess(cur_pid, "csrss.exe")
                                 || Util_IsSystemProcess(cur_pid, "lsass.exe")
                                 || Util_IsProtectedProcess(cur_pid)

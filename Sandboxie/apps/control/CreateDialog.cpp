@@ -166,7 +166,7 @@ void CCreateDialog::OnOK()
     if (i == 0 || i != len)
         errmsg = MSG_3667;
     else {
-        LONG rc = CrashApi_IsBoxEnabled(name);
+        LONG rc = LeafApi_IsBoxEnabled(name);
         if (rc == STATUS_OBJECT_TYPE_MISMATCH)
             errmsg = MSG_3667;
         else if (rc == STATUS_ACCOUNT_RESTRICTION)

@@ -16,7 +16,7 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// CrashHostDll.cpp : Defines the exported functions for the DLL application.
+// LeafHostDll.cpp : Defines the exported functions for the DLL application.
 //
 
 #include "stdafx.h"
@@ -28,7 +28,7 @@ typedef BOOL (*P_OpenProcessToken)(HANDLE ProcessHandle, DWORD DesiredAccess, PH
 static P_OpenProcessToken   __sys_OpenProcessToken = NULL;
 
 
-BOOL CrashHostDll_OpenProcessToken(HANDLE ProcessHandle, DWORD DesiredAccess, PHANDLE phTokenOut)
+BOOL LeafHostDll_OpenProcessToken(HANDLE ProcessHandle, DWORD DesiredAccess, PHANDLE phTokenOut)
 {
     BOOL bRet = FALSE;
     HANDLE hToken = 0;
@@ -43,7 +43,7 @@ BOOL CrashHostDll_OpenProcessToken(HANDLE ProcessHandle, DWORD DesiredAccess, PH
     if (bRet)
     {
         // todo:
-        //HANDLE hAltToken = (HANDLE)CrashApi_QueryProcessInfoEx((HANDLE)GetProcessId(ProcessHandle), 'ptok', 0);
+        //HANDLE hAltToken = (HANDLE)LeafApi_QueryProcessInfoEx((HANDLE)GetProcessId(ProcessHandle), 'ptok', 0);
         //if (hAltToken) {
         //    CloseHandle(hToken);
         //    if (phTokenOut)
@@ -51,7 +51,7 @@ BOOL CrashHostDll_OpenProcessToken(HANDLE ProcessHandle, DWORD DesiredAccess, PH
         //    bRet = TRUE;
         //}
 
-        if (CrashApi_QueryProcessInfo((HANDLE)GetProcessId(ProcessHandle), 0) & SBIE_FLAG_VALID_PROCESS)
+        if (LeafApi_QueryProcessInfo((HANDLE)GetProcessId(ProcessHandle), 0) & SBIE_FLAG_VALID_PROCESS)
         {
             BOOL bNeedAnotherValidToken = FALSE;
             LUID idLogonSession = {0};
@@ -94,7 +94,7 @@ BOOL CrashHostDll_OpenProcessToken(HANDLE ProcessHandle, DWORD DesiredAccess, PH
                     nPidCount = cbReturned / sizeof(DWORD);
                     for ( UINT i = 0; i < nPidCount; i++ )
                     {
-                        if (!CrashApi_QueryProcessInfo((HANDLE)aPid[i], 0) & SBIE_FLAG_VALID_PROCESS)
+                        if (!LeafApi_QueryProcessInfo((HANDLE)aPid[i], 0) & SBIE_FLAG_VALID_PROCESS)
                         {
                             HANDLE hProc = OpenProcess(PROCESS_ALL_ACCESS, TRUE, aPid[i]);
                             if (hProc)
@@ -142,16 +142,16 @@ BOOL CrashHostDll_OpenProcessToken(HANDLE ProcessHandle, DWORD DesiredAccess, PH
     return bRet;
 }
 
-BOOLEAN InitHook( HINSTANCE hCrashDll )
+BOOLEAN InitHook( HINSTANCE hLeafDll )
 {
-    if (hCrashDll)
+    if (hLeafDll)
     {
         HMODULE module = GetModuleHandle(L"Advapi32.dll");
 
         void *OpenProcessToken = (P_OpenProcessToken)GetProcAddress(module, "OpenProcessToken");
 
         if (OpenProcessToken)
-            SBIEDLL_HOOK(CrashHostDll_, OpenProcessToken);
+            SBIEDLL_HOOK(LeafHostDll_, OpenProcessToken);
     }
     return TRUE;
 }

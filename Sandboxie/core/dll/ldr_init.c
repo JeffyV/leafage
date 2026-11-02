@@ -196,14 +196,14 @@ _FX void Ldr_LoadInjectDlls(BOOLEAN bHostInject)
     //
 
     WCHAR *path = Dll_AllocTemp(1024 * sizeof(WCHAR));
-    CrashApi_GetHomePath(NULL, 0, path, 1020);
+    LeafApi_GetHomePath(NULL, 0, path, 1020);
 
     if (!__sys_LdrLoadDll)
         __sys_LdrLoadDll = (P_LdrLoadDll)GetProcAddress(Dll_Ntdll, "LdrLoadDll");
 
     while (1) {
 
-        status = CrashApi_QueryConfAsIs(
+        status = LeafApi_QueryConfAsIs(
                         NULL, (bHostInject? Ldr_HostInjectDll:Ldr_InjectDll), index,
                         dllname, (MAX_PATH * 2 - 2) * sizeof(WCHAR));
         ++index;
@@ -896,11 +896,11 @@ _FX void* Ldr_Inject_Entry(ULONG_PTR *pPtr)
     //
 
 #ifdef _M_ARM64EC
-    extern ULONG* CrashApi_SyscallPtr;
-    CrashApi_SyscallPtr = NULL;
+    extern ULONG* LeafApi_SyscallPtr;
+    LeafApi_SyscallPtr = NULL;
 #endif
-    extern SBIELOW_DATA* CrashApi_data;
-    VirtualFree((void*)CrashApi_data->syscall_data, 0, MEM_RELEASE);
+    extern SBIELOW_DATA* LeafApi_data;
+    VirtualFree((void*)LeafApi_data->syscall_data, 0, MEM_RELEASE);
 
     //
     // return original entry point address to jump to

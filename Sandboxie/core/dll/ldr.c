@@ -500,7 +500,7 @@ _FX BOOLEAN Ldr_Init()
     // set PEB.ProcessParameters->LoaderThreads = 0
     //
 
-    if (CrashApi_QueryConfBool(NULL, L"NoParallelLoading", FALSE)) {
+    if (LeafApi_QueryConfBool(NULL, L"NoParallelLoading", FALSE)) {
         RTL_USER_PROCESS_PARAMETERS* ProcessParms = Proc_GetRtlUserProcessParameters();
         ProcessParms->LoaderThreads = 0;
     }
@@ -664,7 +664,7 @@ _FX void Ldr_CallDllCallbacks(void)
     }
 
     if (!buf) {
-        CrashApi_Log(2205, L"LoadedModules [%08X]", status);
+        LeafApi_Log(2205, L"LoadedModules [%08X]", status);
         return;
     }
 
@@ -742,7 +742,7 @@ _FX void Ldr_CallDllCallbacks(void)
             if (iNew == 0 && *uni.Buffer)
                 *uni.Buffer = L'*';
             _wcslwr(uni.Buffer);
-            CrashApi_MonitorPut(MONITOR_IMAGE, uni.Buffer);
+            LeafApi_MonitorPut(MONITOR_IMAGE, uni.Buffer);
             RtlFreeUnicodeString(&uni);
 
             __my_Ldr_CallOneDllCallback(pNew->Path + pNew->NameOffset,
@@ -809,18 +809,18 @@ _FX NTSTATUS Ldr_LdrLoadDllImpl(
 
     //WCHAR text[4096];
     //Sbie_snwprintf(text, ARRAYSIZE(text), L"%s (loading...)", (ModuleName && ModuleName->Buffer) ? ModuleName->Buffer : PathString);
-    //CrashApi_MonitorPutMsg(MONITOR_IMAGE, text);
+    //LeafApi_MonitorPutMsg(MONITOR_IMAGE, text);
 
     status = __sys_LdrLoadDll(PathString, DllFlags, ModuleName, ModuleHandle);
 
     if (!NT_SUCCESS(status)) {
         WCHAR text[4096];
         Sbie_snwprintf(text, ARRAYSIZE(text), L"%s (load failed 0x%08X)", (ModuleName && ModuleName->Buffer) ? ModuleName->Buffer : PathString, status);
-        CrashApi_MonitorPutMsg(MONITOR_IMAGE, text);
+        LeafApi_MonitorPutMsg(MONITOR_IMAGE, text);
     }
 
     //Sbie_snwprintf(text, ARRAYSIZE(text), L"%s (... 0x%08X)", (ModuleName && ModuleName->Buffer) ? ModuleName->Buffer : PathString, status);
-    //CrashApi_MonitorPutMsg(MONITOR_IMAGE, text);
+    //LeafApi_MonitorPutMsg(MONITOR_IMAGE, text);
 
     return status;
 }
@@ -891,7 +891,7 @@ _FX NTSTATUS Ldr_LdrUnloadDll(HANDLE ModuleHandle)
     DWORD tid;
 
     //
-    // prevent unloading of CrashDll
+    // prevent unloading of LeafDll
     //
 
     tid = GetCurrentThreadId();
@@ -1059,9 +1059,9 @@ _FX void Ldr_DetectImageType(const CHAR *ImageName)
 
             WCHAR msg[128];
             Sbie_snwprintf(msg, 128, L"Detected web browser image");
-            CrashApi_MonitorPutMsg(MONITOR_IMAGE | MONITOR_TRACE, msg);
+            LeafApi_MonitorPutMsg(MONITOR_IMAGE | MONITOR_TRACE, msg);
 
-            CrashApi_QueryProcessInfoEx(0, 'spit', Dll_ImageType);
+            LeafApi_QueryProcessInfoEx(0, 'spit', Dll_ImageType);
 
             if (Dll_RestrictedToken || Dll_AppContainerToken) {
 
@@ -1099,7 +1099,7 @@ _FX void Ldr_MyDllCallbackNew(const WCHAR *ImageName, HMODULE ImageBase, BOOL Lo
         Sbie_snwprintf(text, ARRAYSIZE(text), L"%s (loaded)", ImageName);
     else
         Sbie_snwprintf(text, ARRAYSIZE(text), L"%s (unloaded)", ImageName);
-    CrashApi_MonitorPutMsg(MONITOR_IMAGE, text);
+    LeafApi_MonitorPutMsg(MONITOR_IMAGE, text);
 
     //
     // invoke our sub-modules as necessary
@@ -1116,7 +1116,7 @@ _FX void Ldr_MyDllCallbackNew(const WCHAR *ImageName, HMODULE ImageBase, BOOL Lo
                     LeaveCriticalSection(&Ldr_LoadedModules_CritSec);
                     ok = dll->init_func(ImageBase);
                     if (!ok)
-                        CrashApi_Log(2318, dll->nameW);
+                        LeafApi_Log(2318, dll->nameW);
                 }
             }
             else {
@@ -1332,7 +1332,7 @@ _FX void *Ldr_GetProcAddr_3(ULONG_PTR DllBase, const WCHAR *ProcName)
                 // don't handle forwarded exports
                 //
 
-                CrashApi_Log(2205, L"EXPORT %s", proc);
+                LeafApi_Log(2205, L"EXPORT %s", proc);
                 proc = NULL;
             }
         }
@@ -1368,7 +1368,7 @@ _FX NTSTATUS Ldr_NtLoadDriver(UNICODE_STRING *RegistryPath)
         }
 
         if (DriverName)
-            CrashApi_Log(2103, L"%S [%S] (NtLoadDriver)", DriverName, Dll_BoxName);
+            LeafApi_Log(2103, L"%S [%S] (NtLoadDriver)", DriverName, Dll_BoxName);
     }
 
     return status;
@@ -1385,7 +1385,7 @@ _FX void Ldr_LoadSkipList()
     WCHAR buf[128];
     ULONG index = 0;
     while (1) { // for each setting
-        NTSTATUS status = CrashApi_QueryConfAsIs(NULL, L"DllSkipHook", index, buf, sizeof(buf));
+        NTSTATUS status = LeafApi_QueryConfAsIs(NULL, L"DllSkipHook", index, buf, sizeof(buf));
         ++index;
         if (NT_SUCCESS(status)) {
             DLL *dll = Ldr_Dlls;

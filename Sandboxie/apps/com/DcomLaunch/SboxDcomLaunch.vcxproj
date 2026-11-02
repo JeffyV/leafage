@@ -86,24 +86,24 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieDebug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>CrashDcomLaunch</TargetName>
+    <TargetName>LeafDcomLaunch</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieDebug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>CrashDcomLaunch</TargetName>
+    <TargetName>LeafDcomLaunch</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieDebug|ARM64'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>CrashDcomLaunch</TargetName>
+    <TargetName>LeafDcomLaunch</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|Win32'">
-    <TargetName>CrashDcomLaunch</TargetName>
+    <TargetName>LeafDcomLaunch</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|x64'">
-    <TargetName>CrashDcomLaunch</TargetName>
+    <TargetName>LeafDcomLaunch</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|ARM64'">
-    <TargetName>CrashDcomLaunch</TargetName>
+    <TargetName>LeafDcomLaunch</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SbieDebug|Win32'">
     <ClCompile>
@@ -113,7 +113,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>CrashDll.lib;kernel32.lib;secur32.lib;Advapi32.lib;Ntdll.lib;User32.lib</AdditionalDependencies>
+      <AdditionalDependencies>LeafDll.lib;kernel32.lib;secur32.lib;Advapi32.lib;Ntdll.lib;User32.lib</AdditionalDependencies>
       <CETCompat>true</CETCompat>
     </Link>
   </ItemDefinitionGroup>
@@ -125,7 +125,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>CrashDll.lib;kernel32.lib;secur32.lib;Advapi32.lib;Ntdll.lib;User32.lib</AdditionalDependencies>
+      <AdditionalDependencies>LeafDll.lib;kernel32.lib;secur32.lib;Advapi32.lib;Ntdll.lib;User32.lib</AdditionalDependencies>
       <CETCompat>true</CETCompat>
     </Link>
   </ItemDefinitionGroup>
@@ -139,7 +139,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>CrashDll.lib;kernel32.lib;secur32.lib;Advapi32.lib;Ntdll.lib;User32.lib</AdditionalDependencies>
+      <AdditionalDependencies>LeafDll.lib;kernel32.lib;secur32.lib;Advapi32.lib;Ntdll.lib;User32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|Win32'">
@@ -149,7 +149,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>CrashDll.lib;kernel32.lib;secur32.lib;Advapi32.lib;Ntdll.lib;User32.lib</AdditionalDependencies>
+      <AdditionalDependencies>LeafDll.lib;kernel32.lib;secur32.lib;Advapi32.lib;Ntdll.lib;User32.lib</AdditionalDependencies>
       <CETCompat>true</CETCompat>
     </Link>
   </ItemDefinitionGroup>
@@ -160,7 +160,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>CrashDll.lib;kernel32.lib;secur32.lib;Advapi32.lib;Ntdll.lib;User32.lib</AdditionalDependencies>
+      <AdditionalDependencies>LeafDll.lib;kernel32.lib;secur32.lib;Advapi32.lib;Ntdll.lib;User32.lib</AdditionalDependencies>
       <CETCompat>true</CETCompat>
     </Link>
   </ItemDefinitionGroup>
@@ -173,7 +173,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>CrashDll.lib;kernel32.lib;secur32.lib;Advapi32.lib;Ntdll.lib;User32.lib</AdditionalDependencies>
+      <AdditionalDependencies>LeafDll.lib;kernel32.lib;secur32.lib;Advapi32.lib;Ntdll.lib;User32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

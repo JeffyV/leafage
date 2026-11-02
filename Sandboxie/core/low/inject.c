@@ -34,8 +34,8 @@ typedef long NTSTATUS;
 // Functions
 //---------------------------------------------------------------------------
 
-_FX NTSTATUS CrashApi_LogMsg(ULONG64 pNtDeviceIoControlFile, ULONG64 api_device_handle, ULONG code, const WCHAR* text);
-_FX NTSTATUS CrashApi_DebugError(SBIELOW_DATA* data, ULONG error);
+_FX NTSTATUS LeafApi_LogMsg(ULONG64 pNtDeviceIoControlFile, ULONG64 api_device_handle, ULONG code, const WCHAR* text);
+_FX NTSTATUS LeafApi_DebugError(SBIELOW_DATA* data, ULONG error);
 
 UCHAR *FindDllExport(void *DllBase, const UCHAR *ProcName, ULONG *pErr);
 
@@ -89,7 +89,7 @@ ULONG_PTR DetourFunc(INJECT_DATA *inject)
     UNICODE_STRING* pDllPath;
     HANDLE ModuleHandle;
     typedef VOID(*P_Dll_Ordinal1)(INJECT_DATA* inject);
-    P_Dll_Ordinal1 CrashDllOrdinal1;
+    P_Dll_Ordinal1 LeafDllOrdinal1;
     void *RegionBase;
     SIZE_T RegionSize;
     ULONG OldProtect;
@@ -141,7 +141,7 @@ ULONG_PTR DetourFunc(INJECT_DATA *inject)
 
     if (status == 0) {
 
-        pDllPath = (UNICODE_STRING*)&inject->CrashDll;
+        pDllPath = (UNICODE_STRING*)&inject->LeafDll;
 
         status = ((P_LdrLoadDll)inject->LdrLoadDll)(NULL, 0, pDllPath, &ModuleHandle);
     }
@@ -152,16 +152,16 @@ ULONG_PTR DetourFunc(INJECT_DATA *inject)
 
     if (status == 0) {
 
-        status = ((P_LdrGetProcedureAddress)inject->LdrGetProcAddr)(ModuleHandle, NULL, 1, (ULONG_PTR*)&CrashDllOrdinal1);
+        status = ((P_LdrGetProcedureAddress)inject->LdrGetProcAddr)(ModuleHandle, NULL, 1, (ULONG_PTR*)&LeafDllOrdinal1);
 #ifdef _M_ARM64
         //
-        // on ARM64EC we hook the native code, hence we need to obtain the address of the native ordinal 1 from our CrashDll.dll
+        // on ARM64EC we hook the native code, hence we need to obtain the address of the native ordinal 1 from our LeafDll.dll
         // instead of the FFS sequence as given by NtGetProcedureAddress when in ARM64EC mode
         //
 
         if (data->flags.is_arm64ec && status >= 0) {
-            CrashDllOrdinal1 = (P_Dll_Ordinal1)Hook_GetFFSTarget((UCHAR*)CrashDllOrdinal1);
-            //if (!CrashDllOrdinal1)
+            LeafDllOrdinal1 = (P_Dll_Ordinal1)Hook_GetFFSTarget((UCHAR*)LeafDllOrdinal1);
+            //if (!LeafDllOrdinal1)
             //    status = STATUS_ENTRYPOINT_NOT_FOUND;
         }
 #endif
@@ -173,7 +173,7 @@ ULONG_PTR DetourFunc(INJECT_DATA *inject)
 
     if (status == 0) {
 
-        CrashDllOrdinal1(inject);
+        LeafDllOrdinal1(inject);
     }
 
     //
@@ -183,7 +183,7 @@ ULONG_PTR DetourFunc(INJECT_DATA *inject)
     else {
 
         wchar_t text[] = { 0 };
-        CrashApi_LogMsg(inject->NtDeviceIoControlFile, inject->api_device_handle, 2181, text);
+        LeafApi_LogMsg(inject->NtDeviceIoControlFile, inject->api_device_handle, 2181, text);
 
         status = 0xC0000142; // = STATUS_DLL_INIT_FAILED
         ULONG_PTR Parameters[1] = { (ULONG_PTR)pDllPath };
@@ -248,10 +248,10 @@ _FX void InitInject(SBIELOW_DATA *data, void *DetourCode)
 
 		ntdll_base = (void *)data->ntdll_wow64_base;
 
-        //extern ULONG64 CrashApi_QueryProcessInfo(
+        //extern ULONG64 LeafApi_QueryProcessInfo(
         //                            SBIELOW_DATA *data, ULONG info_type);
 		//
-        //ULONG ntdll32_base = (ULONG)CrashApi_QueryProcessInfo(data, 'nt32');
+        //ULONG ntdll32_base = (ULONG)LeafApi_QueryProcessInfo(data, 'nt32');
 		//
         //ntdll_base = (void *)(ULONG_PTR)ntdll32_base;
 
@@ -283,7 +283,7 @@ _FX void InitInject(SBIELOW_DATA *data, void *DetourCode)
         inject->LdrLoadDll = (ULONG_PTR)Hook_GetFFSTarget((UCHAR*)inject->LdrLoadDll);
 #endif
     if (!inject->LdrLoadDll) {
-        CrashApi_DebugError(data, (0x01 << 4) | uError);
+        LeafApi_DebugError(data, (0x01 << 4) | uError);
         return;
     }
 
@@ -294,7 +294,7 @@ _FX void InitInject(SBIELOW_DATA *data, void *DetourCode)
         inject->LdrGetProcAddr = (ULONG_PTR)Hook_GetFFSTarget((UCHAR*)inject->LdrGetProcAddr);
 #endif
     if (!inject->LdrGetProcAddr) {
-        CrashApi_DebugError(data, (0x02 << 4) | uError);
+        LeafApi_DebugError(data, (0x02 << 4) | uError);
         return;
     }
 
@@ -304,21 +304,21 @@ _FX void InitInject(SBIELOW_DATA *data, void *DetourCode)
         inject->NtProtectVirtualMemory = (ULONG_PTR)FindDllExport(ntdll_base,
                                                 (UCHAR*)extra + extra->NtProtectVirtualMemory_offset, &uError);
         if (!inject->NtProtectVirtualMemory) {
-            CrashApi_DebugError(data, (0x03 << 4) | uError);
+            LeafApi_DebugError(data, (0x03 << 4) | uError);
             return;
         }
 
         inject->NtRaiseHardError = (ULONG_PTR)FindDllExport(ntdll_base,
                                                 (UCHAR*)extra + extra->NtRaiseHardError_offset, &uError);
         if (!inject->NtRaiseHardError) {
-            CrashApi_DebugError(data, (0x04 << 4) | uError);
+            LeafApi_DebugError(data, (0x04 << 4) | uError);
             return;
         }
 
         inject->NtDeviceIoControlFile = (ULONG_PTR)FindDllExport(ntdll_base,
                                                 (UCHAR*)extra + extra->NtDeviceIoControlFile_offset, &uError);
         if (!inject->NtDeviceIoControlFile) {
-            CrashApi_DebugError(data, (0x05 << 4) | uError);
+            LeafApi_DebugError(data, (0x05 << 4) | uError);
             return;
         }
     }
@@ -352,7 +352,7 @@ _FX void InitInject(SBIELOW_DATA *data, void *DetourCode)
         HookTarget = FindDllExport(ntdll_base,
                         (UCHAR *)extra + extra->RtlFindActCtx_offset, &uError);
         if (!HookTarget) {
-            CrashApi_DebugError(data, (0x05 << 4) | uError);
+            LeafApi_DebugError(data, (0x05 << 4) | uError);
             return;
         }
     }
@@ -373,15 +373,15 @@ _FX void InitInject(SBIELOW_DATA *data, void *DetourCode)
 #endif
 
     //
-    // select the right version of CrashDll.dll
+    // select the right version of LeafDll.dll
     //
 
 #ifdef _M_ARM64
     if (data->flags.is_arm64ec) {
 
-        inject->CrashDll.Length = (SHORT)extra->Arm64ecSbieDll_length;
-        inject->CrashDll.MaxLen = inject->CrashDll.Length + sizeof(WCHAR);
-        inject->CrashDll.Buf64 =
+        inject->LeafDll.Length = (SHORT)extra->Arm64ecSbieDll_length;
+        inject->LeafDll.MaxLen = inject->LeafDll.Length + sizeof(WCHAR);
+        inject->LeafDll.Buf64 =
             (ULONG64)((ULONG_PTR)extra + extra->Arm64ecSbieDll_offset);
     }
     else
@@ -389,21 +389,21 @@ _FX void InitInject(SBIELOW_DATA *data, void *DetourCode)
 #ifdef _WIN64
     if (data->flags.is_wow64) 
     {
-        inject->CrashDll.Length = (SHORT)extra->Wow64SbieDll_length;
-        inject->CrashDll.MaxLen = inject->CrashDll.Length + sizeof(WCHAR);
-        inject->CrashDll.Buf32  =
+        inject->LeafDll.Length = (SHORT)extra->Wow64SbieDll_length;
+        inject->LeafDll.MaxLen = inject->LeafDll.Length + sizeof(WCHAR);
+        inject->LeafDll.Buf32  =
                         (ULONG)((ULONG_PTR)extra + extra->Wow64SbieDll_offset);
     }
     else
 #endif
     {
-        inject->CrashDll.Length = (SHORT)extra->NativeSbieDll_length;
-        inject->CrashDll.MaxLen = inject->CrashDll.Length + sizeof(WCHAR);
+        inject->LeafDll.Length = (SHORT)extra->NativeSbieDll_length;
+        inject->LeafDll.MaxLen = inject->LeafDll.Length + sizeof(WCHAR);
 #ifdef _WIN64
-        inject->CrashDll.Buf64 =
+        inject->LeafDll.Buf64 =
             (ULONG64)((ULONG_PTR)extra + extra->NativeSbieDll_offset);
 #else
-        inject->CrashDll.Buf32  =
+        inject->LeafDll.Buf32  =
             (ULONG)((ULONG_PTR)extra + extra->NativeSbieDll_offset);
 #endif
     }

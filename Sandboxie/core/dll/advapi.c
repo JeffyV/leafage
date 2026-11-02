@@ -246,7 +246,7 @@ _FX BOOLEAN AdvApi_Init(HMODULE module)
     // Note: the infinite recursion issue has been resolved int 5.43
     if ((Config_GetSettingsForImageName_bool(L"UseSbieDeskHack", TRUE) 
         || (Dll_ImageType == DLL_IMAGE_GOOGLE_CHROME) || (Dll_ImageType == DLL_IMAGE_MOZILLA_FIREFOX) || (Dll_ImageType == DLL_IMAGE_ACROBAT_READER))
-        && !CrashApi_QueryConfBool(NULL, L"OpenWndStation", FALSE)) {
+        && !LeafApi_QueryConfBool(NULL, L"OpenWndStation", FALSE)) {
         SetSecurityInfo = __sys_SetSecurityInfo;
         GetSecurityInfo = __sys_GetSecurityInfo;
         SBIEDLL_HOOK(AdvApi_, SetSecurityInfo);
@@ -271,8 +271,8 @@ _FX BOOLEAN AdvApi_Init(HMODULE module)
     // some Windows services use AccessCheckByType to verify the callers
     // are using the right SIDs.  fake success for the following:
     // wuauclt.exe
-    // CrashWUAU (wuauserv service)
-    // CrashBITS (bits service)
+    // LeafWUAU (wuauserv service)
+    // LeafBITS (bits service)
     //
 
     if (Dll_Windows < 10) {
@@ -648,7 +648,7 @@ _FX ULONG AdvApi_GetEffectiveRightsFromAclW(
         __sys_GetEffectiveRightsFromAclW(pacl, pTrustee, pAccessRights);
     if (rc == 0 && pAccessRights && *pAccessRights == 0) {
         *pAccessRights = STANDARD_RIGHTS_ALL | SPECIFIC_RIGHTS_ALL;
-        CrashApi_Log(2205, L"GetEffectiveRightsFromAcl");
+        LeafApi_Log(2205, L"GetEffectiveRightsFromAcl");
     }
     return rc;
 }
@@ -685,7 +685,7 @@ _FX BOOLEAN Ntmarta_Init(HMODULE module)
     GETPROC2(GetSecurityInfo, );
     if ((Config_GetSettingsForImageName_bool(L"UseSbieDeskHack", TRUE) 
         || (Dll_ImageType == DLL_IMAGE_GOOGLE_CHROME) || (Dll_ImageType == DLL_IMAGE_MOZILLA_FIREFOX) || (Dll_ImageType == DLL_IMAGE_ACROBAT_READER)) 
-        && !CrashApi_QueryConfBool(NULL, L"OpenWndStation", FALSE)) {
+        && !LeafApi_QueryConfBool(NULL, L"OpenWndStation", FALSE)) {
 
         GetSecurityInfo = __sys_Ntmarta_GetSecurityInfo;
         if (GetSecurityInfo)

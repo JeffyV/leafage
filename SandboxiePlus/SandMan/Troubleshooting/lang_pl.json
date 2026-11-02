@@ -79,9 +79,9 @@
 "SBIE2115: File is too large to copy into sandbox, opening in read only": "SBIE2115: Plik jest za duży, aby skopiować go do pudełka (sandboxa), otwieranie w trybie tylko do odczytu",
 "File is too large to copy into sandbox, opening in read only": "Plik jest za duży, aby skopiować go do pudełka (sandboxa), otwieranie w trybie tylko do odczytu",
 
-"SBIE2181: Failed to load CrashDll.dll": "SBIE2181: Nie udało się załadować CrashDll.dll",
+"SBIE2181: Failed to load LeafDll.dll": "SBIE2181: Nie udało się załadować LeafDll.dll",
 "Fix the DACLs of Sandboxie's home folder": "Napraw listy kontroli dostępu (DACL) folderu głównego Sandboxie",
-"Failures to load CrashDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.": "Niepowodzenia w ładowaniu CrashDll.dll, które mogą wystąpić w Chrome lub innym oprogramowaniu wykorzystującym kontenery aplikacji, często są spowodowane nieprawidłowymi wpisami w listach kontroli dostępu (DACL) dla folderu głównego Sandboxie. Ta procedura naprawi te problemy, dlatego poprosi o uprawnienia administratora dla programu kmdutil.exe.",
+"Failures to load LeafDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.": "Niepowodzenia w ładowaniu LeafDll.dll, które mogą wystąpić w Chrome lub innym oprogramowaniu wykorzystującym kontenery aplikacji, często są spowodowane nieprawidłowymi wpisami w listach kontroli dostępu (DACL) dla folderu głównego Sandboxie. Ta procedura naprawi te problemy, dlatego poprosi o uprawnienia administratora dla programu kmdutil.exe.",
 "The DACLs have been adjusted, please try to run your application again and indicate if the issue has been resolved.": "Zostały dostosowane listy kontroli dostępu (DACL). Proszę spróbować ponownie uruchomić aplikację i wskazać, czy problem został rozwiązany.",
 "DACLs fix did not resolve the issue": "Naprawa list kontroli dostępu (DACL) nie rozwiązała problemu",
 

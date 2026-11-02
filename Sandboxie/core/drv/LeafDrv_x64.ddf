@@ -10,7 +10,7 @@
     .Set CompressionType=MSZIP
     .Set Cabinet=on
     .Set Compress=on
-    .Set CabinetNameTemplate=CrashDrv_x64.cab
+    .Set CabinetNameTemplate=LeafDrv_x64.cab
     .Set DestinationDir=..\Projects\Bin\x64\SbieRelease
-    CrashDrv.inf
-    ..\..\Bin\x64\SbieRelease\CrashDrv.sys
+    LeafDrv.inf
+    ..\..\Bin\x64\SbieRelease\LeafDrv.sys

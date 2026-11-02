@@ -446,7 +446,7 @@ _FX BOOL Sxs_ReadTextAndClose(HANDLE hFile, UCHAR *Text)
     if (ok && ((! len) || (len >= SXS_TEXT_LEN))) {
 
         if (len >= SXS_TEXT_LEN)
-            CrashApi_Log(2205, Sxs_Manifest_Length, len);
+            LeafApi_Log(2205, Sxs_Manifest_Length, len);
         LastError = ERROR_SXS_MANIFEST_FORMAT_ERROR;
         ok = FALSE;
 
@@ -502,7 +502,7 @@ _FX void Sxs_ConvertUnicodeToAscii(UCHAR *Text)
     }
 
     if (warn)
-        CrashApi_Log(2205, L"SXS/UNICODE");
+        LeafApi_Log(2205, L"SXS/UNICODE");
 }
 
 
@@ -765,7 +765,7 @@ _FX BOOLEAN Sxs_GetPathAndText(ACTCTX *ActCtx, SXS_ARGS *args)
             if ((! len) || (len >= SXS_TEXT_LEN)) {
 
                 if (len >= SXS_TEXT_LEN)
-                    CrashApi_Log(2205, Sxs_Manifest_Length, len);
+                    LeafApi_Log(2205, Sxs_Manifest_Length, len);
                 LastError = ERROR_SXS_MANIFEST_FORMAT_ERROR;
 
             } else {
@@ -932,7 +932,7 @@ _FX void *Sxs_CallService(SXS_ARGS *args, BOOLEAN *UseAltCreateActCtx)
     *ptr1 = '*';
 
     //
-    // send the request message through an CrashSvc queue
+    // send the request message through an LeafSvc queue
     //
 
     for (retries = 0; retries < 3; ++retries) {
@@ -984,7 +984,7 @@ _FX void *Sxs_CallService(SXS_ARGS *args, BOOLEAN *UseAltCreateActCtx)
         if (status == STATUS_PRIVILEGE_NOT_HELD) {
 
             //
-            // CrashSvc could not open our caller process, for instance Avira
+            // LeafSvc could not open our caller process, for instance Avira
             // blocks access to its avscan.exe process
             //
 
@@ -1003,7 +1003,7 @@ _FX void *Sxs_CallService(SXS_ARGS *args, BOOLEAN *UseAltCreateActCtx)
 
         } else {
 
-            CrashApi_Log(2203, L"%S - %S [%08X]",
+            LeafApi_Log(2203, L"%S - %S [%08X]",
                         Sxs_QueueName, Dll_ImageName, status);
         }
 
@@ -1016,7 +1016,7 @@ _FX void *Sxs_CallService(SXS_ARGS *args, BOOLEAN *UseAltCreateActCtx)
     }
 
     //
-    // check for special and esoteric case where CrashRpcSs
+    // check for special and esoteric case where LeafRpcSs
     // is telling us to call the system CreateActCtx instead.
     // see also Sxs_Request and Sxs_GenerateHelper in apps/com/RpcSs/sxs.c
     //
@@ -1116,7 +1116,7 @@ _FX HANDLE Sxs_CreateActCtxW(ACTCTX *ActCtx)
     HANDLE hActCtx = INVALID_HANDLE_VALUE;
 
     //
-    // special processing if we are running in the context of CrashRpcSs
+    // special processing if we are running in the context of LeafRpcSs
     //
 
     if (Sxs_UseAltCreateActCtx)
@@ -1245,7 +1245,7 @@ _FX HANDLE Sxs_CreateActCtxW(ACTCTX *ActCtx)
         if (MappedBase) {
 
             //
-            // process result from SXS service in CrashRpcSs
+            // process result from SXS service in LeafRpcSs
             //
 
             NTSTATUS status = __sys_RtlCreateActivationContext(
@@ -1308,13 +1308,13 @@ finish:
 _FX HANDLE Sxs_CreateActCtxW_Alt(ACTCTX *ActCtx)
 {
     //
-    // the CrashRpcSs process implements our SXS service, so it is
-    // not reliable to use our SXS service from the CrashRpcSs process
+    // the LeafRpcSs process implements our SXS service, so it is
+    // not reliable to use our SXS service from the LeafRpcSs process
     // for at least two reasons.
     //
     // - the service pipe may not be ready for use yet
     // - even if the service pipe (and related thread) are ready,
-    // some other thread in the CrashRpcSs process may block the
+    // some other thread in the LeafRpcSs process may block the
     // request.  for example, by holding the loader lock.
     //
     // workaround:  in the context of RpcSs, use the real SXS from CSRSS.
@@ -1555,7 +1555,7 @@ _FX void Sxs_RtlRaiseException(EXCEPTION_RECORD *ExceptionRecord)
 {
     ULONG code = ExceptionRecord->ExceptionCode;
     if ((code & 0xFFFF0000) != 0x40010000)  // ignore debug exceptions
-        CrashApi_Log(2205, L"TrustedInstaller %08X", code);
+        LeafApi_Log(2205, L"TrustedInstaller %08X", code);
     __sys_RtlRaiseException(ExceptionRecord);
 }
 
@@ -1583,7 +1583,7 @@ _FX BOOL Sxs_SxsInstallW(void *info)
 {
     BOOL ok = __sys_SxsInstallW(info);
     if (! ok) {
-        CrashApi_Log(2205, L"SxsInstallW");
+        LeafApi_Log(2205, L"SxsInstallW");
         SetLastError(0);
         ok = TRUE;
     }
@@ -1648,7 +1648,7 @@ _FX BOOLEAN Sxs_InitKernel32(void)
         //
         // disable in-sandbox SXS resolutions in three cases:
         //
-        // if this is the CrashRpcSs process which itself implements
+        // if this is the LeafRpcSs process which itself implements
         // the in-sandbox SXS service
         //
         // if the sandbox setting DisableBoxedWinSxS=y
@@ -1984,7 +1984,7 @@ _FX ULONG Sxs_CheckManifestForCreateProcess(const WCHAR *DosPath)
                 (HighestAvailable && ElvType != TokenElevationTypeDefault)) {
 
             //
-            // if we are running in the CrashSvc UAC elevation process
+            // if we are running in the LeafSvc UAC elevation process
             // then we cannot return ERROR_ELEVATION_REQUIRED because
             // that would cause an infinite loop
             //
@@ -2040,7 +2040,7 @@ _FX BOOLEAN Sxs_KeyCallback(const WCHAR *path, HANDLE *out_handle)
     //
     // this callback is invoked by Key_NtCreateKey when it is used during
     // CreateProcess.  this allows us to intercept the open for SideBySide
-    // key so we can redirect to the CrashSvc service key which includes
+    // key so we can redirect to the LeafSvc service key which includes
     // a pre-set value for PreferExternalManifest
     //
 
@@ -2072,7 +2072,7 @@ _FX BOOLEAN Sxs_KeyCallback(const WCHAR *path, HANDLE *out_handle)
         if (redirect) {
 
             const WCHAR *ValueName = L"PreferExternalManifest";
-            extern WCHAR *Support_CrashSvcKeyPath;
+            extern WCHAR *Support_LeafSvcKeyPath;
 
             UNICODE_STRING objname;
             OBJECT_ATTRIBUTES objattrs;
@@ -2081,7 +2081,7 @@ _FX BOOLEAN Sxs_KeyCallback(const WCHAR *path, HANDLE *out_handle)
             InitializeObjectAttributes(
                 &objattrs, &objname, OBJ_CASE_INSENSITIVE, NULL, NULL);
 
-            RtlInitUnicodeString(&objname, Support_CrashSvcKeyPath);
+            RtlInitUnicodeString(&objname, Support_LeafSvcKeyPath);
 
             if (0 != __sys_NtOpenKey(&handle, KEY_READ, &objattrs))
                 handle = NULL;
@@ -2116,7 +2116,7 @@ _FX BOOLEAN Sxs_KeyCallback(const WCHAR *path, HANDLE *out_handle)
                 CloseHandle(handle);
             }
 
-            CrashApi_Log(2205, ValueName);
+            LeafApi_Log(2205, ValueName);
         }
     }
 
@@ -2224,7 +2224,7 @@ _FX BOOLEAN Sxs_FileCallback(const WCHAR *path, HANDLE *out_handle)
             CloseHandle(handle);
         }
 
-        CrashApi_Log(2205, FileName + 1);
+        LeafApi_Log(2205, FileName + 1);
     }
 
     return FALSE;

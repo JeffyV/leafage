@@ -35,7 +35,7 @@
 typedef struct tagNAMED_PIPE_IOSB {
 
     //
-    // if CrashSvc is 64-bit, it returns a 64-bit IO_STATUS_BLOCK even if
+    // if LeafSvc is 64-bit, it returns a 64-bit IO_STATUS_BLOCK even if
     // the caller is a 32-bit process.  the following structure keeps
     // everyone on a 64-bit IO_STATUS_BLOCK, always
     //

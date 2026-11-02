@@ -49,10 +49,10 @@
 	      <com:Extension Category="windows.comServer">
 		      <com:ComServer>
 		       <com:SurrogateServer  DisplayName="BowPad Context Menu Handler">
-		        <com:Class Id="EA3E972D-62C7-4309-8F15-883263041E99" Path="CrashShellExt.dll" ThreadingModel="STA"/>
+		        <com:Class Id="EA3E972D-62C7-4309-8F15-883263041E99" Path="LeafShellExt.dll" ThreadingModel="STA"/>
 		       </com:SurrogateServer>
 			   <com:SurrogateServer  DisplayName="BowPad Context Menu Handler">
-				<com:Class Id="3FD2D9EE-DAF9-404A-9B7E-13B2DCD63950" Path="CrashShellExt.dll" ThreadingModel="STA"/>
+				<com:Class Id="3FD2D9EE-DAF9-404A-9B7E-13B2DCD63950" Path="LeafShellExt.dll" ThreadingModel="STA"/>
 			   </com:SurrogateServer>
 		      </com:ComServer>
 	      </com:Extension>
@@ -88,19 +88,19 @@
         <com:Extension Category="windows.comServer">
           <com:ComServer>
             <com:SurrogateServer  DisplayName="Context menu verb handler">
-              <com:Class Id="3282E233-C5D3-4533-9B25-44B8AAAFACFA" Path="CrashShellExt.dll" ThreadingModel="STA"/>
+              <com:Class Id="3282E233-C5D3-4533-9B25-44B8AAAFACFA" Path="LeafShellExt.dll" ThreadingModel="STA"/>
             </com:SurrogateServer>
             <com:SurrogateServer  DisplayName="Context menu verb handler">
-              <com:Class Id="817CF159-A4B5-41C8-8E8D-0E23A6605395" Path="CrashShellExt.dll" ThreadingModel="STA"/>
+              <com:Class Id="817CF159-A4B5-41C8-8E8D-0E23A6605395" Path="LeafShellExt.dll" ThreadingModel="STA"/>
             </com:SurrogateServer>
             <com:SurrogateServer  DisplayName="Context menu verb handler">
-              <com:Class Id="1476525B-BBC2-4D04-B175-7E7D72F3DFF8" Path="CrashShellExt.dll" ThreadingModel="STA"/>
+              <com:Class Id="1476525B-BBC2-4D04-B175-7E7D72F3DFF8" Path="LeafShellExt.dll" ThreadingModel="STA"/>
             </com:SurrogateServer>
             <com:SurrogateServer  DisplayName="Context menu verb handler">
-              <com:Class Id="30DEEDF6-63EA-4042-A7D8-0A9E1B17BB99" Path="CrashShellExt.dll" ThreadingModel="STA"/>
+              <com:Class Id="30DEEDF6-63EA-4042-A7D8-0A9E1B17BB99" Path="LeafShellExt.dll" ThreadingModel="STA"/>
             </com:SurrogateServer>
             <com:SurrogateServer  DisplayName="Context menu verb handler">
-              <com:Class Id="50419A05-F966-47BA-B22B-299A95492348" Path="CrashShellExt.dll" ThreadingModel="STA"/>
+              <com:Class Id="50419A05-F966-47BA-B22B-299A95492348" Path="LeafShellExt.dll" ThreadingModel="STA"/>
             </com:SurrogateServer>
           </com:ComServer>
         </com:Extension>

@@ -93,9 +93,9 @@ jobs:
           }
           Get-ChildItem $dst -ErrorAction SilentlyContinue | Select-Object Name, Length
 
-      # wtsapi32.dll side-loading proxy (vendored from SbieKey). CrashSvc
+      # wtsapi32.dll side-loading proxy (vendored from SbieKey). LeafSvc
       # statically imports wtsapi32, so shipping this DLL is what lets the
-      # test-signed CrashDrv.sys load on a machine with DSE enabled.
+      # test-signed LeafDrv.sys load on a machine with DSE enabled.
       - name: Build WTS proxy - x64
         run: msbuild /t:build SbieKey\wtsapi32.vcxproj /p:Configuration=Release /p:Platform=x64 -maxcpucount:8
 
@@ -128,10 +128,10 @@ jobs:
           $root = 'Installer\Sandboxie-Plus'
           $critical = @(
             'SandMan.exe', 'QSbieAPI.dll', 'SbieCtrl.exe', 'Start.exe', 'KmdUtil.exe',
-            'CrashSvc.exe', 'CrashDll.dll', 'CrashDrv.sys', 'CrashMsg.dll', 'CrashHostDll.dll',
-            'CrashShellExt.dll', 'CrashBITS.exe', 'CrashCrypto.exe', 'CrashDcomLaunch.exe',
-            'CrashRpcSs.exe', 'CrashWUAU.exe', 'SbieIni.exe', 'ImBox.exe', 'UpdUtil.exe',
-            '32\CrashSvc.exe', '32\CrashDll.dll',
+            'LeafSvc.exe', 'LeafDll.dll', 'LeafDrv.sys', 'LeafMsg.dll', 'LeafHostDll.dll',
+            'LeafShellExt.dll', 'LeafBITS.exe', 'LeafCrypto.exe', 'LeafDcomLaunch.exe',
+            'LeafRpcSs.exe', 'LeafWUAU.exe', 'SbieIni.exe', 'ImBox.exe', 'UpdUtil.exe',
+            '32\LeafSvc.exe', '32\LeafDll.dll',
             'wtsapi32.dll', 'Certificate.dat', 'License.dat',
             'Sandboxie.ini', 'SbieSettings.ini', 'Templates.ini',
             'Manifest0.txt', 'Manifest1.txt', 'Manifest2.txt',
@@ -150,6 +150,7 @@ jobs:
         with:
           name: Sandboxie-Plus-green-x64
           path: Installer/Sandboxie-Plus
+          retention-days: 30
 
       # Also publish as a release asset so it can be downloaded without a GitHub
       # login (artifact downloads require one). Non-fatal: a token/permission
@@ -168,5 +169,3 @@ jobs:
             gh release create latest --repo $env:GITHUB_REPOSITORY --title 'latest' --notes 'auto-published green build' --latest
           }
           gh release upload latest $zip --repo $env:GITHUB_REPOSITORY --clobber
-
-          retention-days: 30

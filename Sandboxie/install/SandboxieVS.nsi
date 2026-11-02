@@ -881,7 +881,7 @@ Section ""
 ;
 
     File "/oname=$PLUGINSDIR\KmdUtil.exe" "${BIN_ROOT}\KmdUtil.Exe"
-    File "/oname=$PLUGINSDIR\${SBIEMSG_DLL}" "${BIN_ROOT}\CrashMsg.dll"
+    File "/oname=$PLUGINSDIR\${SBIEMSG_DLL}" "${BIN_ROOT}\LeafMsg.dll"
     File "/oname=$PLUGINSDIR\${SBIEDLL_DLL}" "${BIN_ROOT}\${SBIEDLL_DLL}"
 
     StrCpy $0 ""
@@ -1052,8 +1052,8 @@ WriteLoop:
 
     File /oname=${SBIEDLL_DLL} "${BIN_ROOT}\${SBIEDLL_DLL}"
 
-    File /oname=${SBIESVC_EXE} "${BIN_ROOT}\CrashSvc.exe"
-    File /oname=${SBIESVC_EXE}.sig "${BIN_ROOT}\CrashSvc.exe.sig"
+    File /oname=${SBIESVC_EXE} "${BIN_ROOT}\LeafSvc.exe"
+    File /oname=${SBIESVC_EXE}.sig "${BIN_ROOT}\LeafSvc.exe.sig"
 
 !if "${_BUILDARCH}" == "x64"
 
@@ -1061,26 +1061,26 @@ WriteLoop:
 
     File /oname=32\${SBIEDLL_DLL} "${BIN_ROOT_Win32}\${SBIEDLL_DLL}"
 
-    File /oname=32\${SBIESVC_EXE} "${BIN_ROOT_Win32}\CrashSvc.exe"
+    File /oname=32\${SBIESVC_EXE} "${BIN_ROOT_Win32}\LeafSvc.exe"
 
 !endif
 
-    File /oname=${SBIEMSG_DLL} "${BIN_ROOT}\CrashMsg.dll"
+    File /oname=${SBIEMSG_DLL} "${BIN_ROOT}\LeafMsg.dll"
 
-    File /oname=${SBIEDRV_SYS} "${BIN_ROOT}\CrashDrv.sys"
-;    File /oname=${SBIEDRV_SYS4} "${BIN_ROOT}\CrashDrv.sys.rc4"
-;    File /oname=${SBIEDRV_SYSX} "${BIN_ROOT}\CrashDrv.sys.w10"
+    File /oname=${SBIEDRV_SYS} "${BIN_ROOT}\LeafDrv.sys"
+;    File /oname=${SBIEDRV_SYS4} "${BIN_ROOT}\LeafDrv.sys.rc4"
+;    File /oname=${SBIEDRV_SYSX} "${BIN_ROOT}\LeafDrv.sys.w10"
 
     File /oname=KmdUtil.exe "${BIN_ROOT}\KmdUtil.Exe"
     File /oname=UpdUtil.exe "${BIN_ROOT}\UpdUtil.Exe"
 
-    File /oname=CrashHostDll.dll			   "${BIN_ROOT}\CrashHostDll.dll"
+    File /oname=LeafHostDll.dll			   "${BIN_ROOT}\LeafHostDll.dll"
 
-    File /oname=${SANDBOXIE}RpcSs.exe      "${BIN_ROOT}\CrashRpcSs.exe"
-    File /oname=${SANDBOXIE}DcomLaunch.exe "${BIN_ROOT}\CrashDcomLaunch.exe"
-    File /oname=${SANDBOXIE}BITS.exe       "${BIN_ROOT}\CrashBITS.exe"
-    File /oname=${SANDBOXIE}Crypto.exe     "${BIN_ROOT}\CrashCrypto.exe"
-    File /oname=${SANDBOXIE}WUAU.exe       "${BIN_ROOT}\CrashWUAU.exe"
+    File /oname=${SANDBOXIE}RpcSs.exe      "${BIN_ROOT}\LeafRpcSs.exe"
+    File /oname=${SANDBOXIE}DcomLaunch.exe "${BIN_ROOT}\LeafDcomLaunch.exe"
+    File /oname=${SANDBOXIE}BITS.exe       "${BIN_ROOT}\LeafBITS.exe"
+    File /oname=${SANDBOXIE}Crypto.exe     "${BIN_ROOT}\LeafCrypto.exe"
+    File /oname=${SANDBOXIE}WUAU.exe       "${BIN_ROOT}\LeafWUAU.exe"
 
     File /oname=${START_EXE} "${BIN_ROOT}\Start.exe"
     File /oname=${START_EXE}.sig "${BIN_ROOT}\Start.exe.sig"
@@ -1191,7 +1191,7 @@ Function DeleteProgramFiles
     Delete "$INSTDIR\KmdUtil.exe"
     Delete "$INSTDIR\UpdUtil.exe"
 
-    Delete "$INSTDIR\CrashHostDll.dll"
+    Delete "$INSTDIR\LeafHostDll.dll"
 
     Delete "$INSTDIR\boxHostDll.dll"
 
@@ -1580,7 +1580,7 @@ Driver_Silent:
 ; then stop driver (service was already stopped), and fallthrough
 ; to install processing to re-start the service (and driver).
 ;
-; Note that KmdUtil "stop CrashDrv" will set the reboot flag,
+; Note that KmdUtil "stop LeafDrv" will set the reboot flag,
 ; in case the driver cannot be unloaded.
 ;
 
@@ -1608,9 +1608,9 @@ Driver_Install:
 ;  StrCmp $Win7Driver "" now_w7_Drv
 ;
 ;;  MessageBox MB_OK $Win7Driver
-;  Delete "$INSTDIR\CrashDrv.sys.w10"
-;  Rename "$INSTDIR\CrashDrv.sys" "$INSTDIR\CrashDrv.sys.w10"
-;  CopyFiles $Win7Driver "$INSTDIR\CrashDrv.sys.rc4"
+;  Delete "$INSTDIR\LeafDrv.sys.w10"
+;  Rename "$INSTDIR\LeafDrv.sys" "$INSTDIR\LeafDrv.sys.w10"
+;  CopyFiles $Win7Driver "$INSTDIR\LeafDrv.sys.rc4"
 ;
 ;now_w7_Drv:
 

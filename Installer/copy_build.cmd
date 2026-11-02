@@ -129,13 +129,13 @@ rmdir /S /Q %instPath%\translations\
 
 ECHO Copying Sandboxie
 
-copy /y %sbiePath%\CrashSvc.exe %instPath%\
-copy /y %sbiePath%\CrashSvc.pdb %instPath%\
-copy /y %sbiePath%\CrashDll.dll %instPath%\
-copy /y %sbiePath%\CrashDll.pdb %instPath%\
+copy /y %sbiePath%\LeafSvc.exe %instPath%\
+copy /y %sbiePath%\LeafSvc.pdb %instPath%\
+copy /y %sbiePath%\LeafDll.dll %instPath%\
+copy /y %sbiePath%\LeafDll.pdb %instPath%\
 
-copy /y %sbiePath%\CrashDrv.sys %instPath%\
-copy /y %sbiePath%\CrashDrv.pdb %instPath%\
+copy /y %sbiePath%\LeafDrv.sys %instPath%\
+copy /y %sbiePath%\LeafDrv.pdb %instPath%\
 
 copy /y %sbiePath%\SbieCtrl.exe %instPath%\
 copy /y %sbiePath%\SbieCtrl.pdb %instPath%\
@@ -147,43 +147,43 @@ copy /y %sbiePath%\kmdutil.exe %instPath%\KmdUtil.exe
 copy /y %sbiePath%\kmdutil.pdb %instPath%\KmdUtil.pdb
 copy /y %sbiePath%\SbieIni.exe %instPath%\
 copy /y %sbiePath%\SbieIni.pdb %instPath%\
-copy /y %sbiePath%\CrashMsg.dll %instPath%\
-copy /y %sbiePath%\CrashHostDll.dll %instPath%\
-copy /y %sbiePath%\CrashHostDll.pdb %instPath%\
+copy /y %sbiePath%\LeafMsg.dll %instPath%\
+copy /y %sbiePath%\LeafHostDll.dll %instPath%\
+copy /y %sbiePath%\LeafHostDll.pdb %instPath%\
 
-copy /y %sbiePath%\CrashBITS.exe %instPath%\
-copy /y %sbiePath%\CrashBITS.pdb %instPath%\
-copy /y %sbiePath%\CrashCrypto.exe %instPath%\
-copy /y %sbiePath%\CrashCrypto.pdb %instPath%\
-copy /y %sbiePath%\CrashDcomLaunch.exe %instPath%\
-copy /y %sbiePath%\CrashDcomLaunch.pdb %instPath%\
-copy /y %sbiePath%\CrashRpcSs.exe %instPath%\
-copy /y %sbiePath%\CrashRpcSs.pdb %instPath%\
-copy /y %sbiePath%\CrashWUAU.exe %instPath%\
-copy /y %sbiePath%\CrashWUAU.pdb %instPath%\
+copy /y %sbiePath%\LeafBITS.exe %instPath%\
+copy /y %sbiePath%\LeafBITS.pdb %instPath%\
+copy /y %sbiePath%\LeafCrypto.exe %instPath%\
+copy /y %sbiePath%\LeafCrypto.pdb %instPath%\
+copy /y %sbiePath%\LeafDcomLaunch.exe %instPath%\
+copy /y %sbiePath%\LeafDcomLaunch.pdb %instPath%\
+copy /y %sbiePath%\LeafRpcSs.exe %instPath%\
+copy /y %sbiePath%\LeafRpcSs.pdb %instPath%\
+copy /y %sbiePath%\LeafWUAU.exe %instPath%\
+copy /y %sbiePath%\LeafWUAU.pdb %instPath%\
 
 IF %archPath% == x64 (
   mkdir %instPath%\32\
-  copy /y %~dp0..\Sandboxie\Bin\Win32\SbieRelease\CrashSvc.exe %instPath%\32\
-  copy /y %~dp0..\Sandboxie\Bin\Win32\SbieRelease\CrashSvc.pdb %instPath%\32\
-  copy /y %~dp0..\Sandboxie\Bin\Win32\SbieRelease\CrashDll.dll %instPath%\32\
-  copy /y %~dp0..\Sandboxie\Bin\Win32\SbieRelease\CrashDll.pdb %instPath%\32\
+  copy /y %~dp0..\Sandboxie\Bin\Win32\SbieRelease\LeafSvc.exe %instPath%\32\
+  copy /y %~dp0..\Sandboxie\Bin\Win32\SbieRelease\LeafSvc.pdb %instPath%\32\
+  copy /y %~dp0..\Sandboxie\Bin\Win32\SbieRelease\LeafDll.dll %instPath%\32\
+  copy /y %~dp0..\Sandboxie\Bin\Win32\SbieRelease\LeafDll.pdb %instPath%\32\
 
-  copy /y %~dp0..\SandboxiePlus\x64\Release\CrashShellExt.dll %instPath%\
+  copy /y %~dp0..\SandboxiePlus\x64\Release\LeafShellExt.dll %instPath%\
   copy /y %~dp0..\SandboxiePlus\x64\Release\SbieShellPkg.msix %instPath%\
 )
 IF %archPath% == ARM64 (
   mkdir %instPath%\32\
-  copy /y %~dp0..\Sandboxie\Bin\Win32\SbieRelease\CrashSvc.exe %instPath%\32\
-  copy /y %~dp0..\Sandboxie\Bin\Win32\SbieRelease\CrashSvc.pdb %instPath%\32\
-  copy /y %~dp0..\Sandboxie\Bin\Win32\SbieRelease\CrashDll.dll %instPath%\32\
-  copy /y %~dp0..\Sandboxie\Bin\Win32\SbieRelease\CrashDll.pdb %instPath%\32\
+  copy /y %~dp0..\Sandboxie\Bin\Win32\SbieRelease\LeafSvc.exe %instPath%\32\
+  copy /y %~dp0..\Sandboxie\Bin\Win32\SbieRelease\LeafSvc.pdb %instPath%\32\
+  copy /y %~dp0..\Sandboxie\Bin\Win32\SbieRelease\LeafDll.dll %instPath%\32\
+  copy /y %~dp0..\Sandboxie\Bin\Win32\SbieRelease\LeafDll.pdb %instPath%\32\
 
   mkdir %instPath%\64\
-  copy /y %~dp0..\Sandboxie\Bin\ARM64EC\SbieRelease\CrashDll.dll %instPath%\64\
-  copy /y %~dp0..\Sandboxie\Bin\ARM64EC\SbieRelease\CrashDll.pdb %instPath%\64\
+  copy /y %~dp0..\Sandboxie\Bin\ARM64EC\SbieRelease\LeafDll.dll %instPath%\64\
+  copy /y %~dp0..\Sandboxie\Bin\ARM64EC\SbieRelease\LeafDll.pdb %instPath%\64\
 
-  copy /y %~dp0..\SandboxiePlus\ARM64\Release\CrashShellExt.dll %instPath%\
+  copy /y %~dp0..\SandboxiePlus\ARM64\Release\LeafShellExt.dll %instPath%\
   copy /y %~dp0..\SandboxiePlus\ARM64\Release\SbieShellPkg.msix %instPath%\
 )
 

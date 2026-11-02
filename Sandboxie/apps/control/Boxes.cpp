@@ -94,11 +94,11 @@ void CBoxes::ReloadBoxes()
         if (GetSize() == 0)
             name[0] = L'\0';
         else {
-            index = CrashApi_EnumBoxesEx(
+            index = LeafApi_EnumBoxesEx(
                             index, name, TRUE);
             if (index == -1)
                 break;
-            LONG rc = CrashApi_IsBoxEnabled(name);
+            LONG rc = LeafApi_IsBoxEnabled(name);
             if (rc == STATUS_ACCOUNT_RESTRICTION)
                 m_AnyHiddenBoxes = true;
             if (rc != STATUS_SUCCESS)
@@ -127,7 +127,7 @@ void CBoxes::ReloadBoxes()
     bool doWriteExpandedView = false;
 
     if (GetSize() == 1 &&
-            CrashApi_IsBoxEnabled(m_DefaultBox) ==
+            LeafApi_IsBoxEnabled(m_DefaultBox) ==
                 STATUS_OBJECT_NAME_NOT_FOUND) {
 
         CBox *box = new CBox(m_DefaultBox);
@@ -284,10 +284,10 @@ void CBoxes::GetHiddenBoxes(CStringList &list) const
     WCHAR name[64];
     int index = -1;
     while (1) {
-        index = CrashApi_EnumBoxesEx(index, name, TRUE);
+        index = LeafApi_EnumBoxesEx(index, name, TRUE);
         if (index == -1)
             break;
-        LONG rc = CrashApi_IsBoxEnabled(name);
+        LONG rc = LeafApi_IsBoxEnabled(name);
         if (rc == STATUS_ACCOUNT_RESTRICTION)
             list.AddTail(name);
     }

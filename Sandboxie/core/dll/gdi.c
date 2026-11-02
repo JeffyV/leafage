@@ -278,7 +278,7 @@ _FX ULONG_PTR Gdi_GdiDllInitialize_Common(
 
         WCHAR errtxt[48];
         Sbie_snwprintf(errtxt, 48, L"GdiInit.%08p", (void*)rc);
-        CrashApi_Log(2205, errtxt);
+        LeafApi_Log(2205, errtxt);
     }
 
     return rc;
@@ -360,7 +360,7 @@ _FX void Gdi_SplWow64(BOOLEAN Register)
     //
 
     // NoSbieDesk BEGIN
-    if (Dll_CompartmentMode || CrashApi_QueryConfBool(NULL, L"NoSandboxieDesktop", FALSE))
+    if (Dll_CompartmentMode || LeafApi_QueryConfBool(NULL, L"NoSandboxieDesktop", FALSE))
         return;
 	// NoSbieDesk END
 
@@ -543,7 +543,7 @@ _FX WCHAR *Gdi_GetFontPath(const WCHAR *path)
     if (path2) {
         ULONG mp_flags = SbieDll_MatchPath(L'f', path2);
         if (PATH_IS_OPEN(mp_flags))
-            CrashApi_Log(2205, L"Font Path %S", path1);
+            LeafApi_Log(2205, L"Font Path %S", path1);
         Dll_Free(path2);
     }
 
@@ -918,7 +918,7 @@ _FX BOOLEAN Gdi_Full_Init_impl(HMODULE module, BOOLEAN full)
 
 	InitializeCriticalSection(&Gdi_CritSec);
 
-    Gui_UseBlockCapture = CrashApi_QueryConfBool(NULL, L"BlockScreenCapture", FALSE);
+    Gui_UseBlockCapture = LeafApi_QueryConfBool(NULL, L"BlockScreenCapture", FALSE);
     if (Gui_UseBlockCapture)
         Gdi_InitDCCache();
 

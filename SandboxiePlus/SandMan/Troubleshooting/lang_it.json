@@ -79,9 +79,9 @@
 "SBIE2115: File is too large to copy into sandbox, opening in read only": "SBIE2115: File is too large to copy into sandbox, opening in read only",
 "File is too large to copy into sandbox, opening in read only": "File is too large to copy into sandbox, opening in read only",
 
-"SBIE2181: Failed to load CrashDll.dll": "SBIE2181: Failed to load CrashDll.dll",
+"SBIE2181: Failed to load LeafDll.dll": "SBIE2181: Failed to load LeafDll.dll",
 "Fix the DACLs of Sandboxie's home folder": "Fix the DACLs of Sandboxie's home folder",
-"Failures to load CrashDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.": "Failures to load CrashDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.",
+"Failures to load LeafDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.": "Failures to load LeafDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.",
 "The DACLs have been adjusted, please try to run your application again and indicate if the issue has been resolved.": "The DACLs have been adjusted, please try to run your application again and indicate if the issue has been resolved.",
 "DACLs fix did not resolve the issue": "DACLs fix did not resolve the issue",
 

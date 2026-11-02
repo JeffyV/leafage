@@ -115,7 +115,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;CrashDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib;Gdiplus.lib</AdditionalDependencies>
+      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;LeafDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib;Gdiplus.lib</AdditionalDependencies>
       <CETCompat>true</CETCompat>
     </Link>
     <ResourceCompile>
@@ -132,7 +132,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;CrashDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib;Gdiplus.lib</AdditionalDependencies>
+      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;LeafDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib;Gdiplus.lib</AdditionalDependencies>
       <CETCompat>true</CETCompat>
     </Link>
     <ResourceCompile>
@@ -150,7 +150,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;CrashDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib;Gdiplus.lib</AdditionalDependencies>
+      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;LeafDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib;Gdiplus.lib</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <PreprocessorDefinitions>_MSC_VER=1200;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -162,7 +162,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|Win32'">
     <ClCompile />
     <Link>
-      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;CrashDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib;Gdiplus.lib</AdditionalDependencies>
+      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;LeafDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib;Gdiplus.lib</AdditionalDependencies>
       <CETCompat>true</CETCompat>
     </Link>
     <ResourceCompile>
@@ -180,7 +180,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|x64'">
     <ClCompile />
     <Link>
-      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;CrashDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib;Gdiplus.lib</AdditionalDependencies>
+      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;LeafDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib;Gdiplus.lib</AdditionalDependencies>
       <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
       <CETCompat>true</CETCompat>
     </Link>
@@ -199,7 +199,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|ARM64'">
     <ClCompile />
     <Link>
-      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;CrashDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib;Gdiplus.lib</AdditionalDependencies>
+      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;LeafDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib;Gdiplus.lib</AdditionalDependencies>
       <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
     </Link>
     <ResourceCompile>

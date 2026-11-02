@@ -111,11 +111,11 @@ static void InitConsoleWOW64(SBIELOW_DATA *data);
 
 
 //---------------------------------------------------------------------------
-// CrashApi_Ioctl
+// LeafApi_Ioctl
 //---------------------------------------------------------------------------
 
 
-_FX NTSTATUS CrashApi_Ioctl(SBIELOW_DATA *data, void *parms)
+_FX NTSTATUS LeafApi_Ioctl(SBIELOW_DATA *data, void *parms)
 {
     IO_STATUS_BLOCK MyIoStatusBlock;
 
@@ -131,12 +131,12 @@ _FX NTSTATUS CrashApi_Ioctl(SBIELOW_DATA *data, void *parms)
 
 
 //---------------------------------------------------------------------------
-// CrashApi_QueryProcessInfo
+// LeafApi_QueryProcessInfo
 //---------------------------------------------------------------------------
 
 
 //#ifdef _WIN64
-//_FX ULONG64 CrashApi_QueryProcessInfo(SBIELOW_DATA *data, ULONG info_type)
+//_FX ULONG64 LeafApi_QueryProcessInfo(SBIELOW_DATA *data, ULONG info_type)
 //{
 //    NTSTATUS status;
 //    __declspec(align(8)) ULONG64 ResultValue;
@@ -150,7 +150,7 @@ _FX NTSTATUS CrashApi_Ioctl(SBIELOW_DATA *data, void *parms)
 //    args->info_type.val64       = (ULONG64)(ULONG_PTR)info_type;
 //    args->info_data.val64       = (ULONG64)(ULONG_PTR)&ResultValue;
 //
-//    status = CrashApi_Ioctl(data, parms);
+//    status = LeafApi_Ioctl(data, parms);
 //    if (! NT_SUCCESS(status))
 //        ResultValue = 0;
 //
@@ -160,11 +160,11 @@ _FX NTSTATUS CrashApi_Ioctl(SBIELOW_DATA *data, void *parms)
 
 
 //---------------------------------------------------------------------------
-// CrashApi_LogMsg
+// LeafApi_LogMsg
 //---------------------------------------------------------------------------
 
 
-_FX NTSTATUS CrashApi_LogMsg(ULONG64 pNtDeviceIoControlFile, ULONG64 api_device_handle, ULONG code, const WCHAR *text)
+_FX NTSTATUS LeafApi_LogMsg(ULONG64 pNtDeviceIoControlFile, ULONG64 api_device_handle, ULONG code, const WCHAR *text)
 {
     NTSTATUS status = 0;
     __declspec(align(8)) UNICODE_STRING64 msgtext;
@@ -184,7 +184,7 @@ _FX NTSTATUS CrashApi_LogMsg(ULONG64 pNtDeviceIoControlFile, ULONG64 api_device_
     args->session_id.val = -1;
     args->msgid.val = code;
     args->msgtext.val = &msgtext;
-    //status = CrashApi_Ioctl(data, parms);
+    //status = LeafApi_Ioctl(data, parms);
 
     IO_STATUS_BLOCK MyIoStatusBlock;
 #ifdef _WIN64
@@ -200,11 +200,11 @@ _FX NTSTATUS CrashApi_LogMsg(ULONG64 pNtDeviceIoControlFile, ULONG64 api_device_
 
 
 //---------------------------------------------------------------------------
-// CrashApi_DebugError
+// LeafApi_DebugError
 //---------------------------------------------------------------------------
 
 
-_FX NTSTATUS CrashApi_DebugError(SBIELOW_DATA* data, ULONG error)
+_FX NTSTATUS LeafApi_DebugError(SBIELOW_DATA* data, ULONG error)
 {
     // Note: A normal string like L"text" would not result in position independent code !!!
     // hence we create a string array and fill it byte by byte
@@ -218,7 +218,7 @@ _FX NTSTATUS CrashApi_DebugError(SBIELOW_DATA* data, ULONG error)
     for(int i=28; i >= 0; i-=4)
         *ptr++ = table[(error >> i) & 0xF];
 
-    return CrashApi_LogMsg(data->NtDeviceIoControlFile, data->api_device_handle, 2180, text);
+    return LeafApi_LogMsg(data->NtDeviceIoControlFile, data->api_device_handle, 2180, text);
 }
 
 
@@ -409,7 +409,7 @@ _FX void InitSyscalls(SBIELOW_DATA *data, void * SystemService)
                 ZwXxxPtr = ChromeFunc;
             else {
                 if(data->flags.hook_dbg)
-                    CrashApi_DebugError(data, 0x60 | (SyscallPtr[0] << 16));
+                    LeafApi_DebugError(data, 0x60 | (SyscallPtr[0] << 16));
                 //SyscallPtr += 2;
                 //continue;
             }
@@ -627,13 +627,13 @@ _FX void DisableCHPE(SBIELOW_DATA* data)
     // Sandboxie on ARM64 requires x86 applications NOT to use the CHPE (Compiled Hybrid Portable Executable)
     // binaries as when hooking a hybrid binary it is required to hook the internal native functions.
     // 
-    // This can be done quite easily for ARM64EC (x64 on ARM64) by compiling CrashDll.dll as ARM64EC
-    // and resolving the FFS sequence targets, which then can be hooked with the native CrashDll.dll functions.
+    // This can be done quite easily for ARM64EC (x64 on ARM64) by compiling LeafDll.dll as ARM64EC
+    // and resolving the FFS sequence targets, which then can be hooked with the native LeafDll.dll functions.
     // 
     // For CHPE MSFT how ever does not provide any public build tool chain, hence it would be required
     // to hand craft native detour targets and then properly transition to x86 code which is not documented.
     // When the use of hybrid binaries for x86 is disabled all loaded DLL's, except the native ntdll.dll
-    // are pure x86 binaries and can be easily hooked with CrashDll.dll's x86 functions.
+    // are pure x86 binaries and can be easily hooked with LeafDll.dll's x86 functions.
     // 
     // To prevent the kernel from loading the CHPE version of ntdll.dll we can pass PsAttributeChpe = 0
     // in the AttributeList of NtCreateUserProcess, however then the created process will still try to 
@@ -643,7 +643,7 @@ _FX void DisableCHPE(SBIELOW_DATA* data)
     // the regular x86 binaries from the SysWOW64 directory and initialize properly.
     // 
     // Note: This hook affects only the native function and is only installed on x86 processes
-    //          hence we install a similar hook in CrashDll.dll!Proc_Init which causes 
+    //          hence we install a similar hook in LeafDll.dll!Proc_Init which causes 
     //          CreateProcessInternalW to set PsAttributeChpe = 0 when creating new processes.
     //
 
@@ -841,7 +841,7 @@ ULONG_PTR EntrypointC(SBIELOW_DATA *data, void *DetourCode, void *SystemService)
             // WaitForDebugger(data);
 
             //wchar_t text[] = { 't','e','s','t',0 };
-            //CrashApi_LogMsg(data->NtDeviceIoControlFile, data->api_device_handle, 1122, text);
+            //LeafApi_LogMsg(data->NtDeviceIoControlFile, data->api_device_handle, 1122, text);
 
             PrepSyscalls(data, SystemService);
             if (!data->flags.bHostInject && !data->flags.bNoSysHooks)

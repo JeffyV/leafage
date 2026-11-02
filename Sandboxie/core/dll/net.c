@@ -410,8 +410,8 @@ _FX int WSA_WSAStartup(
         WSA_ProxyEnabled = TRUE;
 
         SCertInfo CertInfo = { 0 }; // experimental not yet for public
-        if (NT_SUCCESS(CrashApi_QueryDrvInfo(-1, &CertInfo, sizeof(CertInfo))) && (CertInfo.type == eCertDeveloper || CERT_IS_TYPE(CertInfo, eCertEternal)))
-            WSA_ProxyThread = CrashApi_QueryConfBool(NULL, L"UseProxyThreads", FALSE);
+        if (NT_SUCCESS(LeafApi_QueryDrvInfo(-1, &CertInfo, sizeof(CertInfo))) && (CertInfo.type == eCertDeveloper || CERT_IS_TYPE(CertInfo, eCertEternal)))
+            WSA_ProxyThread = LeafApi_QueryConfBool(NULL, L"UseProxyThreads", FALSE);
 
         if (!WSA_ProxyThread)
             WSA_ProxyHack = TRUE;
@@ -652,8 +652,8 @@ static SOCKET WSA_WSASocketW(
         // we pass NULL instead of a device name as the block is not device based
         //
 
-        BOOLEAN prompt = CrashApi_QueryConfBool(NULL, L"PromptForInternetAccess", FALSE);
-        if (CrashApi_CheckInternetAccess(0, NULL, !prompt) == STATUS_ACCESS_DENIED
+        BOOLEAN prompt = LeafApi_QueryConfBool(NULL, L"PromptForInternetAccess", FALSE);
+        if (LeafApi_CheckInternetAccess(0, NULL, !prompt) == STATUS_ACCESS_DENIED
             && (!prompt || !File_InternetBlockade_ManualBypass())) {
 
             //
@@ -903,7 +903,7 @@ _FX int WSA_IsBlockedTraffic(const short *addr, int addrlen, int protocol)
             WCHAR msg[256];
             Sbie_snwprintf(msg, 256, L"Network Traffic; Port: %u; Prot: %u", port, protocol);
             WSA_DumpIP(addr[0], &ip, msg);
-            CrashApi_MonitorPutMsg(MONITOR_NETFW | (block ? MONITOR_DENY : MONITOR_OPEN), msg);
+            LeafApi_MonitorPutMsg(MONITOR_NETFW | (block ? MONITOR_DENY : MONITOR_OPEN), msg);
         }
 
         if (block) {
@@ -1516,7 +1516,7 @@ _FX void WSA_InitNetFwRules()
 
     for (ULONG index = 0; ; ++index) {
 
-        NTSTATUS status = CrashApi_QueryConf(
+        NTSTATUS status = LeafApi_QueryConf(
             NULL, L"NetworkAccess", index, conf_buf, sizeof(conf_buf) - 16 * sizeof(WCHAR));
         if (!NT_SUCCESS(status))
             break;
@@ -1528,7 +1528,7 @@ _FX void WSA_InitNetFwRules()
 
         NETFW_RULE* rule = NetFw_AllocRule(Dll_Pool, level);
         if (!rule) {
-            CrashApi_Log(2305, NULL);
+            LeafApi_Log(2305, NULL);
             continue;
         }
 
@@ -1713,7 +1713,7 @@ _FX BOOLEAN WSA_InitNetProxy()
     ULONG FoundLevel6 = -1;
 
     for (ULONG index = 0; ; ++index) {
-        NTSTATUS status = CrashApi_QueryConf(
+        NTSTATUS status = LeafApi_QueryConf(
             NULL, L"NetworkUseProxy", index, proxy_buf, sizeof(proxy_buf) - 16 * sizeof(WCHAR));
         if (!NT_SUCCESS(status))
             break;
@@ -1763,10 +1763,10 @@ _FX BOOLEAN WSA_InitNetProxy()
     //
 
     SCertInfo CertInfo = { 0 };
-    if (!NT_SUCCESS(CrashApi_QueryDrvInfo(-1, &CertInfo, sizeof(CertInfo))) || !(CertInfo.active && CertInfo.opt_net)) {
+    if (!NT_SUCCESS(LeafApi_QueryDrvInfo(-1, &CertInfo, sizeof(CertInfo))) || !(CertInfo.active && CertInfo.opt_net)) {
 
         const WCHAR* strings[] = { L"NetworkUseProxy" , NULL };
-        CrashApi_LogMsgExt(-1, 6009, strings);
+        LeafApi_LogMsgExt(-1, 6009, strings);
 
         WSA_Proxy4 = NULL;
         WSA_Proxy6 = NULL;
@@ -1791,7 +1791,7 @@ _FX BOOLEAN WSA_InitBindIP()
     ULONG FoundLevel = -1;
     for (ULONG index = 0; ; ++index) {
 
-        NTSTATUS status = CrashApi_QueryConf(
+        NTSTATUS status = LeafApi_QueryConf(
             NULL, L"BindAdapter", index, conf_buf, sizeof(conf_buf) - 16 * sizeof(WCHAR));
         if (!NT_SUCCESS(status))
             break;
@@ -1874,7 +1874,7 @@ _FX BOOLEAN WSA_InitBindIP()
     ULONG FoundLevel6 = -1;
     for (ULONG index = 0; ; ++index) {
 
-        NTSTATUS status = CrashApi_QueryConf(
+        NTSTATUS status = LeafApi_QueryConf(
             NULL, L"BindAdapterIP", index, conf_buf, sizeof(conf_buf) - 16 * sizeof(WCHAR));
         if (!NT_SUCCESS(status))
             break;
@@ -2107,7 +2107,7 @@ _FX BOOLEAN WSA_Init(HMODULE module)
     __sys_FreeAddrInfoW = (P_FreeAddrInfoW)GetProcAddress(module, "FreeAddrInfoW");
 
 #ifdef PROXY_RESOLVE_HOST_NAMES
-    if(WSA_ProxyEnabled && CrashApi_QueryConfBool(NULL, L"NetworkProxyResolveHostnames", FALSE)) {
+    if(WSA_ProxyEnabled && LeafApi_QueryConfBool(NULL, L"NetworkProxyResolveHostnames", FALSE)) {
 	
         map_init(&DNS_LookupMap, Dll_Pool);
 
@@ -2125,7 +2125,7 @@ _FX BOOLEAN WSA_Init(HMODULE module)
 
     // If there are any NetFwTrace options set, then output this debug string
     WCHAR wsTraceOptions[4];
-    if (CrashApi_QueryConf(NULL, L"NetFwTrace", 0, wsTraceOptions, sizeof(wsTraceOptions)) == STATUS_SUCCESS && wsTraceOptions[0] != L'\0')
+    if (LeafApi_QueryConf(NULL, L"NetFwTrace", 0, wsTraceOptions, sizeof(wsTraceOptions)) == STATUS_SUCCESS && wsTraceOptions[0] != L'\0')
         WSA_TraceFlag = TRUE;
     
     //
@@ -2387,7 +2387,7 @@ _FX int WSA_GetAddrInfoW(
         size_t len = wcslen(pNodeName) + 1;
         char* host = Dll_AllocTemp(len * 2);
         if (!host) {
-            CrashApi_Log(2305, NULL);
+            LeafApi_Log(2305, NULL);
             return ret;
         }
         wcstombs(host, pNodeName, len);

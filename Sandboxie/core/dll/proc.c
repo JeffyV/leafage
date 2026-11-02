@@ -626,7 +626,7 @@ _FX BOOL Proc_UpdateProcThreadAttribute(
             return TRUE;
     }
 
-	// some mitigation flags break CrashDll.dll Injection, so we disable them
+	// some mitigation flags break LeafDll.dll Injection, so we disable them
 	if (Attribute == 0x00020007) //PROC_THREAD_ATTRIBUTE_MITIGATION_POLICY
 	{
 		DWORD64* policy_value_1 = cbSize >= sizeof(DWORD64) ? lpValue : NULL;
@@ -872,7 +872,7 @@ _FX BOOL Proc_CreateProcessInternalW(
     }
 
     // OriginalToken BEGIN
-    if (!Dll_CompartmentMode && !CrashApi_QueryConfBool(NULL, L"OriginalToken", FALSE))
+    if (!Dll_CompartmentMode && !LeafApi_QueryConfBool(NULL, L"OriginalToken", FALSE))
     // OriginalToken END
     {
         // $Workaround$ - 3rd party fix
@@ -907,7 +907,7 @@ _FX BOOL Proc_CreateProcessInternalW(
         {
             //
             // MSEdge Compatibility hack
-            // workers of type cdm can't open CrashSvc's ALPC port
+            // workers of type cdm can't open LeafSvc's ALPC port
             //
 
             if (Dll_ImageType == DLL_IMAGE_GOOGLE_CHROME && lpCommandLine
@@ -1120,11 +1120,11 @@ _FX BOOL Proc_CreateProcessInternalW(
             lpCommandLine = TlsData->proc_command_line;
 
         //
-        // if this is one of our service process (e.g. CrashDcomLaunch)
+        // if this is one of our service process (e.g. LeafDcomLaunch)
         // which is running without system privileges and does not have the
         // SeAssignPrimaryTokenPrivilege, the CreateProcessAsUser call will
         // fail to replace the process token later when it calls
-        // NtSetInformationProcess.  to work around this, we use CrashSvc
+        // NtSetInformationProcess.  to work around this, we use LeafSvc
         // to start the new process
         //
 
@@ -1342,7 +1342,7 @@ _FX BOOL Proc_CreateProcessInternalW(
     if (Config_GetSettingsForImageName_bool(L"DropAppContainerToken", Dll_CompartmentMode ? FALSE : TRUE)) {
         if (Secure_IsAppContainerToken(hToken)) {
             hToken = NULL;
-            CrashApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, L"Dropped AppContainer Token");
+            LeafApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, L"Dropped AppContainer Token");
         }
     }
 
@@ -1351,17 +1351,17 @@ _FX BOOL Proc_CreateProcessInternalW(
     //
 
     // OriginalToken BEGIN
-    if (Dll_CompartmentMode || CrashApi_QueryConfBool(NULL, L"OriginalToken", FALSE))
+    if (Dll_CompartmentMode || LeafApi_QueryConfBool(NULL, L"OriginalToken", FALSE))
     {
         extern BOOLEAN Scm_MsiServer_Systemless;
         if (Dll_ImageType == DLL_IMAGE_MSI_INSTALLER && Scm_MsiServer_Systemless 
-            && !CrashApi_QueryConfBool(NULL, L"RunServicesAsSystem", FALSE) && !CrashApi_QueryConfBool(NULL, L"MsiInstallerExemptions", FALSE)) {
+            && !LeafApi_QueryConfBool(NULL, L"RunServicesAsSystem", FALSE) && !LeafApi_QueryConfBool(NULL, L"MsiInstallerExemptions", FALSE)) {
             // this is a simple workaround for the MSI installer to work properly
             hToken = NULL;
 		    lpProcessAttributes = NULL;
         }
 
-        TlsData->proc_create_process_fake_admin = (Secure_FakeAdmin == FALSE && CrashApi_QueryConfBool(NULL, L"FakeAdminRights", (Dll_ProcessFlags & SBIE_FLAG_FAKE_ADMIN) != 0));
+        TlsData->proc_create_process_fake_admin = (Secure_FakeAdmin == FALSE && LeafApi_QueryConfBool(NULL, L"FakeAdminRights", (Dll_ProcessFlags & SBIE_FLAG_FAKE_ADMIN) != 0));
         //TlsData->proc_create_process_fake_admin = (Dll_ProcessFlags & SBIE_FLAG_FAKE_ADMIN) != 0;
 
         ok = __sys_CreateProcessInternalW(
@@ -1441,7 +1441,7 @@ _FX BOOL Proc_CreateProcessInternalW(
         }
     }
 
-    TlsData->proc_create_process_fake_admin = (Secure_FakeAdmin == FALSE && CrashApi_QueryConfBool(NULL, L"FakeAdminRights", (Dll_ProcessFlags & SBIE_FLAG_FAKE_ADMIN) != 0));
+    TlsData->proc_create_process_fake_admin = (Secure_FakeAdmin == FALSE && LeafApi_QueryConfBool(NULL, L"FakeAdminRights", (Dll_ProcessFlags & SBIE_FLAG_FAKE_ADMIN) != 0));
     //TlsData->proc_create_process_fake_admin = (Dll_ProcessFlags & SBIE_FLAG_FAKE_ADMIN) != 0;
 
     ok = __sys_CreateProcessInternalW(
@@ -1572,7 +1572,7 @@ _FX BOOL Proc_CreateProcessInternalW(
                     else
                     {
                         ResumeThread(lpProcessInformation->hThread);
-                        CrashApi_Log(2224, L"%S [%S]", Dll_ImageName, Dll_BoxName);
+                        LeafApi_Log(2224, L"%S [%S]", Dll_ImageName, Dll_BoxName);
                         g_boolWasWerFaultLastProcess = TRUE;
                         // let WerFault run for a while to create its DMP before we let the crashing process exit.
                         WaitForSingleObject(lpProcessInformation->hProcess, 30000);
@@ -1627,13 +1627,13 @@ finish:
                 err = ERROR_CANCELLED;
         }
         //else
-        //    CrashApi_Log(2226, L"%S [%S]", Dll_ImageName, Dll_BoxName);
+        //    LeafApi_Log(2226, L"%S [%S]", Dll_ImageName, Dll_BoxName);
     }
 
     /*if ((! ok) && (err == ERROR_ELEVATION_REQUIRED)) {
 
         insert env var SBIE_OVERRIDE_PARENT_PID
-        run through CrashSvc
+        run through LeafSvc
         hook NtQueryInformationProcess if env var SBIE_OVERRIDE_PARENT_PID exists
     }*/
 
@@ -1663,7 +1663,7 @@ finish:
     {
         WCHAR msg[1024];
         Sbie_snwprintf(msg, 1024, L"CreateProcess: %s (%s); err=%d", lpApplicationName ? lpApplicationName : L"[noName]", lpCommandLine ? lpCommandLine : L"[noCmd]", ok ? 0 : err);
-        CrashApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, msg);
+        LeafApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, msg);
     }
 
     SetLastError(err);
@@ -1681,13 +1681,13 @@ _FX BOOL Proc_AlternateCreateProcess(
     void *lpCurrentDirectory, LPPROCESS_INFORMATION lpProcessInformation,
     BOOL *ReturnValue)
 {
-    if (CrashApi_QueryConfBool(NULL, L"BlockSoftwareUpdaters", TRUE)) {
+    if (LeafApi_QueryConfBool(NULL, L"BlockSoftwareUpdaters", TRUE)) {
         if (Proc_IsSoftwareUpdateW(lpApplicationName ? lpApplicationName : lpCommandLine)) {
 
             SetLastError(ERROR_ACCESS_DENIED);
             *ReturnValue = FALSE;
 
-            CrashApi_MonitorPutMsg(MONITOR_OTHER, L"Blocked start of an updater");
+            LeafApi_MonitorPutMsg(MONITOR_OTHER, L"Blocked start of an updater");
             return TRUE;        // exit CreateProcessInternal
         }
     }
@@ -1713,13 +1713,13 @@ _FX BOOL Proc_AlternateCreateProcess(
         // don't start Kaspersky Anti Virus klwtblfs.exe component
         // because Kaspersky protects the process and we can't put
         // it into a job or inject SbieLow and so on
-        CrashApi_MonitorPutMsg(MONITOR_OTHER, L"Blocked start of klwtblfs.exe");
+        LeafApi_MonitorPutMsg(MONITOR_OTHER, L"Blocked start of klwtblfs.exe");
         return TRUE;        // exit CreateProcessInternal
     }
     if (Dll_ImageType == DLL_IMAGE_SANDBOXIE_DCOMLAUNCH && lpCommandLine
         && wcsstr(lpCommandLine, L"smartscreen.exe")) {
 
-        CrashApi_MonitorPutMsg(MONITOR_OTHER, L"Blocked start of smartscreen.exe");
+        LeafApi_MonitorPutMsg(MONITOR_OTHER, L"Blocked start of smartscreen.exe");
         return TRUE;        // exit CreateProcessInternal
     }
     return FALSE;           // continue with CreateProcessInternal
@@ -2059,7 +2059,7 @@ _FX void Proc_FixBatchCommandLine(
         }
     }
 
-    CrashApi_Log(2205, L"Batch Command Line");
+    LeafApi_Log(2205, L"Batch Command Line");
 }
 
 
@@ -2407,7 +2407,7 @@ _FX UINT Proc_WinExec(LPCSTR lpCmdLine, UINT uCmdShow)
 _FX void Proc_ExitProcess(UINT ExitCode)
 {
     if (ExitCode != 0)
-        CrashApi_Log(2108, Dll_ImageName);
+        LeafApi_Log(2108, Dll_ImageName);
     __sys_ExitProcess(0);
 }
 
@@ -2518,7 +2518,7 @@ _FX BOOLEAN SbieDll_RunFromHome(
     Dll_Free(path);
 
     if (! ok) {
-        CrashApi_Log(2313, L"%S (%d)", pgmName, err);
+        LeafApi_Log(2313, L"%S (%d)", pgmName, err);
         SetLastError(err);
         return FALSE;
     }
@@ -2629,7 +2629,7 @@ _FX BOOLEAN Proc_CheckMailer(const WCHAR *ImagePath, BOOLEAN IsBoxedPath)
         memzero(value, sizeof(value));
 
         while (! ok) {
-            LONG rc = CrashApi_QueryConfAsIs(
+            LONG rc = LeafApi_QueryConfAsIs(
                 NULL, L"OpenFilePath", idx, value, 500 * sizeof(WCHAR));
             ++idx;
             if (rc == 0) {
@@ -2644,7 +2644,7 @@ _FX BOOLEAN Proc_CheckMailer(const WCHAR *ImagePath, BOOLEAN IsBoxedPath)
         }
 
         while (! ok) {
-            LONG rc = CrashApi_QueryConfAsIs(
+            LONG rc = LeafApi_QueryConfAsIs(
                 NULL, L"OpenPipePath", idx, value, 500 * sizeof(WCHAR));
             ++idx;
             if (rc == 0) {
@@ -2660,7 +2660,7 @@ _FX BOOLEAN Proc_CheckMailer(const WCHAR *ImagePath, BOOLEAN IsBoxedPath)
     }
 
     if (! ok)
-        CrashApi_Log(2212, imgName);
+        LeafApi_Log(2212, imgName);
 
     return ok;
 }
@@ -2762,10 +2762,10 @@ _FX BOOLEAN Proc_IsSoftwareUpdateW(const WCHAR *path)
 
     if (IsUpdate) {
 
-        //CrashApi_Log(2191, SoftName);
-        CrashApi_Log(2191, Dll_ImageName);
-        CrashApi_Log(2192, NULL);
-        //CrashApi_Log(2193, NULL);
+        //LeafApi_Log(2191, SoftName);
+        LeafApi_Log(2191, Dll_ImageName);
+        LeafApi_Log(2192, NULL);
+        //LeafApi_Log(2193, NULL);
     }
 
     return IsUpdate;
@@ -2783,17 +2783,17 @@ _FX BOOLEAN Proc_IsSoftwareUpdateW(const WCHAR *path)
 //    BOOLEAN found = FALSE;
 //
 //    ULONG pid_count = 0;
-//    CrashApi_EnumProcessEx(NULL, FALSE, -1, NULL, &pid_count); // query count
+//    LeafApi_EnumProcessEx(NULL, FALSE, -1, NULL, &pid_count); // query count
 //    pid_count += 128;
 //
 //    pids = Dll_AllocTemp(sizeof(ULONG) * pid_count);
-//    CrashApi_EnumProcessEx(NULL, FALSE, -1, pids, &pid_count); // query pids
+//    LeafApi_EnumProcessEx(NULL, FALSE, -1, pids, &pid_count); // query pids
 //
 //    for (i = 0; i < pid_count; ++i) {
 //
 //        WCHAR image[128];
 //        HANDLE pids_i = (HANDLE) (ULONG_PTR) pids[i];
-//        CrashApi_QueryProcess(pids_i, NULL, image, NULL, NULL);
+//        LeafApi_QueryProcess(pids_i, NULL, image, NULL, NULL);
 //        if (_wcsicmp(image, ImageToFind) == 0) {
 //
 //            found = TRUE;
@@ -3032,7 +3032,7 @@ _FX NTSTATUS Proc_NtSetInformationProcess(
 
         if ((InfoClass == ProcessAccessToken) && (! NT_SUCCESS(status))) {
 
-            //CrashApi_Log(2205, L"SetInformationProcess");
+            //LeafApi_Log(2205, L"SetInformationProcess");
         }
     }
 
@@ -3052,7 +3052,7 @@ _FX NTSTATUS Proc_NtQueryInformationProcess(
         ProcessHandle, ProcessInformationClass, ProcessInformation, ProcessInformationLength, ReturnLength);
 
     if ((ProcessInformationClass == ProcessImageFileName) && (NT_SUCCESS(status))) {    // caller requesting image file name?
-        if (NT_SUCCESS(CrashApi_QueryProcess(ProcessHandle, NULL, NULL, NULL, NULL)))    // is process sandboxed?
+        if (NT_SUCCESS(LeafApi_QueryProcess(ProcessHandle, NULL, NULL, NULL, NULL)))    // is process sandboxed?
         {
             WCHAR *TruePath, *CopyPath;
             if (NT_SUCCESS(File_GetName(NULL, (UNICODE_STRING*)ProcessInformation, &TruePath, &CopyPath, NULL)))
@@ -3090,7 +3090,7 @@ _FX NTSTATUS Proc_NtCreateProcessEx(
     // Ntdll!PssNtCaptureSnapshot uses NtCreateProcessEx directly,
     // but we only support process creation through CreateProcessInternal
     //
-    CrashApi_Log(2205, L"NtCreateProcessEx (%d)", Dll_ProcessId);
+    LeafApi_Log(2205, L"NtCreateProcessEx (%d)", Dll_ProcessId);
     return STATUS_ACCESS_DENIED;
 }
 
@@ -3113,13 +3113,13 @@ _FX void Proc_RestartProcessOutOfPcaJob(void)
     // if this is a forced process that was started by a parent process
     // which is inside a Program Compatibility Assistant (PCA) job, then
     // this current process is also in the same PCA job, and can't be
-    // placed in the sandbox job by GuiServer::InitProcess in CrashSvc.
+    // placed in the sandbox job by GuiServer::InitProcess in LeafSvc.
     //
     // this scenario is detected by Process_NotifyProcess_Create
     // in core/drv/process.c and the SBIE_FLAG_PROCESS_IN_PCA_JOB is set
     // which causes Dll_Ordinal1 to call us.
     //
-    // we work around the PCA job problem by getting CrashSvc to start
+    // we work around the PCA job problem by getting LeafSvc to start
     // a new instance of the current process, which would be outside
     // the PCA job, and therefore can be put into the sandbox job.
     //

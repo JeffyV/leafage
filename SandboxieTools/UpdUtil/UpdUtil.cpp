@@ -1427,10 +1427,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		if (bRestart) {
 			Execute(base_dir + L"\\KmdUtil.exe", L"scandll_silent");
-			Execute(base_dir + L"\\KmdUtil.exe", L"stop CrashSvc");
-			Execute(base_dir + L"\\KmdUtil.exe", L"stop CrashDrv");
+			Execute(base_dir + L"\\KmdUtil.exe", L"stop LeafSvc");
+			Execute(base_dir + L"\\KmdUtil.exe", L"stop LeafDrv");
 			Sleep(3000);
-			Execute(base_dir + L"\\KmdUtil.exe", L"stop CrashDrv");
+			Execute(base_dir + L"\\KmdUtil.exe", L"stop LeafDrv");
 		}
 
 		//
@@ -1460,7 +1460,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		std::shared_ptr<TAddonMap> pAddons;
 		if (jsonAddons) 
 		{
-			std::wstring core_arch = Arch2Str(GetBinaryArch(base_dir + L"\\crashsvc.exe"));
+			std::wstring core_arch = Arch2Str(GetBinaryArch(base_dir + L"\\leafsvc.exe"));
 
 			std::wstring agent_arch = GetArgument(arguments, L"agent_arch");
 			if (agent_arch.empty()) {
@@ -1597,7 +1597,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		if (bRestart) {
 			Sleep(1000);
-			Execute(base_dir + L"\\KmdUtil.exe", L"start CrashSvc");
+			Execute(base_dir + L"\\KmdUtil.exe", L"start LeafSvc");
 		}
 
 		std::wstring wOpen = GetArgument(arguments, L"open");
@@ -1736,9 +1736,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 // Driver API
 
 #define SANDBOXIE		L"Sandboxie"
-#define SBIEDRV			L"CrashDrv"
+#define SBIEDRV			L"LeafDrv"
 
-#define SBIESVC_PORT	L"\\RPC Control\\CrashSvcPort"
+#define SBIESVC_PORT	L"\\RPC Control\\LeafSvcPort"
 #define MAX_REQUEST_LENGTH      (2048 * 1024)
 
 
@@ -1753,9 +1753,9 @@ typedef struct _UNICODE_STRING64 {
 #include "..\..\Sandboxie\core\drv\api_defs.h"
 #include "..\..\Sandboxie\core\drv\api_flags.h"
 
-HANDLE CrashApi_DeviceHandle = INVALID_HANDLE_VALUE;
+HANDLE LeafApi_DeviceHandle = INVALID_HANDLE_VALUE;
 
-NTSTATUS CrashApi_Ioctl(ULONG64 *parms)
+NTSTATUS LeafApi_Ioctl(ULONG64 *parms)
 {
     NTSTATUS status;
     OBJECT_ATTRIBUTES objattrs;
@@ -1764,20 +1764,20 @@ NTSTATUS CrashApi_Ioctl(ULONG64 *parms)
 
     if (parms == NULL) {
 
-		if (CrashApi_DeviceHandle != INVALID_HANDLE_VALUE)
-			NtClose(CrashApi_DeviceHandle);
+		if (LeafApi_DeviceHandle != INVALID_HANDLE_VALUE)
+			NtClose(LeafApi_DeviceHandle);
 
-        CrashApi_DeviceHandle = INVALID_HANDLE_VALUE;
+        LeafApi_DeviceHandle = INVALID_HANDLE_VALUE;
 		return STATUS_SUCCESS;
     }
 
-    if (CrashApi_DeviceHandle == INVALID_HANDLE_VALUE) {
+    if (LeafApi_DeviceHandle == INVALID_HANDLE_VALUE) {
 
         RtlInitUnicodeString(&uni, API_DEVICE_NAME);
         InitializeObjectAttributes(&objattrs, &uni, OBJ_CASE_INSENSITIVE, NULL, NULL);
 
         status = NtOpenFile(
-            &CrashApi_DeviceHandle, FILE_GENERIC_READ, &objattrs, &MyIoStatusBlock,
+            &LeafApi_DeviceHandle, FILE_GENERIC_READ, &objattrs, &MyIoStatusBlock,
             FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0);
 
         if (status == STATUS_OBJECT_NAME_NOT_FOUND || status == STATUS_NO_SUCH_DEVICE)
@@ -1788,19 +1788,19 @@ NTSTATUS CrashApi_Ioctl(ULONG64 *parms)
 
     if (status != STATUS_SUCCESS) {
 
-        CrashApi_DeviceHandle = INVALID_HANDLE_VALUE;
+        LeafApi_DeviceHandle = INVALID_HANDLE_VALUE;
 
     } else {
 
         status = NtDeviceIoControlFile(
-            CrashApi_DeviceHandle, NULL, NULL, NULL, &MyIoStatusBlock,
+            LeafApi_DeviceHandle, NULL, NULL, NULL, &MyIoStatusBlock,
             API_SBIEDRV_CTLCODE, parms, sizeof(ULONG64) * 8, NULL, 0);
     }
 
     return status;
 }
 
-//LONG CrashApi_Call(ULONG api_code, LONG arg_num, ...) 
+//LONG LeafApi_Call(ULONG api_code, LONG arg_num, ...) 
 //{
 //    va_list valist;
 //    NTSTATUS status;
@@ -1817,7 +1817,7 @@ NTSTATUS CrashApi_Ioctl(ULONG64 *parms)
 //        parms[i] = (ULONG64)va_arg(valist, ULONG_PTR);
 //    va_end(valist);
 //
-//    status = CrashApi_Ioctl(parms);
+//    status = LeafApi_Ioctl(parms);
 //
 //    return status;
 //}
@@ -1833,7 +1833,7 @@ bool GetDriverInfo(DWORD InfoClass, void* pBuffer, size_t Size)
 	args->info_data.val = pBuffer;
 	args->info_len.val = Size;
 
-	NTSTATUS status = CrashApi_Ioctl(parms);
+	NTSTATUS status = LeafApi_Ioctl(parms);
 	if (!NT_SUCCESS(status)) {
 		memset(pBuffer, 0, Size);
 		return false;

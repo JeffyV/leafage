@@ -17,7 +17,7 @@
  */
 
 //---------------------------------------------------------------------------
-// Sandboxie DLL (CrashDll) to Sandboxie Service (CrashSvc) RPC Interface
+// Sandboxie DLL (LeafDll) to Sandboxie Service (LeafSvc) RPC Interface
 //---------------------------------------------------------------------------
 
 
@@ -122,7 +122,7 @@ _FX NTSTATUS SbieDll_ConnectPort()
             //
             // if we are running in 32-bit mode on a 64-bit OS, we have to
             // adjust sizes and offsets to account for the longer fields
-            // ClientId and ClientViewSize.  Note that the 64-bit CrashSvc
+            // ClientId and ClientViewSize.  Note that the 64-bit LeafSvc
             // is already adjusted by nature of being a 64-bit process
             //
 
@@ -158,7 +158,7 @@ _FX MSG_HEADER *SbieDll_CallServer(MSG_HEADER *req)
 
     if (Dll_SbieTrace) {
         WCHAR dbg[1024];
-        extern const wchar_t* Trace_CrashSvcFunc2Str(ULONG func);
+        extern const wchar_t* Trace_LeafSvcFunc2Str(ULONG func);
         extern const wchar_t* Trace_SbieGuiFunc2Str(ULONG func);
         switch (req->msgid) {
             //case MSGID_QUEUE:
@@ -177,9 +177,9 @@ _FX MSG_HEADER *SbieDll_CallServer(MSG_HEADER *req)
         //case MSGID_QUEUE_STARTUP:
         //case MSGID_QUEUE_NOTIFICATION:
         //default: Sbie_snwprintf(dbg, 1024, L"SbieDll_CallServer: %s 0x%04x", Dll_ImageName, req->msgid);
-        default: Sbie_snwprintf(dbg, 1024, L"SbieDll_CallServer: %s %s", Dll_ImageName, Trace_CrashSvcFunc2Str(req->msgid));
+        default: Sbie_snwprintf(dbg, 1024, L"SbieDll_CallServer: %s %s", Dll_ImageName, Trace_LeafSvcFunc2Str(req->msgid));
         }
-        CrashApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, dbg);
+        LeafApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, dbg);
     }
 
     //
@@ -219,7 +219,7 @@ _FX MSG_HEADER *SbieDll_CallServer(MSG_HEADER *req)
 
         if (!NT_SUCCESS(status)) {
             if (!Dll_AppContainerToken && !Silent) // todo: fix me make service available for appcontainer processes
-                CrashApi_Log(2203, L"connect %08X (msg_id 0x%04X)", status, req->msgid);
+                LeafApi_Log(2203, L"connect %08X (msg_id 0x%04X)", status, req->msgid);
             return NULL;
         }
     }
@@ -282,7 +282,7 @@ _FX MSG_HEADER *SbieDll_CallServer(MSG_HEADER *req)
         msg = (PORT_MESSAGE *)spaceRpl;
 
         if (buf_len && msg->u1.s1.DataLength) {
-            CrashApi_Log(2203, L"early reply");
+            LeafApi_Log(2203, L"early reply");
             return NULL;
         }
     }
@@ -292,7 +292,7 @@ _FX MSG_HEADER *SbieDll_CallServer(MSG_HEADER *req)
         NtClose(data->PortHandle);
         data->PortHandle = NULL;
 
-        CrashApi_Log(2203, L"request %08X", status);
+        LeafApi_Log(2203, L"request %08X", status);
         return NULL;
     }
 
@@ -308,7 +308,7 @@ _FX MSG_HEADER *SbieDll_CallServer(MSG_HEADER *req)
     if (msg->u1.s1.DataLength >= sizeof(MSG_HEADER)) {
 
         if (msg_data[3] != curr_sequence) {
-            CrashApi_Log(2203, L"mismatched reply");
+            LeafApi_Log(2203, L"mismatched reply");
             return NULL;
         }
 
@@ -319,7 +319,7 @@ _FX MSG_HEADER *SbieDll_CallServer(MSG_HEADER *req)
         buf_len = 0;
 
     if (buf_len == 0) {
-        CrashApi_Log(2203, L"null reply (msg %08X len %d)",
+        LeafApi_Log(2203, L"null reply (msg %08X len %d)",
                     req->msgid, req->length);
         return NULL;
     }
@@ -366,7 +366,7 @@ _FX MSG_HEADER *SbieDll_CallServer(MSG_HEADER *req)
             NtClose(data->PortHandle);
             data->PortHandle = NULL;
 
-            CrashApi_Log(2203, L"reply %08X", status);
+            LeafApi_Log(2203, L"reply %08X", status);
             return NULL;
         }
     }
@@ -442,7 +442,7 @@ _FX void *SbieDll_CallServerQueue(const WCHAR* queue, void *req, ULONG req_len, 
 		}
 	}
 
-	CrashApi_Log(2203, L"%S - %S [%08X]", QueueName, Dll_ImageName, status);
+	LeafApi_Log(2203, L"%S - %S [%08X]", QueueName, Dll_ImageName, status);
 	SetLastError(ERROR_SERVER_DISABLED);
 	return NULL;
 }
@@ -859,7 +859,7 @@ _FX void *SbieDll_CallProxySvr(
         }
     }
 
-    CrashApi_Log(2203, L"%S; MsgId: %d - %S [%08X]", QueueName, *(ULONG*)req, Dll_ImageName, status);
+    LeafApi_Log(2203, L"%S; MsgId: %d - %S [%08X]", QueueName, *(ULONG*)req, Dll_ImageName, status);
     SetLastError(ERROR_SERVER_DISABLED);
     return NULL;
 }

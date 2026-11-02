@@ -1091,13 +1091,13 @@ void CSettingsWindow::AddContextMenu(bool bAlwaysClassic)
 	QSettings CurrentVersion("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", QSettings::NativeFormat);
 	if (CurrentVersion.value("CurrentBuild").toInt() >= 22000 && !bAlwaysClassic) // Windows 11
 	{
-		QSettings MyReg("HKEY_CURRENT_USER\\SOFTWARE\\Xanasoft\\Sandboxie-Plus\\CrashShellExt\\Lang", QSettings::NativeFormat);
+		QSettings MyReg("HKEY_CURRENT_USER\\SOFTWARE\\Xanasoft\\Sandboxie-Plus\\LeafShellExt\\Lang", QSettings::NativeFormat);
 		MyReg.setValue("Open Sandboxed", CSettingsWindow::tr("Run &Sandboxed"));
 		MyReg.setValue("Explore Sandboxed", CSettingsWindow::tr("Run &Sandboxed"));
 		
 		QDir::setCurrent(QCoreApplication::applicationDirPath());
 		QProcess Proc;
-		Proc.execute("rundll32.exe", QStringList() << "CrashShellExt.dll,RegisterPackage");
+		Proc.execute("rundll32.exe", QStringList() << "LeafShellExt.dll,RegisterPackage");
 		Proc.waitForFinished();
 		return;
 	}
@@ -1114,7 +1114,7 @@ void CSettingsWindow::RemoveContextMenu()
 	{
 		QDir::setCurrent(QCoreApplication::applicationDirPath());
 		QProcess Proc;
-		Proc.execute("rundll32.exe", QStringList() << "CrashShellExt.dll,RemovePackage");
+		Proc.execute("rundll32.exe", QStringList() << "LeafShellExt.dll,RemovePackage");
 		Proc.waitForFinished();
 	}
 
@@ -1697,7 +1697,7 @@ void CSettingsWindow::SaveSettings()
 			theAPI->GetUserSettings()->SetBool("SbieCtrl_EnableAutoStart", false);
 
 		theAPI->SbieIniSet("$", "Language", QString::number(LangId), CSbieIni::eIniUpdate, false);
-		//theAPI->GetGlobalSettings()->SetNum("CrashSvc_Language", LangId);
+		//theAPI->GetGlobalSettings()->SetNum("LeafSvc_Language", LangId);
 	}
 
 	if (ui.chkShellMenu->checkState() != IsContextMenu())

@@ -53,11 +53,11 @@ void BuildSvcSet()
     g_setSvcNames.clear();
 
     // Loop through every section, searching for "HostInjectProcess", and add the service names to the set.
-    while (CrashApi_QueryConf(NULL, NULL, i++, wszConfigLine, sizeof(wszConfigLine)) == STATUS_SUCCESS)
+    while (LeafApi_QueryConf(NULL, NULL, i++, wszConfigLine, sizeof(wszConfigLine)) == STATUS_SUCCESS)
     {
-        if (CrashApi_IsBoxEnabled(wszConfigLine) == STATUS_SUCCESS)
+        if (LeafApi_IsBoxEnabled(wszConfigLine) == STATUS_SUCCESS)
         {
-            if (CrashApi_QueryConf(wszConfigLine, L"HostInjectProcess", 0, wszConfigLine, sizeof(wszConfigLine)) == STATUS_SUCCESS)
+            if (LeafApi_QueryConf(wszConfigLine, L"HostInjectProcess", 0, wszConfigLine, sizeof(wszConfigLine)) == STATUS_SUCCESS)
             {
                 WCHAR   wszProcName[261];
                 WCHAR   wszSvcName[261];

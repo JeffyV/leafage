@@ -153,7 +153,7 @@ MSG_HEADER *FileServer::Handler(void *_this, MSG_HEADER *msg)
 
     HANDLE idProcess = (HANDLE)(ULONG_PTR)PipeServer::GetCallerProcessId();
 
-    if (0 != CrashApi_QueryProcess(idProcess, NULL, NULL, NULL, NULL))
+    if (0 != LeafApi_QueryProcess(idProcess, NULL, NULL, NULL, NULL))
         return SHORT_REPLY(STATUS_ACCESS_DENIED);
 
     //
@@ -220,7 +220,7 @@ NOINLINE void FileServer::MyFree(void *ptr)
     ULONG_PTR *p_len = (ULONG_PTR *)((char *)ptr - sizeof(ULONG_PTR));
     ULONG_PTR *p_tzuk = (ULONG_PTR *)((char *)ptr + *p_len);
     if (*p_tzuk != tzuk)
-        CrashApi_Log(2316, NULL);
+        LeafApi_Log(2316, NULL);
     *p_tzuk = 0;
     HeapFree(m_heap, 0, p_len);
 }
@@ -374,7 +374,7 @@ MSG_HEADER *FileServer::LoadKey(MSG_HEADER *msg, HANDLE idProcess)
     // validate request from sandboxed process
     //
 
-    NTSTATUS status = CrashApi_QueryProcess(
+    NTSTATUS status = LeafApi_QueryProcess(
         idProcess, NULL, NULL, NULL, NULL);
     if (! NT_SUCCESS(status))
         return SHORT_REPLY(STATUS_ACCESS_DENIED);
@@ -719,7 +719,7 @@ bool FileServer::CopySingleFile(
         if (status == STATUS_OBJECT_NAME_NOT_FOUND ||
             status == STATUS_OBJECT_PATH_NOT_FOUND) {
 
-            // CrashApi_LogEx(session_id, 2107, AssemblyNamePtr);
+            // LeafApi_LogEx(session_id, 2107, AssemblyNamePtr);
 
             status = NtCreateFile(
                 &dst_handle, FILE_GENERIC_WRITE, &objattrs, &IoStatusBlock,
@@ -730,7 +730,7 @@ bool FileServer::CopySingleFile(
 
         if (! NT_SUCCESS(status)) {
 
-            CrashApi_LogEx(
+            LeafApi_LogEx(
                 session_id, 2216, L"[%08X] %S", status, AssemblyNamePtr);
         }
 
@@ -800,7 +800,7 @@ bool FileServer::CopySingleFile(
 
         if (! NT_SUCCESS(status)) {
 
-            CrashApi_LogEx(
+            LeafApi_LogEx(
                 session_id, 2216, L"[%08X] %S", status, AssemblyNamePtr);
         }
 
@@ -1168,7 +1168,7 @@ NTSTATUS FileServer::CheckBoxFilePath(
     //
 
     ULONG len = 0;
-    NTSTATUS status = CrashApi_QueryProcessPath(
+    NTSTATUS status = LeafApi_QueryProcessPath(
         idProcess, NULL, NULL, NULL, &len, NULL, NULL);
     if (! NT_SUCCESS(status))
         return status;
@@ -1178,7 +1178,7 @@ NTSTATUS FileServer::CheckBoxFilePath(
     if (! sandbox_path)
         return STATUS_INSUFFICIENT_RESOURCES;
 
-    status = CrashApi_QueryProcessPath(
+    status = LeafApi_QueryProcessPath(
         idProcess, sandbox_path, NULL, NULL, &len, NULL, NULL);
     if (! NT_SUCCESS(status)) {
         MyFree(sandbox_path);
@@ -1221,7 +1221,7 @@ NTSTATUS FileServer::CheckBoxKeyPath(
     //
 
     ULONG len = 0;
-    NTSTATUS status = CrashApi_QueryProcessPath(
+    NTSTATUS status = LeafApi_QueryProcessPath(
         idProcess, NULL, NULL, NULL, NULL, &len, NULL);
     if (! NT_SUCCESS(status))
         return status;
@@ -1231,7 +1231,7 @@ NTSTATUS FileServer::CheckBoxKeyPath(
     if (! sandbox_path)
         return STATUS_INSUFFICIENT_RESOURCES;
 
-    status = CrashApi_QueryProcessPath(
+    status = LeafApi_QueryProcessPath(
         idProcess, NULL, sandbox_path, NULL, NULL, &len, NULL);
     if (! NT_SUCCESS(status)) {
         MyFree(sandbox_path);

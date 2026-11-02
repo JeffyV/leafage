@@ -69,7 +69,7 @@ _FX BOOLEAN Ipc_StartServer(const WCHAR *TruePath, BOOLEAN Async)
     BOOLEAN event_created = FALSE;
     BOOLEAN bRet = TRUE;
 
-    if (CrashApi_QueryConfBool(NULL, L"NoSandboxieRpcSs", FALSE))
+    if (LeafApi_QueryConfBool(NULL, L"NoSandboxieRpcSs", FALSE))
         return FALSE;
 
     //
@@ -90,11 +90,11 @@ _FX BOOLEAN Ipc_StartServer(const WCHAR *TruePath, BOOLEAN Async)
     } else {
 
     //
-    // -    CrashDcomLaunch is started when CrashRpcSs asks
+    // -    LeafDcomLaunch is started when LeafRpcSs asks
     //      for the 'actkernel' port.
     //
-    // -    CrashRpcSs is started when any process that is not
-    //      CrashDcomLaunch asks for the 'epmapper' port
+    // -    LeafRpcSs is started when any process that is not
+    //      LeafDcomLaunch asks for the 'epmapper' port
     //
 
         if (Dll_ImageType == DLL_IMAGE_SANDBOXIE_RPCSS) {
@@ -134,15 +134,15 @@ _FX BOOLEAN Ipc_StartServer(const WCHAR *TruePath, BOOLEAN Async)
             // is a complicated call that can end up attempting to acquire
             // the loader lock.  while at the same time, some other thread
             // may already have taken the loader lock, and might be waiting
-            // for CrashRpcSs to start
+            // for LeafRpcSs to start
             //
             // v4 note:  CreateProcess uses LoadLibrary and because we are
             // invoked during the DLL init phase, this may cause problems
             // with DLL initialization.  this is in addition to the problem
             // described in the paragraph above, and other problems such as
             // an SRP or AppLocker rule preventing us from starting the
-            // CrashRpcSs.  requesting CrashSvc ProcessServevr to run
-            // CrashRpcSs for us can fix all of these problems.
+            // LeafRpcSs.  requesting LeafSvc ProcessServevr to run
+            // LeafRpcSs for us can fix all of these problems.
             //
 
             ULONG errnum;
@@ -155,14 +155,14 @@ _FX BOOLEAN Ipc_StartServer(const WCHAR *TruePath, BOOLEAN Async)
             si.dwXCountChars = si.dwYCountChars = tzuk;
 
             WCHAR program[64];
-            wcscpy(program, L"Crash");
+            wcscpy(program, L"Leaf");
             wcscat(program, service);
             wcscat(program, L".exe");
 
             if (service == _rpcss) {
 
                 //
-                // starting rpcss: go through CrashSvc ProcessServer
+                // starting rpcss: go through LeafSvc ProcessServer
                 //
 
                 if (! Proc_ImpersonateSelf(TRUE))
@@ -190,7 +190,7 @@ _FX BOOLEAN Ipc_StartServer(const WCHAR *TruePath, BOOLEAN Async)
 
                 //
                 // rpcss starting dcomlaunch:  normal CreateProcess
-                // (CrashRpcSs has to be parent of CrashDcomLaunch)
+                // (LeafRpcSs has to be parent of LeafDcomLaunch)
                 //
 
                 if (! SbieDll_RunFromHome(program, NULL, &si, &pi))
@@ -201,7 +201,7 @@ _FX BOOLEAN Ipc_StartServer(const WCHAR *TruePath, BOOLEAN Async)
 
             if (errnum != -1) {
 
-                CrashApi_Log(2204, _format, service, errnum);
+                LeafApi_Log(2204, _format, service, errnum);
 
                 CloseHandle(hServerEvent);
 
@@ -271,7 +271,7 @@ _FX BOOLEAN Ipc_StartServer(const WCHAR *TruePath, BOOLEAN Async)
 
                     if (rc == STATUS_LICENSE_QUOTA_EXCEEDED) {
 
-                        // duplicate copy of CrashRpcSs.exe,
+                        // duplicate copy of LeafRpcSs.exe,
                         // so don't indicate any error.
                         // see also apps/com/rpcss/rpcss.c
 
@@ -279,16 +279,16 @@ _FX BOOLEAN Ipc_StartServer(const WCHAR *TruePath, BOOLEAN Async)
 
                         const WCHAR *FormatToUse =
                             (rc & 0x80000000) ? _formatHex : _format;
-                        CrashApi_Log(2204, FormatToUse, service, rc, rc);
+                        LeafApi_Log(2204, FormatToUse, service, rc, rc);
                     }
 
                 } else
-                    CrashApi_Log(2204, _format, service, -3);
+                    LeafApi_Log(2204, _format, service, -3);
 
                 break;
             }
 
-            CrashApi_Log(2204, _format, service, -1);
+            LeafApi_Log(2204, _format, service, -1);
         }
 
         //
@@ -304,7 +304,7 @@ _FX BOOLEAN Ipc_StartServer(const WCHAR *TruePath, BOOLEAN Async)
         // dcomlaunch server.
         //
         // exception to special case:  (1) if running with 'open COM', then
-        // CrashDcomLaunch does not load.  (2) if the DcomLaunch service
+        // LeafDcomLaunch does not load.  (2) if the DcomLaunch service
         // is not available (i.e. Windows pre XP SP 2)
         //
 
@@ -331,7 +331,7 @@ _FX BOOLEAN Ipc_StartServer(const WCHAR *TruePath, BOOLEAN Async)
                             if (GetExitCodeProcess(hServerProcess, &rc)
                                 && rc != 0 && rc != STILL_ACTIVE) {
 
-                                CrashApi_Log(2204, _format, _dcomlaunch, -4);
+                                LeafApi_Log(2204, _format, _dcomlaunch, -4);
                                 bRet = FALSE;
                                 break;
                             }
@@ -345,7 +345,7 @@ _FX BOOLEAN Ipc_StartServer(const WCHAR *TruePath, BOOLEAN Async)
                                                 hEvent, 30 * 1000))
                         break;
 
-                    CrashApi_Log(2204, _format, _dcomlaunch, -2);
+                    LeafApi_Log(2204, _format, _dcomlaunch, -2);
                 }
 
                 if (hEvent)

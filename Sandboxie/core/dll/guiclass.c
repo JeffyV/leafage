@@ -176,9 +176,9 @@ _FX BOOLEAN Gui_InitClass(HMODULE module)
 
     //WCHAR text[128];
     //Sbie_snwprintf(text, ARRAYSIZE(text), L"Gui_OpenAllWinClasses: %d; Gui_RenameClasses: %d", Gui_OpenAllWinClasses, Gui_RenameClasses);
-    //CrashApi_MonitorPutMsg(MONITOR_DEBUG, text);
+    //LeafApi_MonitorPutMsg(MONITOR_DEBUG, text);
 
-    Gui_UseProtectScreen = CrashApi_QueryConfBool(NULL, L"CoverBoxedWindows", FALSE);
+    Gui_UseProtectScreen = LeafApi_QueryConfBool(NULL, L"CoverBoxedWindows", FALSE);
 
     //
     // hook functions
@@ -982,7 +982,7 @@ _FX BOOLEAN Gui_NoRenameClass(const WCHAR* iptr)
     ULONG path_len = (wcslen(iptr) + 1) * sizeof(WCHAR);
     WCHAR* path_lwr = Dll_AllocTemp(path_len);
     if (!path_lwr) {
-        CrashApi_Log(2305, NULL);
+        LeafApi_Log(2305, NULL);
         return FALSE;
     }
     memcpy(path_lwr, iptr, path_len);

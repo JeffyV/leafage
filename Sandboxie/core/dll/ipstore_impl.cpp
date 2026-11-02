@@ -209,7 +209,7 @@ bool IPStoreImpl::read()
             }
 
             if (! ok)
-                CrashApi_Log(2332, NULL);
+                LeafApi_Log(2332, NULL);
 
             Stream_Close(stream);
         }
@@ -666,7 +666,7 @@ IPStoreImpl::PsItem *IPStoreImpl::find_item(
 
 HRESULT IPStoreImpl::not_impl(const WCHAR *func)
 {
-    CrashApi_Log(2205, L"IPStore::%S", func);
+    LeafApi_Log(2205, L"IPStore::%S", func);
     return E_FAIL;
 }
 

@@ -155,7 +155,7 @@ _FX BOOLEAN Gui_InitProp(HMODULE module)
     //
 
     // DisableComProxy BEGIN
-    if (!CrashApi_QueryConfBool(NULL, L"DisableComProxy", FALSE))
+    if (!LeafApi_QueryConfBool(NULL, L"DisableComProxy", FALSE))
     // DisableComProxy END
     if (! SbieDll_IsOpenCOM()) {
 
@@ -172,7 +172,7 @@ _FX BOOLEAN Gui_InitProp(HMODULE module)
     // so unless we are running in appcompartment mode by default we drop that SetProp
     //
 
-    Gui_NonRudeHWND_Hack = CrashApi_QueryConfBool(NULL, L"UseNonRudeHwndHack", !Dll_CompartmentMode);
+    Gui_NonRudeHWND_Hack = LeafApi_QueryConfBool(NULL, L"UseNonRudeHwndHack", !Dll_CompartmentMode);
 
     SBIEDLL_HOOK_GUI(GetPropA);
     SBIEDLL_HOOK_GUI(GetPropW);
@@ -208,7 +208,7 @@ _FX BOOLEAN Gui_InitProp(HMODULE module)
         if (! Gui_Hook_SetWindowLong8(module))
 #endif
         {
-            CrashApi_Log(2205, L"SetWindowLong8");
+            LeafApi_Log(2205, L"SetWindowLong8");
             return FALSE;
         }
 
@@ -244,7 +244,7 @@ _FX BOOLEAN Gui_InitProp(HMODULE module)
         if (! Gui_Hook_SetWindowLongPtr8(module))
 #endif
         {
-            CrashApi_Log(2205, L"SetWindowLongPtr8");
+            LeafApi_Log(2205, L"SetWindowLongPtr8");
             return FALSE;
         }
 

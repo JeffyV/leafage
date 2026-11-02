@@ -150,7 +150,7 @@ BOOL UpdateFolderDACLs(const wchar_t* folderPath, EXPLICIT_ACCESS *ea)
 extern "C" BOOL Kmd_FixDacls()
 {
     WCHAR HomePath[MAX_PATH];
-    CrashApi_GetHomePath(NULL, 0, HomePath, MAX_PATH);
+    LeafApi_GetHomePath(NULL, 0, HomePath, MAX_PATH);
     if (!*HomePath) // sbie not installed or not running
         return FALSE;
 

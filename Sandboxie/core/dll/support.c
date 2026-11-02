@@ -17,7 +17,7 @@
  */
 
 //---------------------------------------------------------------------------
-// Support Functions for Programs Using CrashDll
+// Support Functions for Programs Using LeafDll
 //---------------------------------------------------------------------------
 
 
@@ -51,7 +51,7 @@ static void SbieDll_SetStartError(ULONG Level);
 
 static WCHAR *SbieDll_StartError = NULL;
 
-const WCHAR *Support_CrashSvcKeyPath =
+const WCHAR *Support_LeafSvcKeyPath =
     L"\\registry\\machine\\system\\currentcontrolset\\services\\" SBIESVC;
 
 
@@ -230,7 +230,7 @@ _FX BOOLEAN SbieDll_SetServiceRegistryValue(
     InitializeObjectAttributes(
         &objattrs, &objname, OBJ_CASE_INSENSITIVE, NULL, NULL );
 
-    RtlInitUnicodeString(&objname, Support_CrashSvcKeyPath);
+    RtlInitUnicodeString(&objname, Support_LeafSvcKeyPath);
 
     status = NtOpenKey(&handle, KEY_SET_VALUE, &objattrs);
     if (!NT_SUCCESS(status))
@@ -266,7 +266,7 @@ _FX BOOLEAN SbieDll_GetServiceRegistryValue(
     InitializeObjectAttributes(
         &objattrs, &objname, OBJ_CASE_INSENSITIVE, NULL, NULL);
 
-    RtlInitUnicodeString(&objname, Support_CrashSvcKeyPath);
+    RtlInitUnicodeString(&objname, Support_LeafSvcKeyPath);
 
     status = NtOpenKey(&handle, KEY_READ, &objattrs);
     if (! NT_SUCCESS(status))
@@ -430,7 +430,7 @@ _FX BOOLEAN SbieDll_Mount(const WCHAR* BoxName, const WCHAR* BoxKey, BOOLEAN Pro
     ULONG reg_path_len;
     BOOLEAN ok = FALSE;
 
-    if (!NT_SUCCESS(CrashApi_QueryBoxPath(BoxName, NULL, NULL, NULL, &file_path_len, NULL, NULL)))
+    if (!NT_SUCCESS(LeafApi_QueryBoxPath(BoxName, NULL, NULL, NULL, &file_path_len, NULL, NULL)))
         return FALSE;
 
     req_len = sizeof(IMBOX_MOUNT_REQ) + file_path_len;
@@ -444,7 +444,7 @@ _FX BOOLEAN SbieDll_Mount(const WCHAR* BoxName, const WCHAR* BoxKey, BOOLEAN Pro
     req->auto_unmount = FALSE;
 
     reg_path_len = MAX_REG_ROOT_LEN;
-    if (NT_SUCCESS(CrashApi_QueryBoxPath(BoxName, req->file_root, req->reg_root, NULL, &file_path_len, &reg_path_len, NULL))) {
+    if (NT_SUCCESS(LeafApi_QueryBoxPath(BoxName, req->file_root, req->reg_root, NULL, &file_path_len, &reg_path_len, NULL))) {
 
         rpl = SbieDll_CallServer(&req->h);
     }
@@ -475,7 +475,7 @@ _FX BOOLEAN SbieDll_Unmount(const WCHAR *BoxName)
     req.h.msgid = MSGID_IMBOX_UNMOUNT;
 
     ULONG reg_len = MAX_REG_ROOT_LEN;
-    if (!NT_SUCCESS(CrashApi_QueryBoxPath(BoxName, NULL, req.reg_root, NULL, NULL, &reg_len, NULL)))
+    if (!NT_SUCCESS(LeafApi_QueryBoxPath(BoxName, NULL, req.reg_root, NULL, NULL, &reg_len, NULL)))
         return FALSE;
 
     rpl = SbieDll_CallServer(&req.h);
@@ -829,7 +829,7 @@ _FX ULONG SbieDll_FormatMessage_2(WCHAR **text_ptr, const WCHAR **ins)
 
 _FX WCHAR *SbieDll_FormatMessage(ULONG code, const WCHAR **ins)
 {
-    static HMODULE CrashMsgDll   = NULL;
+    static HMODULE LeafMsgDll   = NULL;
     const ULONG FormatFlags     = FORMAT_MESSAGE_FROM_HMODULE |
                                   FORMAT_MESSAGE_ARGUMENT_ARRAY |
                                   FORMAT_MESSAGE_ALLOCATE_BUFFER;
@@ -838,28 +838,28 @@ _FX WCHAR *SbieDll_FormatMessage(ULONG code, const WCHAR **ins)
     ULONG err = GetLastError();
 
     //
-    // get the handle for CrashMsg.dll
+    // get the handle for LeafMsg.dll
     //
 
-    if (! CrashMsgDll) {
+    if (! LeafMsgDll) {
 
 #ifndef SBIEDLL_FORMATMESSAGE_ONLY
 
         STARTUPINFOW si;
         if (SbieDll_RunFromHome(SBIEMSG_DLL, NULL, &si, NULL)) {
             WCHAR *path2 = (WCHAR *)si.lpReserved;
-            CrashMsgDll =
+            LeafMsgDll =
                 LoadLibraryEx(path2, NULL, LOAD_LIBRARY_AS_DATAFILE);
             HeapFree(GetProcessHeap(), HEAP_GENERATE_EXCEPTIONS, path2);
         }
 
-        if (! CrashMsgDll) {
+        if (! LeafMsgDll) {
             WCHAR *path = LocalAlloc(
                                 LMEM_FIXED, (MAX_PATH + 64) * sizeof(WCHAR));
             if (path) {
-                if (CrashApi_GetHomePath(NULL, 0, path, MAX_PATH) == 0) {
+                if (LeafApi_GetHomePath(NULL, 0, path, MAX_PATH) == 0) {
                     wcscat(path, L"\\" SBIEMSG_DLL);
-                    CrashMsgDll =
+                    LeafMsgDll =
                         LoadLibraryEx(path, NULL, LOAD_LIBRARY_AS_DATAFILE);
                 }
                 LocalFree(path);
@@ -880,9 +880,9 @@ _FX WCHAR *SbieDll_FormatMessage(ULONG code, const WCHAR **ins)
     rc = 0;
     out = NULL;
 
-    if (CrashMsgDll) {
+    if (LeafMsgDll) {
 
-        rc = FormatMessage(FormatFlags, CrashMsgDll, code,
+        rc = FormatMessage(FormatFlags, LeafMsgDll, code,
                            SbieDll_GetLanguage(NULL),
                            (LPWSTR)&out, 4, (va_list *)ins);
         if (rc != 0) {

@@ -163,7 +163,7 @@ ULONG UserServer::StartWorker(ULONG session_id)
         return STATUS_INSUFFICIENT_RESOURCES;
 
     cmdline[0] = L'\"';
-    status = CrashApi_GetHomePath(NULL, 0, &cmdline[1], 512);
+    status = LeafApi_GetHomePath(NULL, 0, &cmdline[1], 512);
     if (status != 0)
         ok = FALSE;
     else {
@@ -365,7 +365,7 @@ ULONG UserServer::StartAsync(ULONG session_id, HANDLE hEvent)
 
 void UserServer::ReportError2336(ULONG session_id, ULONG errlvl, ULONG status)
 {
-    CrashApi_LogEx(session_id, 2336, L"[%02X / %08X]", errlvl, status);
+    LeafApi_LogEx(session_id, 2336, L"[%02X / %08X]", errlvl, status);
 }
 
 
@@ -398,7 +398,7 @@ void UserServer::RunWorker(const WCHAR *cmdline)
     UserServer *pThis = GetInstance();
 
     //
-    // get process id for parent (which should be the main CrashSvc process)
+    // get process id for parent (which should be the main LeafSvc process)
     //
 
     NTSTATUS status;
@@ -638,17 +638,17 @@ ULONG UserServer::OpenFile(WorkerArgs *args)
 
     ULONG session_id;
     WCHAR boxname[BOXNAME_COUNT];
-    if (!NT_SUCCESS(CrashApi_QueryProcess((HANDLE)(ULONG_PTR)args->pid, boxname, NULL, NULL, &session_id))
+    if (!NT_SUCCESS(LeafApi_QueryProcess((HANDLE)(ULONG_PTR)args->pid, boxname, NULL, NULL, &session_id))
      || session_id != m_SessionId 
-     || !CrashApi_QueryConfBool(boxname, L"EnableEFS", FALSE)) {
+     || !LeafApi_QueryConfBool(boxname, L"EnableEFS", FALSE)) {
 
         return STATUS_ACCESS_DENIED;
     }
 
     SCertInfo CertInfo = { 0 };
-    if (!NT_SUCCESS(CrashApi_QueryDrvInfo(-1, &CertInfo, sizeof(CertInfo))) || !(CertInfo.active && CertInfo.opt_enc)) {
+    if (!NT_SUCCESS(LeafApi_QueryDrvInfo(-1, &CertInfo, sizeof(CertInfo))) || !(CertInfo.active && CertInfo.opt_enc)) {
         const WCHAR* strings[] = { boxname, L"EnableEFS", NULL };
-        CrashApi_LogMsgExt(session_id, 6004, strings);
+        LeafApi_LogMsgExt(session_id, 6004, strings);
         return STATUS_ACCESS_DENIED;
     } 
 
@@ -695,7 +695,7 @@ ULONG UserServer::OpenFile(WorkerArgs *args)
         return STATUS_INTERNAL_ERROR;
 
 #ifdef USE_MATCH_PATH_EX
-    ULONG64 Dll_ProcessFlags = CrashApi_QueryProcessInfo((HANDLE)args->pid, 0);
+    ULONG64 Dll_ProcessFlags = LeafApi_QueryProcessInfo((HANDLE)args->pid, 0);
 
     BOOLEAN use_rule_specificity = (Dll_ProcessFlags & SBIE_FLAG_RULE_SPECIFICITY) != 0;
     //BOOLEAN use_privacy_mode = (Dll_ProcessFlags & SBIE_FLAG_PRIVACY_MODE) != 0;
@@ -780,7 +780,7 @@ ULONG UserServer::OpenDocument(WorkerArgs *args)
 
     ULONG session_id;
     WCHAR boxname[BOXNAME_COUNT];
-    if (!NT_SUCCESS(CrashApi_QueryProcess((HANDLE)(ULONG_PTR)args->pid, boxname, NULL, NULL, &session_id))
+    if (!NT_SUCCESS(LeafApi_QueryProcess((HANDLE)(ULONG_PTR)args->pid, boxname, NULL, NULL, &session_id))
      || session_id != m_SessionId) {
 
         return STATUS_ACCESS_DENIED;
@@ -830,7 +830,7 @@ ULONG UserServer::GetProcessPathList(ULONG path_code,
     const HANDLE xpid = (HANDLE)(ULONG_PTR)pid;
 
     ULONG len;
-    LONG status = CrashApi_QueryPathList(path_code, &len, NULL, xpid, TRUE);
+    LONG status = LeafApi_QueryPathList(path_code, &len, NULL, xpid, TRUE);
     if (status != 0)
         return status;
 
@@ -844,7 +844,7 @@ ULONG UserServer::GetProcessPathList(ULONG path_code,
     LIST *list = (LIST *)Pool_Alloc(pool, sizeof(LIST));
 
     if (path && list)
-        status = CrashApi_QueryPathList(path_code, NULL, path, xpid, TRUE);
+        status = LeafApi_QueryPathList(path_code, NULL, path, xpid, TRUE);
 
     if (status != STATUS_SUCCESS) {
         Pool_Delete(pool);
@@ -884,7 +884,7 @@ ULONG UserServer::GetProcessPathList(ULONG path_code,
 //    ULONG path_len = (length + 1) * sizeof(WCHAR);
 //    WCHAR* path_lwr = (WCHAR*)HeapAlloc(GetProcessHeap(), 0, path_len);
 //    if (!path_lwr) {
-//        CrashApi_Log(2305, NULL);
+//        LeafApi_Log(2305, NULL);
 //        goto finish;
 //    }
 //    memcpy(path_lwr, string, path_len);

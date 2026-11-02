@@ -95,7 +95,7 @@ ULONG SbieDll_GetLanguage(BOOLEAN *rtl)
     ptr = wcsrchr(path, L'\\');                         \
     if (ptr) {                                          \
         wcscpy(ptr + 1, SBIEMSG_DLL);                   \
-        CrashMsgDll = LoadLibrary(path);                 \
+        LeafMsgDll = LoadLibrary(path);                 \
     }
 
 #include "core/dll/support.c"
@@ -634,7 +634,7 @@ BOOL Kmd_Start_Service(
 BOOL Kmd_Stop_Service(
     const wchar_t *Driver_Name)
 {
-    extern BOOLEAN Kmd_Stop_CrashDrv(void);
+    extern BOOLEAN Kmd_Stop_LeafDrv(void);
     SC_HANDLE service;
     SERVICE_STATUS service_status;
     ULONG retries;
@@ -697,7 +697,7 @@ BOOL Kmd_Stop_Service(
 
         if (is_driver) {
             // stop the driver
-            if (! Kmd_Stop_CrashDrv()) {
+            if (! Kmd_Stop_LeafDrv()) {
                 //
                 // the running service holds a connection to the driver, so it
                 // refuses to unload (STATUS_CONNECTION_IN_USE in the driver,
@@ -726,7 +726,7 @@ BOOL Kmd_Stop_Service(
                     CloseServiceHandle(svc);
                 }
 
-                if (! Kmd_Stop_CrashDrv())
+                if (! Kmd_Stop_LeafDrv())
                     continue;
             }
 
@@ -744,7 +744,7 @@ BOOL Kmd_Stop_Service(
                 return TRUE;
 
             //
-            // the driver was already unloaded by Kmd_Stop_CrashDrv(), the SCM
+            // the driver was already unloaded by Kmd_Stop_LeafDrv(), the SCM
             // just can not stop a legacy filter driver on its own and reports
             // ERROR_INVALID_SERVICE_CONTROL (1052); that is not a failure and
             // must not trigger the retry loop below (it shows message boxes)
@@ -782,7 +782,7 @@ BOOL Kmd_Show_Message(
     ULONG id = _wtoi(message);
     if (id == 0)
         return FALSE;
-    CrashApi_LogMsgEx(-1, id, text, wcslen(text)* sizeof(WCHAR));
+    LeafApi_LogMsgEx(-1, id, text, wcslen(text)* sizeof(WCHAR));
     return TRUE;
 }
 

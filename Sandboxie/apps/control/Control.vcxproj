@@ -152,7 +152,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>uafxcw.lib;common.lib;CrashDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
+      <AdditionalDependencies>uafxcw.lib;common.lib;LeafDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <IgnoreSpecificDefaultLibraries>uafxcw.lib</IgnoreSpecificDefaultLibraries>
@@ -173,7 +173,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>uafxcw.lib;common.lib;CrashDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
+      <AdditionalDependencies>uafxcw.lib;common.lib;LeafDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <IgnoreSpecificDefaultLibraries>uafxcw.lib</IgnoreSpecificDefaultLibraries>
@@ -196,7 +196,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>uafxcw.lib;common.lib;CrashDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
+      <AdditionalDependencies>uafxcw.lib;common.lib;LeafDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <IgnoreSpecificDefaultLibraries>uafxcw.lib</IgnoreSpecificDefaultLibraries>
@@ -215,7 +215,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>uafxcw.lib;common.lib;CrashDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
+      <AdditionalDependencies>uafxcw.lib;common.lib;LeafDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <IgnoreSpecificDefaultLibraries>uafxcw.lib</IgnoreSpecificDefaultLibraries>
@@ -233,7 +233,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>uafxcw.lib;common.lib;CrashDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
+      <AdditionalDependencies>uafxcw.lib;common.lib;LeafDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <IgnoreSpecificDefaultLibraries>uafxcw.lib</IgnoreSpecificDefaultLibraries>
@@ -255,7 +255,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>uafxcw.lib;common.lib;CrashDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
+      <AdditionalDependencies>uafxcw.lib;common.lib;LeafDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <IgnoreSpecificDefaultLibraries>uafxcw.lib</IgnoreSpecificDefaultLibraries>

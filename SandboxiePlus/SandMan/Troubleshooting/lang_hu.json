@@ -79,9 +79,9 @@
 "SBIE2115: File is too large to copy into sandbox, opening in read only": "SBIE2115: a fájl túl nagy a homokozóba másoláshoz, csak olvasható módban nyílik meg",
 "File is too large to copy into sandbox, opening in read only": "A fájl túl nagy a homokozóba másoláshoz, csak olvasható módban nyílik meg",
 
-"SBIE2181: Failed to load CrashDll.dll": "SBIE2181: CrashDll.dll betöltése sikertelen",
+"SBIE2181: Failed to load LeafDll.dll": "SBIE2181: LeafDll.dll betöltése sikertelen",
 "Fix the DACLs of Sandboxie's home folder": "A Sandboxie mappák DACL-jeinek kijavítása",
-"Failures to load CrashDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.": "Ha a Chrome vagy más alkalmazástárolókat használó szoftver nem tudja betölteni az CrashDll.dll fájlt, azt gyakran a sandboxie könyvtár érvénytelen DACL-bejegyzései okozzák. Ez a művelet megoldja a DACL bejegyzéseket. Emiatt rendszergazdai jogokat kér a kmdutil.exe számára.",
+"Failures to load LeafDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.": "Ha a Chrome vagy más alkalmazástárolókat használó szoftver nem tudja betölteni az LeafDll.dll fájlt, azt gyakran a sandboxie könyvtár érvénytelen DACL-bejegyzései okozzák. Ez a művelet megoldja a DACL bejegyzéseket. Emiatt rendszergazdai jogokat kér a kmdutil.exe számára.",
 "The DACLs have been adjusted, please try to run your application again and indicate if the issue has been resolved.": "A DACL-ek beállítása megtörtént. Kérjük, próbálja meg újra futtatni az alkalmazást, és jelezze, ha a probléma megoldódott.",
 "DACLs fix did not resolve the issue": "A DACL-javítás nem oldotta meg a problémát",
 

@@ -551,7 +551,7 @@ BOOL File_WriteProcessMemory(
                 dbg_size -= len;
                 BufferToHexW(lpBuffer, nSize, dbg_ptr, dbg_size - 1);
                 wcscat(dbg_ptr, L"]");
-                CrashApi_MonitorPutMsg(MONITOR_HOOK, dbg);
+                LeafApi_MonitorPutMsg(MONITOR_HOOK, dbg);
             }
         }
     }

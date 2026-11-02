@@ -916,7 +916,7 @@ _FX NTSTATUS File_GetFileName(HANDLE FileHandle, ULONG NameLen, WCHAR* NameBuf)
 {
     NTSTATUS status;
 
-    status = CrashApi_GetFileName(FileHandle, NameBuf, &NameLen, NULL);
+    status = LeafApi_GetFileName(FileHandle, NameBuf, &NameLen, NULL);
 
     if (NT_SUCCESS(status) && !*NameBuf)
         status = STATUS_OBJECT_PATH_NOT_FOUND;

@@ -17,7 +17,7 @@
  */
 
  //---------------------------------------------------------------------------
- // Sandboxie Low Level code injection mechanism moved here from CrashSvc
+ // Sandboxie Low Level code injection mechanism moved here from LeafSvc
  //---------------------------------------------------------------------------
 
 #include "dll.h"
@@ -164,7 +164,7 @@ P_VirtualAlloc2 __sys_VirtualAlloc2 = NULL;
 _FX ULONG SbieDll_InjectLow_LoadLow(BOOLEAN arch_64bit, void **sbielow_ptr, ULONG *sbielow_len, ULONG *start_offset, ULONG* data_offset, ULONG* detour_offset)
 {
     //
-    // lock the SbieLow resource (embedded within the CrashSvc executable,
+    // lock the SbieLow resource (embedded within the LeafSvc executable,
     // see lowlevel.rc) and find the offset to executable code, and length
     //
 
@@ -402,7 +402,7 @@ _FX ULONG SbieDll_GetSysCallOffset(const ULONG *SyscallPtr, ULONG syscall_index)
 
 _FX ULONG SbieDll_InjectLow_InitSyscalls(BOOLEAN drv_init)
 {
-	const WCHAR *_CrashDll = L"\\" SBIEDLL L".dll";
+	const WCHAR *_LeafDll = L"\\" SBIEDLL L".dll";
 	WCHAR sbie_home[512];
 	ULONG status;
 	ULONG len;
@@ -414,7 +414,7 @@ _FX ULONG SbieDll_InjectLow_InitSyscalls(BOOLEAN drv_init)
 #endif
 
 	//
-	// Get the CrashDll Location
+	// Get the LeafDll Location
 	//
 
 	/*if (1) {
@@ -423,7 +423,7 @@ _FX ULONG SbieDll_InjectLow_InitSyscalls(BOOLEAN drv_init)
 	else */
 	if (drv_init)
 	{
-		status = CrashApi_GetHomePath(NULL, 0, sbie_home, 512);
+		status = LeafApi_GetHomePath(NULL, 0, sbie_home, 512);
 		if (status != 0)
 			return status;
 	}
@@ -456,7 +456,7 @@ _FX ULONG SbieDll_InjectLow_InitSyscalls(BOOLEAN drv_init)
 		// Get a full sys call list from the driver
 		//
 
-		status = CrashApi_Call(API_QUERY_SYSCALLS, 1, (ULONG_PTR)syscall_data);
+		status = LeafApi_Call(API_QUERY_SYSCALLS, 1, (ULONG_PTR)syscall_data);
 		if (status != 0)
 			return status;
 
@@ -510,9 +510,9 @@ _FX ULONG SbieDll_InjectLow_InitSyscalls(BOOLEAN drv_init)
 
 		wchar_t KernelDll_str[13]		= L"kernel32.dll";
 
-		wchar_t NativeSbieDll_str[]		= L"...\\CrashDll.dll";
-		wchar_t Arm64ecSbieDll_str[]	= L"...\\64\\CrashDll.dll";
-		wchar_t Wow64SbieDll_str[]		= L"...\\32\\CrashDll.dll";
+		wchar_t NativeSbieDll_str[]		= L"...\\LeafDll.dll";
+		wchar_t Arm64ecSbieDll_str[]	= L"...\\64\\LeafDll.dll";
+		wchar_t Wow64SbieDll_str[]		= L"...\\32\\LeafDll.dll";
 
 		struct INJECT_DATA {
 			// ...
@@ -610,11 +610,11 @@ _FX ULONG SbieDll_InjectLow_InitSyscalls(BOOLEAN drv_init)
 	ptr += len + 1;
 
 	//
-	// append paths for native and wow64 CrashDll to the syscall buffer
+	// append paths for native and wow64 LeafDll to the syscall buffer
 	//
 
 	wcscpy(ptr, sbie_home);
-	wcscat(ptr, _CrashDll);
+	wcscat(ptr, _LeafDll);
 
 	len = (ULONG)wcslen(ptr);
 	extra->NativeSbieDll_offset = ULONG_DIFF(ptr, extra);
@@ -624,7 +624,7 @@ _FX ULONG SbieDll_InjectLow_InitSyscalls(BOOLEAN drv_init)
 #ifdef _M_ARM64
 	wcscpy(ptr, sbie_home);
 	wcscat(ptr, L"\\64");
-	wcscat(ptr, _CrashDll);
+	wcscat(ptr, _LeafDll);
 
 	len = (ULONG)wcslen(ptr);
 	extra->Arm64ecSbieDll_offset = ULONG_DIFF(ptr, extra);
@@ -635,7 +635,7 @@ _FX ULONG SbieDll_InjectLow_InitSyscalls(BOOLEAN drv_init)
 #ifdef _WIN64
 	wcscpy(ptr, sbie_home);
 	wcscat(ptr, L"\\32");
-	wcscat(ptr, _CrashDll);
+	wcscat(ptr, _LeafDll);
 
 	len = (ULONG)wcslen(ptr);
 	extra->Wow64SbieDll_offset = ULONG_DIFF(ptr, extra);
@@ -689,7 +689,7 @@ _FX ULONG SbieDll_InjectLow_InitSyscalls(BOOLEAN drv_init)
 		ULONG* aCode = SbieDll_FindFirstSysCallFunc((ULONG*)Dll_Ntdll, &HandleStubHijack);
 
 		if (aCode == NULL) {
-			CrashApi_Log(2303, L"syscall, wrappers not found");
+			LeafApi_Log(2303, L"syscall, wrappers not found");
 			return STATUS_SUCCESS; // we will fail process creation for ec processes later
 		}
 
@@ -1000,7 +1000,7 @@ _FX ULONG SbieDll_InjectLow(HANDLE hProcess, ULONG init_flags, BOOLEAN dup_drv_h
 	if (dup_drv_handle)
 	{
 		//
-		// duplicate the CrashDrv API file device handle into target process
+		// duplicate the LeafDrv API file device handle into target process
 		//
 
 		lowdata.api_device_handle = (ULONG64)(ULONG_PTR)
@@ -1053,7 +1053,7 @@ _FX ULONG SbieDll_InjectLow(HANDLE hProcess, ULONG init_flags, BOOLEAN dup_drv_h
 		)) {
 
 		//UCHAR *code = lowdata.LdrInitializeThunk_tramp;
-		//CrashApi_LogEx(msg->session_id, 2335,
+		//LeafApi_LogEx(msg->session_id, 2335,
 		//	L"%S [%02X %02X %02X %02X %02X %02X"
 		//	L" %02X %02X %02X %02X %02X %02X]",
 		//	msg->process_name,

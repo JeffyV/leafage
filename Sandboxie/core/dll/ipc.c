@@ -420,7 +420,7 @@ static P_NtImpersonateThread        __sys_NtImpersonateThread       = NULL;
 
 static ULONG_PTR *Ipc_ProxyViews = NULL;
 
-const WCHAR *Ipc_CrashRpcSs      = L"CrashRpcSs.exe";
+const WCHAR *Ipc_LeafRpcSs      = L"LeafRpcSs.exe";
 
 const WCHAR *Ipc_epmapper  = L"\\RPC Control\\epmapper";
 const WCHAR *Ipc_actkernel = L"\\RPC Control\\actkernel";
@@ -471,7 +471,7 @@ _FX BOOLEAN Ipc_Init(void)
 
     SbieDll_MatchPath(L'i', (const WCHAR *)-1);
 
-    ipc_namespace_isoaltion = CrashApi_QueryConfBool(NULL, L"NtNamespaceIsolation", TRUE);
+    ipc_namespace_isoaltion = LeafApi_QueryConfBool(NULL, L"NtNamespaceIsolation", TRUE);
 
     //
     // intercept NTDLL entry points
@@ -494,7 +494,7 @@ _FX BOOLEAN Ipc_Init(void)
     SBIEDLL_HOOK_IF(NtAlpcQueryInformationMessage);
 
     // OriginalToken BEGIN
-    if (!Dll_CompartmentMode && !CrashApi_QueryConfBool(NULL, L"OriginalToken", FALSE))
+    if (!Dll_CompartmentMode && !LeafApi_QueryConfBool(NULL, L"OriginalToken", FALSE))
     // OriginalToken END
     {
         SBIEDLL_HOOK(Ipc_, NtImpersonateClientOfPort);
@@ -546,7 +546,7 @@ _FX BOOLEAN Ipc_Init(void)
     SBIEDLL_HOOK(Ipc_,NtQueryDirectoryObject);
 
     // OriginalToken BEGIN
-    if (!Dll_CompartmentMode && !CrashApi_QueryConfBool(NULL, L"OriginalToken", FALSE))
+    if (!Dll_CompartmentMode && !LeafApi_QueryConfBool(NULL, L"OriginalToken", FALSE))
     // OriginalToken END
     {
         SBIEDLL_HOOK(Ipc_, NtImpersonateAnonymousToken);
@@ -618,14 +618,14 @@ _FX void Ipc_CreateObjects(void)
     // create main directory, in case it isn't there yet
     //
 
-    status = CrashApi_CreateDirOrLink(CopyPath, NULL);
+    status = LeafApi_CreateDirOrLink(CopyPath, NULL);
 
     if (status == STATUS_OBJECT_PATH_NOT_FOUND) {
 
         status = Ipc_CreatePath(TruePath, CopyPath);
 
         if (NT_SUCCESS(status))
-            status = CrashApi_CreateDirOrLink(CopyPath, NULL);
+            status = LeafApi_CreateDirOrLink(CopyPath, NULL);
     }
 
     if (! NT_SUCCESS(status)) {
@@ -659,12 +659,12 @@ _FX void Ipc_CreateObjects(void)
     }
 
     if (NT_SUCCESS(status))
-        status = CrashApi_CreateDirOrLink(BNOLINKS, NULL);
+        status = LeafApi_CreateDirOrLink(BNOLINKS, NULL);
     
     if (NT_SUCCESS(status)) {
         wcscpy(buffer, BNOLINKS);
         wcscat(buffer, str);
-        status = CrashApi_CreateDirOrLink(buffer, CopyPath);
+        status = LeafApi_CreateDirOrLink(buffer, CopyPath);
     }
 
     if (! NT_SUCCESS(status)) {
@@ -681,7 +681,7 @@ _FX void Ipc_CreateObjects(void)
     wcscpy(buffer2, Dll_BoxIpcPath);
     wcscat(buffer2, L"\\BaseNamedObjects");
 
-    status = CrashApi_CreateDirOrLink(buffer2, NULL);
+    status = LeafApi_CreateDirOrLink(buffer2, NULL);
 
     if (! NT_SUCCESS(status)) {
         errlvl = 88;
@@ -695,7 +695,7 @@ _FX void Ipc_CreateObjects(void)
 
     wcscpy(GLOBAL, buffer);
 
-    status = CrashApi_CreateDirOrLink(buffer, buffer2);
+    status = LeafApi_CreateDirOrLink(buffer, buffer2);
 
     if (! NT_SUCCESS(status)) {
         errlvl = 51;
@@ -705,7 +705,7 @@ _FX void Ipc_CreateObjects(void)
     wcscpy(buffer, buffer2);
     wcscat(buffer, L"\\Local");
 
-    status = CrashApi_CreateDirOrLink(buffer, buffer2);
+    status = LeafApi_CreateDirOrLink(buffer, buffer2);
 
     if (! NT_SUCCESS(status)) {
         errlvl = 52;
@@ -715,7 +715,7 @@ _FX void Ipc_CreateObjects(void)
     wcscpy(buffer, buffer2);
     wcscat(buffer, L"\\Session");
 
-    status = CrashApi_CreateDirOrLink(buffer, BNOLINKS);
+    status = LeafApi_CreateDirOrLink(buffer, BNOLINKS);
 
     if (! NT_SUCCESS(status)) {
         errlvl = 53;
@@ -725,7 +725,7 @@ _FX void Ipc_CreateObjects(void)
     if (NT_SUCCESS(status)) {
         wcscpy(buffer, BNOLINKS);
         wcscat(buffer, L"\\0");
-        status = CrashApi_CreateDirOrLink(buffer, buffer2);
+        status = LeafApi_CreateDirOrLink(buffer, buffer2);
     }
 
     if (! NT_SUCCESS(status)) {
@@ -740,7 +740,7 @@ _FX void Ipc_CreateObjects(void)
     wcscpy(buffer, CopyPath);
     wcscat(buffer, L"\\Global");
 
-    status = CrashApi_CreateDirOrLink(buffer, GLOBAL);
+    status = LeafApi_CreateDirOrLink(buffer, GLOBAL);
 
     if (! NT_SUCCESS(status)) {
         errlvl = 41;
@@ -750,7 +750,7 @@ _FX void Ipc_CreateObjects(void)
     wcscpy(buffer, CopyPath);
     wcscat(buffer, L"\\Local");
 
-    status = CrashApi_CreateDirOrLink(buffer, CopyPath);
+    status = LeafApi_CreateDirOrLink(buffer, CopyPath);
 
     if (! NT_SUCCESS(status)) {
         errlvl = 42;
@@ -760,7 +760,7 @@ _FX void Ipc_CreateObjects(void)
     wcscpy(buffer, CopyPath);
     wcscat(buffer, L"\\Session");
 
-    status = CrashApi_CreateDirOrLink(buffer, BNOLINKS);
+    status = LeafApi_CreateDirOrLink(buffer, BNOLINKS);
 
     if (! NT_SUCCESS(status)) {
         errlvl = 43;
@@ -783,7 +783,7 @@ finish:
         Dll_Free(buffer2);
 
     if (errlvl)
-        CrashApi_Log(2308, L"[%d / %08X]", errlvl, status);
+        LeafApi_Log(2308, L"[%d / %08X]", errlvl, status);
 }
 
 
@@ -1063,7 +1063,7 @@ _FX BOOLEAN Ipc_GetName_AdjustSplWow64Path(WCHAR *TruePath, BOOLEAN adj)
     //
 
     // NoSbieDesk BEGIN
-    if (Dll_CompartmentMode || CrashApi_QueryConfBool(NULL, L"NoSandboxieDesktop", FALSE))
+    if (Dll_CompartmentMode || LeafApi_QueryConfBool(NULL, L"NoSandboxieDesktop", FALSE))
         return TRUE;
 	// NoSbieDesk END
 
@@ -1200,7 +1200,7 @@ _FX NTSTATUS Ipc_GetName2(
     {
         WCHAR msg[1024];
         Sbie_snwprintf(msg, 1024, L"%s: %s", NtName, *OutTruePath);
-        CrashApi_MonitorPutMsg(MONITOR_IPC | MONITOR_TRACE, msg);
+        LeafApi_MonitorPutMsg(MONITOR_IPC | MONITOR_TRACE, msg);
     }
 
     return status;
@@ -1264,7 +1264,7 @@ _FX NTSTATUS Ipc_CreatePath(WCHAR *TruePath, WCHAR *CopyPath)
 
             *backslash = L'\0';
 
-            status = CrashApi_CreateDirOrLink(CopyPath, NULL);
+            status = LeafApi_CreateDirOrLink(CopyPath, NULL);
 
             *backslash = L'\\';
 
@@ -2305,11 +2305,11 @@ _FX NTSTATUS Ipc_ImpersonateSelf(PORT_MESSAGE *PortMsg)
 
             //
             // the following scenario needs special consideration:
-            // - SandboxeRpcSs/CrashDcomLaunch are started under a
+            // - SandboxeRpcSs/LeafDcomLaunch are started under a
             //   limited user account
             // - the program creates an instance of some LocalServer32 COM
             //   object which requires elevation and is therefore started
-            //   (by CrashDcomLaunch) under an administrator user account
+            //   (by LeafDcomLaunch) under an administrator user account
             // - the LocalServer32 starts and issues CoRegisterClassObject,
             //   which causes SandboxeRpcSs to connect to it via ALPC
             // - the LocalServer32 tries to impersonate SandboxeRpcSs which
@@ -2332,9 +2332,9 @@ _FX NTSTATUS Ipc_ImpersonateSelf(PORT_MESSAGE *PortMsg)
             }
             if (OtherProcessId) {
                 WCHAR ImageName[96];
-                CrashApi_QueryProcess(
+                LeafApi_QueryProcess(
                                 OtherProcessId, NULL, ImageName, NULL, NULL);
-                if (_wcsicmp(ImageName, Ipc_CrashRpcSs) == 0) {
+                if (_wcsicmp(ImageName, Ipc_LeafRpcSs) == 0) {
 
                     ImpLevel = SecurityAnonymous;
                 }
@@ -2447,9 +2447,9 @@ _FX NTSTATUS Ipc_NtAlpcImpersonateClientOfPort(
     ULONG_PTR UnknownParameter3)
 {
     //
-    // in a scenario where CrashRpcSs is running with low privileges
+    // in a scenario where LeafRpcSs is running with low privileges
     // (typically in Windows Vista with UAC enabled), while the caller is
-    // running as SYSTEM, NtAlpcImpersonateClientOfPort in CrashRpcSs
+    // running as SYSTEM, NtAlpcImpersonateClientOfPort in LeafRpcSs
     // might fail, or else silently impersonate at identification level
     // depending on the situation.  (identification-level impersonation
     // will cause STATUS_BAD_IMPERSONATION_LEVEL in NtAlpcSendWaitReceive,
@@ -2486,7 +2486,7 @@ _FX NTSTATUS Ipc_NtImpersonateAnonymousToken(HANDLE ThreadHandle)
     // be fixed for the new Windows to properly select thunk zero
 
     if (status == STATUS_ACCESS_DENIED)
-        CrashApi_Log(2205, L"ImpersonateAnonymousToken %08X", ThreadHandle);
+        LeafApi_Log(2205, L"ImpersonateAnonymousToken %08X", ThreadHandle);
 
     return status;
 }
@@ -2501,7 +2501,7 @@ _FX NTSTATUS Ipc_NtImpersonateThread(
     HANDLE ServerThreadHandle, HANDLE ClientThreadHandle,
     PSECURITY_QUALITY_OF_SERVICE SecurityQos)
 {
-    CrashApi_Log(2205, L"ImpersonateThread");
+    LeafApi_Log(2205, L"ImpersonateThread");
     return STATUS_ACCESS_DENIED;
 }
 
@@ -2560,7 +2560,7 @@ _FX NTSTATUS Ipc_NtCreateEvent(
     if (! TruePath) {
 
         if(ObjectAttributes->ObjectName->Buffer)
-            CrashApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
+            LeafApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
 
         status = __sys_NtCreateEvent(
             EventHandle, DesiredAccess, ObjectAttributes,
@@ -2785,7 +2785,7 @@ _FX NTSTATUS Ipc_NtCreateEventPair(
     if (! TruePath) {
 
         if(ObjectAttributes->ObjectName->Buffer)
-            CrashApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
+            LeafApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
 
         status = __sys_NtCreateEventPair(
             EventPairHandle, DesiredAccess, ObjectAttributes);
@@ -3008,7 +3008,7 @@ _FX NTSTATUS Ipc_NtCreateKeyedEvent(
     if (! TruePath) {
 
         if(ObjectAttributes->ObjectName->Buffer)
-            CrashApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
+            LeafApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
 
         status = __sys_NtCreateKeyedEvent(
             KeyedEventHandle, DesiredAccess, ObjectAttributes,
@@ -3235,7 +3235,7 @@ _FX NTSTATUS Ipc_NtCreateTimer(
     if (! TruePath) {
 
         if(ObjectAttributes->ObjectName->Buffer)
-            CrashApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
+            LeafApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
 
         status = __sys_NtCreateTimer(
             TimerHandle, DesiredAccess, ObjectAttributes,
@@ -3462,7 +3462,7 @@ _FX NTSTATUS Ipc_NtCreateMutant(
     if (! TruePath) {
 
         if(ObjectAttributes->ObjectName->Buffer)
-            CrashApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
+            LeafApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
 
         status = __sys_NtCreateMutant(
             MutantHandle, DesiredAccess, ObjectAttributes,
@@ -3690,7 +3690,7 @@ _FX NTSTATUS Ipc_NtCreateSemaphore(
     if (! TruePath) {
 
         if(ObjectAttributes->ObjectName->Buffer)
-            CrashApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
+            LeafApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
 
         status = __sys_NtCreateSemaphore(
             SemaphoreHandle, DesiredAccess, ObjectAttributes,
@@ -3930,7 +3930,7 @@ _FX NTSTATUS Ipc_NtCreateSection(
     if (! TruePath) {
 
         if(ObjectAttributes->ObjectName->Buffer)
-            CrashApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
+            LeafApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
 
         status = __sys_NtCreateSection(
             SectionHandle, DesiredAccess, ObjectAttributes,
@@ -4069,7 +4069,7 @@ _FX NTSTATUS Ipc_NtCreateSectionEx(
     if (! TruePath) {
 
         if(ObjectAttributes->ObjectName->Buffer)
-            CrashApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
+            LeafApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
 
         status = __sys_NtCreateSectionEx(
             SectionHandle, DesiredAccess, ObjectAttributes,
@@ -4300,7 +4300,7 @@ _FX NTSTATUS Ipc_NtCreateSymbolicLinkObject(
     if (! TruePath) {
 
         if(ObjectAttributes->ObjectName->Buffer)
-            CrashApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
+            LeafApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
 
         status = __sys_NtCreateSymbolicLinkObject(
             SymbolicLinkHandle, DesiredAccess, ObjectAttributes,
@@ -4531,7 +4531,7 @@ _FX NTSTATUS Ipc_NtCreateDirectoryObject(
     if (! TruePath) {
 
         if(ObjectAttributes->ObjectName->Buffer)
-            CrashApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
+            LeafApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
 
         status = __sys_NtCreateDirectoryObject(DirectoryHandle, DesiredAccess, ObjectAttributes);
 
@@ -4647,7 +4647,7 @@ _FX NTSTATUS Ipc_NtCreateDirectoryObjectEx(
     if (! TruePath) {
 
         if(ObjectAttributes->ObjectName->Buffer)
-            CrashApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
+            LeafApi_MonitorPut2(MONITOR_IPC, ObjectAttributes->ObjectName->Buffer, FALSE);
 
         status = __sys_NtCreateDirectoryObjectEx(DirectoryHandle, DesiredAccess, ObjectAttributes
                                                     , ShadowDirectoryHandle, Flags);
@@ -5338,7 +5338,7 @@ _FX NTSTATUS Ipc_ConnectProxyPort(
     req_len += info_len;
 
     //
-    // issue request to CrashSvc to connect to an LPC port
+    // issue request to LeafSvc to connect to an LPC port
     //
 
     req = Dll_AllocTemp(req_len);
@@ -5408,7 +5408,7 @@ finish:
     }
 
     if (err) {
-        CrashApi_Log(2205, L"ConnectPort (%02X/%08X) %S", err, status, TruePath);
+        LeafApi_Log(2205, L"ConnectPort (%02X/%08X) %S", err, status, TruePath);
         if (status == STATUS_SUCCESS)
             status = STATUS_INVALID_PARAMETER;
     }
@@ -5547,7 +5547,7 @@ finish:
         Dll_Free(rpl);
 
     if (err) {
-        CrashApi_Log(2205, L"RequestPort (%02X/%08X)", err, status);
+        LeafApi_Log(2205, L"RequestPort (%02X/%08X)", err, status);
         if (status == STATUS_SUCCESS)
             status = STATUS_INVALID_PARAMETER;
     }
@@ -5606,12 +5606,12 @@ _FX NTSTATUS Ipc_NtAlpcSendWaitReceivePort(
             return STATUS_SUCCESS;
         }
 
-        /*CrashApi_Log(2205, L"SendPort - SF=%08X SM=%c SV=%c RM=%c RV=%c",
+        /*LeafApi_Log(2205, L"SendPort - SF=%08X SM=%c SV=%c RM=%c RV=%c",
             SendFlags,
             (SendMsg ? 'Y' : 'N'), (SendView ? 'Y' : 'N'),
             (ReceiveMsg ? 'Y' : 'N'), (ReceiveView ? 'Y' : 'N'));
         if (SendView) {
-            CrashApi_Log(2205, L"SendPort - SVSF=%08X SVRF=%08X SVVA=%08X",
+            LeafApi_Log(2205, L"SendPort - SVSF=%08X SVRF=%08X SVVA=%08X",
                 SendView->SendFlags,  SendView->ReceiveFlags, SendView->u.s2.ViewAttrs);
         }*/
 
@@ -5679,7 +5679,7 @@ _FX NTSTATUS Ipc_NtAlpcSendWaitReceivePort(
 
                 //
                 // flag 0x40000000 indicates that a section view was mapped
-                // with response data.  in this case CrashSvc copied the data
+                // with response data.  in this case LeafSvc copied the data
                 // from the mapped view into the reply buffer.  now we need
                 // to copy this data into a VirtualAlloc-ed area to emulate
                 // the behavior of this memory being mapped externally
@@ -5731,7 +5731,7 @@ finish:
         Dll_Free(rpl);
 
     if (err) {
-        CrashApi_Log(2205, L"SendPort (%02X/%08X)", err, status);
+        LeafApi_Log(2205, L"SendPort (%02X/%08X)", err, status);
         if (status == STATUS_SUCCESS)
             status = STATUS_INVALID_PARAMETER;
     }

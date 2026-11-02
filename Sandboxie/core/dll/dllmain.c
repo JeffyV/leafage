@@ -51,9 +51,9 @@ void Dll_Wow64DisableTurboThunks(void);
 
 const ULONG tzuk = 'xobs';
 
-SBIELOW_DATA* CrashApi_data = NULL;
+SBIELOW_DATA* LeafApi_data = NULL;
 #ifdef _M_ARM64EC
-ULONG* CrashApi_SyscallPtr = NULL;
+ULONG* LeafApi_SyscallPtr = NULL;
 #endif
 
 HINSTANCE Dll_Instance = NULL;
@@ -222,7 +222,7 @@ _FX BOOL WINAPI DllMain(
 _FX void Dll_InitGeneric(HINSTANCE hInstance)
 {
     //
-    // Dll_InitGeneric initializes CrashDll in a general way, suitable
+    // Dll_InitGeneric initializes LeafDll in a general way, suitable
     // for a program which may or may not be in the sandbox
     //
 
@@ -239,7 +239,7 @@ _FX void Dll_InitGeneric(HINSTANCE hInstance)
 	__sys_GetModuleInformation = GetProcAddress(LoadLibraryW(L"psapi.dll"), "GetModuleInformation");
 
     if (! Dll_InitMem()) {
-        CrashApi_Log(2305, NULL);
+        LeafApi_Log(2305, NULL);
         ExitProcess(-1);
     }
 }
@@ -278,13 +278,13 @@ _FX void Dll_InitInjected(void)
 
     Dll_ProcessId = (ULONG)(ULONG_PTR)GetCurrentProcessId();
 
-    status = CrashApi_QueryProcessEx2( // sets proc->sbiedll_loaded = TRUE; in the driver
+    status = LeafApi_QueryProcessEx2( // sets proc->sbiedll_loaded = TRUE; in the driver
         (HANDLE)(ULONG_PTR)Dll_ProcessId, 255,
         Dll_BoxNameSpace, Dll_ImageNameSpace, Dll_SidStringSpace,
         &Dll_SessionId, NULL);
 
     if (status != 0) {
-        CrashApi_Log(2304, Dll_ImageName);
+        LeafApi_Log(2304, Dll_ImageName);
         ExitProcess(-1);
     }
 
@@ -310,7 +310,7 @@ _FX void Dll_InitInjected(void)
     Dll_HomeNtPath = Dll_AllocTemp(1024 * sizeof(WCHAR));
     Dll_HomeDosPath = Dll_AllocTemp(1024 * sizeof(WCHAR));
 
-    CrashApi_GetHomePath((WCHAR*)Dll_HomeNtPath, 1020, (WCHAR*)Dll_HomeDosPath, 1020);
+    LeafApi_GetHomePath((WCHAR*)Dll_HomeNtPath, 1020, (WCHAR*)Dll_HomeDosPath, 1020);
 
     Dll_HomeNtPathLen = wcslen(Dll_HomeNtPath);
     //Dll_HomeDosPathLen = wcslen(Dll_HomeDosPath);
@@ -319,13 +319,13 @@ _FX void Dll_InitInjected(void)
     // get features flags
     //
 
-    CrashApi_QueryDrvInfo(0, &Dll_DriverFlags, sizeof(Dll_DriverFlags));
+    LeafApi_QueryDrvInfo(0, &Dll_DriverFlags, sizeof(Dll_DriverFlags));
 
     //
     // get process type and flags
     //
 
-    Dll_ProcessFlags = CrashApi_QueryProcessInfo(0, 0);
+    Dll_ProcessFlags = LeafApi_QueryProcessInfo(0, 0);
 
     Dll_CompartmentMode = (Dll_ProcessFlags & SBIE_FLAG_APP_COMPARTMENT) != 0;
 
@@ -347,11 +347,11 @@ _FX void Dll_InitInjected(void)
     BoxKeyPathLen = 0;
     BoxIpcPathLen = 0;
 
-    status = CrashApi_QueryBoxPath(
+    status = LeafApi_QueryBoxPath(
         NULL, NULL, NULL, NULL,
         &BoxFilePathLen, &BoxKeyPathLen, &BoxIpcPathLen);
     if (status != 0) {
-        CrashApi_Log(2304, Dll_ImageName);
+        LeafApi_Log(2304, Dll_ImageName);
         ExitProcess(-1);
     }
 
@@ -359,14 +359,14 @@ _FX void Dll_InitInjected(void)
     Dll_BoxKeyPath = Dll_Alloc(BoxKeyPathLen);
     Dll_BoxIpcPath = Dll_Alloc(BoxIpcPathLen);
 
-    status = CrashApi_QueryBoxPath(
+    status = LeafApi_QueryBoxPath(
         NULL,
         (WCHAR *)Dll_BoxFilePath,
         (WCHAR *)Dll_BoxKeyPath,
         (WCHAR *)Dll_BoxIpcPath,
         &BoxFilePathLen, &BoxKeyPathLen, &BoxIpcPathLen);
     if (status != 0) {
-        CrashApi_Log(2304, Dll_ImageName);
+        LeafApi_Log(2304, Dll_ImageName);
         ExitProcess(-1);
     }
 
@@ -374,7 +374,7 @@ _FX void Dll_InitInjected(void)
     Dll_BoxKeyPathLen = wcslen(Dll_BoxKeyPath);
     Dll_BoxIpcPathLen = wcslen(Dll_BoxIpcPath);
 
-  //  Dll_AlernateIpcNaming = CrashApi_QueryConfBool(NULL, L"UseAlernateIpcNaming", FALSE);
+  //  Dll_AlernateIpcNaming = LeafApi_QueryConfBool(NULL, L"UseAlernateIpcNaming", FALSE);
   //  if (Dll_AlernateIpcNaming) {
   //
   //      //
@@ -398,7 +398,7 @@ _FX void Dll_InitInjected(void)
 
 
 #ifdef WITH_DEBUG
-    if (CrashApi_QueryConfBool(NULL, L"DisableSbieDll", FALSE)) {
+    if (LeafApi_QueryConfBool(NULL, L"DisableSbieDll", FALSE)) {
         Dll_InitComplete = TRUE;
         return;
     }
@@ -445,11 +445,11 @@ _FX void Dll_InitInjected(void)
         //
 
         ULONG pid_count = 0;
-        if (NT_SUCCESS(CrashApi_EnumProcessEx(NULL,FALSE,-1,NULL,&pid_count)) && pid_count == 1)
+        if (NT_SUCCESS(LeafApi_EnumProcessEx(NULL,FALSE,-1,NULL,&pid_count)) && pid_count == 1)
             Dll_FirstProcessInBox = TRUE;
 
         WCHAR str[32];
-        if (NT_SUCCESS(CrashApi_QueryConfAsIs(NULL, L"ProcessLimit", 0, str, sizeof(str) - sizeof(WCHAR)))) {
+        if (NT_SUCCESS(LeafApi_QueryConfAsIs(NULL, L"ProcessLimit", 0, str, sizeof(str) - sizeof(WCHAR)))) {
             ULONG num = _wtoi(str);
             if (num > 0) {
                 if (num < pid_count)
@@ -524,7 +524,7 @@ _FX void Dll_InitInjected(void)
 #endif WITH_DEBUG
 
     if (! ok) {
-        CrashApi_Log(2304, Dll_ImageName);
+        LeafApi_Log(2304, Dll_ImageName);
         ExitProcess(-1);
     }
 
@@ -533,7 +533,7 @@ _FX void Dll_InitInjected(void)
     //
 
     WCHAR str[32];
-    if (NT_SUCCESS(CrashApi_QueryConfAsIs(NULL, L"CpuAffinityMask", 0, str, sizeof(str) - sizeof(WCHAR))) && str[0] == L'0' && (str[1] == L'x' || str[1] == L'X')){
+    if (NT_SUCCESS(LeafApi_QueryConfAsIs(NULL, L"CpuAffinityMask", 0, str, sizeof(str) - sizeof(WCHAR))) && str[0] == L'0' && (str[1] == L'x' || str[1] == L'X')){
 
         WCHAR* endptr;
         KAFFINITY AffinityMask = wcstoul(str + 2, &endptr, 16); // note we only support core 0-31 as wcstoull is not exported by ntdll
@@ -573,7 +573,7 @@ _FX void Dll_InitExeEntry(void)
     Gui_InitConsole2();
 
     //
-    // if we are SplWow64, register our pid with CrashSvc GUI Proxy
+    // if we are SplWow64, register our pid with LeafSvc GUI Proxy
     //
 
     Gdi_SplWow64(TRUE);
@@ -603,7 +603,7 @@ _FX void Dll_InitExeEntry(void)
         UserEnv_Init(Dll_KernelBase);
 
     //
-    // start CrashRpcSs
+    // start LeafRpcSs
     //
 
     SbieDll_StartCOM(TRUE);
@@ -643,7 +643,7 @@ _FX ULONG Dll_GetImageType(const WCHAR *ImageName)
     WCHAR* buf = wbuf;
 
     for (index = 0; ; ++index) {
-        status = CrashApi_QueryConfAsIs(
+        status = LeafApi_QueryConfAsIs(
             NULL, L"SpecialImage", index, buf, 90 * sizeof(WCHAR));
         if (!NT_SUCCESS(status))
             break;
@@ -680,11 +680,11 @@ _FX ULONG Dll_GetImageType(const WCHAR *ImageName)
 
     static const WCHAR *_ImageNames[] = {
 
-        L"CrashRpcSs.exe",      (WCHAR *)DLL_IMAGE_SANDBOXIE_RPCSS,
-        L"CrashDcomLaunch.exe", (WCHAR *)DLL_IMAGE_SANDBOXIE_DCOMLAUNCH,
-        L"CrashCrypto.exe",     (WCHAR *)DLL_IMAGE_SANDBOXIE_CRYPTO,
-        L"CrashWUAU.exe",       (WCHAR *)DLL_IMAGE_SANDBOXIE_WUAU,
-        L"CrashBITS.exe",       (WCHAR *)DLL_IMAGE_SANDBOXIE_BITS,
+        L"LeafRpcSs.exe",      (WCHAR *)DLL_IMAGE_SANDBOXIE_RPCSS,
+        L"LeafDcomLaunch.exe", (WCHAR *)DLL_IMAGE_SANDBOXIE_DCOMLAUNCH,
+        L"LeafCrypto.exe",     (WCHAR *)DLL_IMAGE_SANDBOXIE_CRYPTO,
+        L"LeafWUAU.exe",       (WCHAR *)DLL_IMAGE_SANDBOXIE_WUAU,
+        L"LeafBITS.exe",       (WCHAR *)DLL_IMAGE_SANDBOXIE_BITS,
         SBIESVC_EXE,                (WCHAR *)DLL_IMAGE_SANDBOXIE_SBIESVC,
 
         L"msiexec.exe",             (WCHAR *)DLL_IMAGE_MSI_INSTALLER,
@@ -759,13 +759,13 @@ _FX void Dll_SelectImageType(void)
         ||  _wcsicmp(Dll_ImageName, L"cvh.exe") == 0    // Office 2010 virt
         ||  0)) {
 
-        CrashApi_Log(2205, Dll_ImageName);
+        LeafApi_Log(2205, Dll_ImageName);
     }
 
     if (Dll_ImageType == DLL_IMAGE_LAST)
         Dll_ImageType = DLL_IMAGE_UNSPECIFIED;
 
-    CrashApi_QueryProcessInfoEx(0, 'spit', Dll_ImageType);
+    LeafApi_QueryProcessInfoEx(0, 'spit', Dll_ImageType);
 
     //
     // we have some special cases for programs running under a restricted
@@ -798,14 +798,14 @@ _FX VOID Dll_Ordinal1(INJECT_DATA * inject)
     SBIELOW_DATA *data = (SBIELOW_DATA *)inject->sbielow_data;
     BOOLEAN bHostInject = FALSE;
 
-    CrashApi_data = data;
+    LeafApi_data = data;
 #ifdef _M_ARM64EC
     // get the pointer to sys_call_list in the SYSCALL_DATA struct
-    CrashApi_SyscallPtr = (ULONG*)((ULONG64)data->syscall_data + sizeof(ULONG) + sizeof(ULONG) + (NATIVE_FUNCTION_SIZE * NATIVE_FUNCTION_COUNT));
+    LeafApi_SyscallPtr = (ULONG*)((ULONG64)data->syscall_data + sizeof(ULONG) + sizeof(ULONG) + (NATIVE_FUNCTION_SIZE * NATIVE_FUNCTION_COUNT));
 #endif
 
-    extern HANDLE CrashApi_DeviceHandle;
-    CrashApi_DeviceHandle = (HANDLE)data->api_device_handle;
+    extern HANDLE LeafApi_DeviceHandle;
+    LeafApi_DeviceHandle = (HANDLE)data->api_device_handle;
 
     //
     // the SbieLow data area includes values that are useful to us
@@ -829,7 +829,7 @@ _FX VOID Dll_Ordinal1(INJECT_DATA * inject)
     if (!bHostInject)
     {
         //
-        // CrashDll was already partially initialized in Dll_InitGeneric,
+        // LeafDll was already partially initialized in Dll_InitGeneric,
         // complete the initialization for a sandboxed process
         //
         HANDLE heventProcessStart = 0;
@@ -856,12 +856,12 @@ _FX VOID Dll_Ordinal1(INJECT_DATA * inject)
 
         int MustRestartProcess = 0;
         if (Dll_ProcessFlags & SBIE_FLAG_PROCESS_IN_PCA_JOB) {
-            if (!CrashApi_QueryConfBool(NULL, L"NoRestartOnPCA", FALSE))
+            if (!LeafApi_QueryConfBool(NULL, L"NoRestartOnPCA", FALSE))
                 MustRestartProcess = 1;
         }
 
         else if (Dll_ProcessFlags & SBIE_FLAG_FORCED_PROCESS) {
-            if (CrashApi_QueryConfBool(NULL, L"ForceRestartAll", FALSE)
+            if (LeafApi_QueryConfBool(NULL, L"ForceRestartAll", FALSE)
              || SbieDll_CheckStringInList(Dll_ImageName, NULL, L"ForceRestart"))
                 MustRestartProcess = 2;
         }
@@ -870,7 +870,7 @@ _FX VOID Dll_Ordinal1(INJECT_DATA * inject)
 
             WCHAR text[128];
             Sbie_snwprintf(text, 128, L"Cleanly restarting forced process, reason %d", MustRestartProcess);
-            CrashApi_MonitorPutMsg(MONITOR_OTHER, text);
+            LeafApi_MonitorPutMsg(MONITOR_OTHER, text);
 
             extern void Proc_RestartProcessOutOfPcaJob(void);
             Proc_RestartProcessOutOfPcaJob();
@@ -883,7 +883,7 @@ _FX VOID Dll_Ordinal1(INJECT_DATA * inject)
 
         if (Dll_ImageType == DLL_IMAGE_SHELL_EXPLORER && SbieDll_IsOpenCOM()) {
 
-            CrashApi_Log(2195, NULL);
+            LeafApi_Log(2195, NULL);
             ExitProcess(0);
         }
 
@@ -894,12 +894,12 @@ _FX VOID Dll_Ordinal1(INJECT_DATA * inject)
         if (Dll_ImageType == DLL_IMAGE_MSI_INSTALLER) {
 
             if (SbieDll_IsOpenCOM()) {
-                CrashApi_Log(2196, NULL);
+                LeafApi_Log(2196, NULL);
                 ExitProcess(0);
             }
 
-            if (!CrashApi_QueryConfBool(NULL, L"MsiInstallerExemptions", FALSE) && CrashApi_QueryConfBool(NULL, L"NotifyMsiInstaller", TRUE)) {
-                CrashApi_Log(2194, L"MsiInstallerExemptions=y");
+            if (!LeafApi_QueryConfBool(NULL, L"MsiInstallerExemptions", FALSE) && LeafApi_QueryConfBool(NULL, L"NotifyMsiInstaller", TRUE)) {
+                LeafApi_Log(2194, L"MsiInstallerExemptions=y");
             }
         }
     }
@@ -973,7 +973,7 @@ _FX void Dll_Wow64DisableTurboThunks(void)
     }
 
     if(!NT_SUCCESS(status))
-        CrashApi_Log(2205, L"Wow64FunctionTurboThunkControl %08X", status);
+        LeafApi_Log(2205, L"Wow64FunctionTurboThunkControl %08X", status);
 }
 
 #endif

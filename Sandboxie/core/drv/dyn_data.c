@@ -912,7 +912,7 @@ _FX NTSTATUS Dyndata_LoadData()
     //
     // load dyn data from registry
     // 
-    // L"\\REGISTRY\\MACHINE\\SYSTEM\\ControlSet001\\Services\\CrashDrv\\Parameters"
+    // L"\\REGISTRY\\MACHINE\\SYSTEM\\ControlSet001\\Services\\LeafDrv\\Parameters"
     // L"DynData" / L"DynDataSig"
     //
 
@@ -1070,7 +1070,7 @@ _FX NTSTATUS Dyndata_LoadData()
             //
             // Allow the last offsets to be used with not yet known to be compatible Windows builds
             // 
-            // L"\\REGISTRY\\MACHINE\\SYSTEM\\ControlSet001\\Services\\CrashDrv\\Parameters"
+            // L"\\REGISTRY\\MACHINE\\SYSTEM\\ControlSet001\\Services\\LeafDrv\\Parameters"
             // L"AllowOutdatedOffsets"
             //
 

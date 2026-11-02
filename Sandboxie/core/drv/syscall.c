@@ -457,7 +457,7 @@ _FX BOOLEAN Syscall_Init_ServiceData(void)
 
     //
     // save a copy of some syscall functions in ntdll, we will pass
-    // these to CrashSvc, which in turn will pass them to SbieLow
+    // these to LeafSvc, which in turn will pass them to SbieLow
     // (see core/svc/DriverAssistInject.cpp and core/low/lowdata.h)
     //
 
@@ -963,7 +963,7 @@ _FX NTSTATUS Syscall_Api_Query(PROCESS *proc, ULONG64 *parms)
     //
 
     buf_len = sizeof(ULONG)         // size of buffer
-            + sizeof(ULONG)         // offset to extra data (for CrashSvc)
+            + sizeof(ULONG)         // offset to extra data (for LeafSvc)
             + (NATIVE_FUNCTION_SIZE * NATIVE_FUNCTION_COUNT) // saved code from ntdll
             + List_Count(&Syscall_List) * ((sizeof(ULONG) * 2) + (add_names ? 64 : 0))
             + sizeof(ULONG) * 2     // final terminator entry
@@ -976,7 +976,7 @@ _FX NTSTATUS Syscall_Api_Query(PROCESS *proc, ULONG64 *parms)
     //
     // populate the buffer with syscall data.  first we store
     // the size of the buffer, and then we leave room for ULONG used
-    // by CrashSvc, and for the code for four ZwXxx stub functions
+    // by LeafSvc, and for the code for four ZwXxx stub functions
     //
 
     ptr = user_buf;

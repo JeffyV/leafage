@@ -66,7 +66,7 @@ struct SSbieAPI
 		traceBuffer = NULL;
 		traceBufferLen = 0;
 
-		CrashMsgDll = NULL;
+		LeafMsgDll = NULL;
 
 		SvcLock = 0;
 	}
@@ -101,7 +101,7 @@ struct SSbieAPI
 	UCHAR* traceBuffer;
 	ULONG traceBufferLen;
 
-	HMODULE CrashMsgDll;
+	HMODULE LeafMsgDll;
 
 	mutable volatile LONG   SvcLock;
 	mutable MSG_HEADER*		SvcReq;
@@ -290,7 +290,7 @@ SB_STATUS CSbieAPI::Connect(bool takeOver, bool withQueue)
 	UpdateDriveLetters();
 
 	m_SbiePath = GetSbieHome();
-	m->CrashMsgDll = LoadLibraryExW((m_SbiePath.toStdWString() + L"\\" SBIEMSG_DLL).c_str(), NULL, LOAD_LIBRARY_AS_DATAFILE);
+	m->LeafMsgDll = LoadLibraryExW((m_SbiePath.toStdWString() + L"\\" SBIEMSG_DLL).c_str(), NULL, LOAD_LIBRARY_AS_DATAFILE);
 
 	m->lastMessageNum = 0;
 	//m->lastRecordNum = 0;
@@ -350,16 +350,16 @@ SB_STATUS CSbieAPI::Disconnect()
 	}
 
 	// ensure that the client thread is entirely terminated to avoid the service keeping the reference
-	// see CrashSvc PortDisconnectByCreateTime
+	// see LeafSvc PortDisconnectByCreateTime
 	QThread::msleep(250); 
 	if (m->PortHandle) {
 		NtClose(m->PortHandle);
 		m->PortHandle = NULL;
 	}
 
-	if (m->CrashMsgDll) {
-		FreeLibrary(m->CrashMsgDll);
-		m->CrashMsgDll = NULL;
+	if (m->LeafMsgDll) {
+		FreeLibrary(m->LeafMsgDll);
+		m->LeafMsgDll = NULL;
 	}
 
 	m_SandBoxes.clear();
@@ -2376,7 +2376,7 @@ bool CSbieAPI::TestSignature(const QByteArray& Data, const QByteArray& Signature
 // Log
 //
 
-/*QString CSbieAPI__FormatCrashMsg(SSbieAPI* m, ULONG code, const WCHAR *ins1, const WCHAR *ins2)
+/*QString CSbieAPI__FormatLeafMsg(SSbieAPI* m, ULONG code, const WCHAR *ins1, const WCHAR *ins2)
 {
 	ULONG FormatFlags = FORMAT_MESSAGE_FROM_HMODULE | FORMAT_MESSAGE_ARGUMENT_ARRAY | FORMAT_MESSAGE_ALLOCATE_BUFFER;
 	ULONG Lang = 1033; // English
@@ -2384,10 +2384,10 @@ bool CSbieAPI::TestSignature(const QByteArray& Data, const QByteArray& Signature
 	ULONG ret_count = 0;
 	WCHAR* ret_str = NULL;
 
-	if (m->CrashMsgDll)
+	if (m->LeafMsgDll)
 	{
 		const WCHAR *ins[6] = { 0 , ins1, ins2, 0, 0, 0 };
-		ret_count = FormatMessage(FormatFlags, m->CrashMsgDll, code, Lang, (LPWSTR)&ret_str, 4, (va_list *)ins);
+		ret_count = FormatMessage(FormatFlags, m->LeafMsgDll, code, Lang, (LPWSTR)&ret_str, 4, (va_list *)ins);
 	}
 
 	if (ret_count == 0)
@@ -2498,7 +2498,7 @@ bool CSbieAPI::GetLog()
 	}
 
 	/*
-	QString Message = CSbieAPI__FormatCrashMsg(m, MsgCode, str1, str2);
+	QString Message = CSbieAPI__FormatLeafMsg(m, MsgCode, str1, str2);
 	if (ProcessId != 4) // if it is not from the driver, add the pid
 		Message += tr(", by process: %1").arg(ProcessId);
 
@@ -3149,8 +3149,8 @@ QString CSbieAPI::GetSbieMsgStr(quint32 code, quint32 Lang)
 {
 	ULONG FormatFlags = FORMAT_MESSAGE_FROM_HMODULE | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_ALLOCATE_BUFFER;
 	WCHAR* ret_str = NULL;
-	if (!m->CrashMsgDll || (FormatMessageW(FormatFlags, m->CrashMsgDll, code, Lang, (LPWSTR)&ret_str, 4, NULL) == 0
-						&& FormatMessageW(FormatFlags, m->CrashMsgDll, code, 1033, (LPWSTR)&ret_str, 4, NULL) == 0))
+	if (!m->LeafMsgDll || (FormatMessageW(FormatFlags, m->LeafMsgDll, code, Lang, (LPWSTR)&ret_str, 4, NULL) == 0
+						&& FormatMessageW(FormatFlags, m->LeafMsgDll, code, 1033, (LPWSTR)&ret_str, 4, NULL) == 0))
 		return QString("SBIE%0: %1; %2").arg(code & 0xFFFF, 4, 10);
 	QString qStr = QString::fromWCharArray(ret_str);
 	LocalFree(ret_str);

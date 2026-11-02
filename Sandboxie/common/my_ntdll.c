@@ -23,7 +23,7 @@ typedef long NTSTATUS;
 #include "win32_ntddk.h"
 
 //
-// Do not include any external CRT into sboxdll (CrashDll.dll) project !!!
+// Do not include any external CRT into sboxdll (LeafDll.dll) project !!!
 // This DLL is injected early into the process start up sequence and adding dependencies may break Sandboxie. 
 // Normally we link directly to the CRT build into ntdll.dll.
 //

@@ -9,7 +9,7 @@
 
 QString QSBIEAPI_EXPORT CSbieAPI__FormatNtStatus(long nsCode);
 
-enum ECrashMsgCodes
+enum ELeafMsgCodes
 {
 	SB_Generic = 0,
 	SB_Message,
@@ -62,7 +62,7 @@ public:
 	{
 		m = NULL;
 	}
-	CSbieStatus(ECrashMsgCodes MsgCode, const QVariantList& Args = QVariantList(), long Status = 0xC0000001 /*STATUS_UNSUCCESSFUL*/) : CSbieStatus()
+	CSbieStatus(ELeafMsgCodes MsgCode, const QVariantList& Args = QVariantList(), long Status = 0xC0000001 /*STATUS_UNSUCCESSFUL*/) : CSbieStatus()
 	{
 		SFlexError* p = new SFlexError();
 		p->MsgCode = MsgCode;
@@ -70,7 +70,7 @@ public:
 		p->Status = Status;
 		Attach(p);
 	}
-	CSbieStatus(ECrashMsgCodes MsgCode, long Status) : CSbieStatus(MsgCode, QVariantList(), Status)
+	CSbieStatus(ELeafMsgCodes MsgCode, long Status) : CSbieStatus(MsgCode, QVariantList(), Status)
 	{
 	}
 	CSbieStatus(long Status) : CSbieStatus(SB_Generic, QVariantList() << CSbieAPI__FormatNtStatus(Status), Status)
@@ -103,7 +103,7 @@ public:
 protected:
 	struct SFlexError
 	{
-		ECrashMsgCodes MsgCode;
+		ELeafMsgCodes MsgCode;
 		QVariantList Args;
 		long Status;
 

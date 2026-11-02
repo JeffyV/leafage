@@ -123,7 +123,7 @@ ALIGNED HANDLE my_CreateFileW(
         HANDLE                hTemplateFile);
 
     //
-    // prevent CrashCrypto.exe from causing SBIE1313,
+    // prevent LeafCrypto.exe from causing SBIE1313,
     // don't even try to access to the device block for raw reading
     //
 
@@ -170,7 +170,7 @@ int __stdcall WinMain(
 
     if (! CheckSingleInstance()) {
         // return special error code to indicate elective termination
-        // because this is a duplicate copy of CrashRpcSs.exe
+        // because this is a duplicate copy of LeafRpcSs.exe
         // see also core/dll/ipc_start.c
         return STATUS_LICENSE_QUOTA_EXCEEDED;
     }

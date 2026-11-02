@@ -71,7 +71,7 @@ MSG_HEADER *EpMapperServer::EpmapperGetPortNameHandler(MSG_HEADER *msg)
 
     HANDLE idProcess = (HANDLE)(ULONG_PTR)PipeServer::GetCallerProcessId();
     WCHAR boxname[BOXNAME_COUNT];
-    if (!NT_SUCCESS(CrashApi_QueryProcess(idProcess, boxname, NULL, NULL, NULL)))
+    if (!NT_SUCCESS(LeafApi_QueryProcess(idProcess, boxname, NULL, NULL, NULL)))
         return SHORT_REPLY(E_FAIL);
 
     const WCHAR* wstrSpooler = L"Spooler";
@@ -90,7 +90,7 @@ MSG_HEADER *EpMapperServer::EpmapperGetPortNameHandler(MSG_HEADER *msg)
     WCHAR buf[MAX_PATH];
 
     if (_wcsicmp(req->wszPortId, SPOOLER_PORT_ID) == 0) {
-        if (CrashApi_QueryConfBool(boxname, L"ClosePrintSpooler", FALSE)) 
+        if (LeafApi_QueryConfBool(boxname, L"ClosePrintSpooler", FALSE)) 
             return SHORT_REPLY(E_ACCESSDENIED);
         wcscpy_s(pwszServiceName, 81, wstrSpooler);
     }
@@ -98,13 +98,13 @@ MSG_HEADER *EpMapperServer::EpmapperGetPortNameHandler(MSG_HEADER *msg)
         wcscpy_s(pwszServiceName, 81, wstrWPAD);
     }
     else if (_wcsicmp(req->wszPortId, BT_PORT_ID) == 0) {
-        if (!CrashApi_QueryConfBool(boxname, L"OpenBluetooth", FALSE)) 
+        if (!LeafApi_QueryConfBool(boxname, L"OpenBluetooth", FALSE)) 
             return SHORT_REPLY(E_ACCESSDENIED);
         //wcscpy_s(pwszServiceName, 81, wstrBT);
         memcpy(&ifidRequest, &ifidBluetooth, sizeof(RPC_IF_ID)); 
     }
     else if (_wcsicmp(req->wszPortId, SSDP_PORT_ID) == 0) {
-        if (!CrashApi_QueryConfBool(boxname, L"OpenUPnP", FALSE)) 
+        if (!LeafApi_QueryConfBool(boxname, L"OpenUPnP", FALSE)) 
             return SHORT_REPLY(E_ACCESSDENIED);
         //wcscpy_s(pwszServiceName, 81, wstrSSDP);
         memcpy(&ifidRequest, &ifidSSDP, sizeof(RPC_IF_ID));
@@ -113,7 +113,7 @@ MSG_HEADER *EpMapperServer::EpmapperGetPortNameHandler(MSG_HEADER *msg)
         memcpy(&ifidRequest, &ifidGCS, sizeof(RPC_IF_ID));
     }
     else if (_wcsicmp(req->wszPortId, SMART_CARD_PORT_ID) == 0) {
-        if (!CrashApi_QueryConfBool(boxname, L"OpenSmartCard", TRUE)) 
+        if (!LeafApi_QueryConfBool(boxname, L"OpenSmartCard", TRUE)) 
             return SHORT_REPLY(E_ACCESSDENIED);
         memcpy(&ifidRequest, &ifidSmartCard, sizeof(RPC_IF_ID));
     }
@@ -177,7 +177,7 @@ MSG_HEADER *EpMapperServer::EpmapperGetPortNameHandler(MSG_HEADER *msg)
         {
             // Param 1 is the service PID
             // Param 2 will return the port name with "\RPC Control\" prepended
-            rpl->h.status = CrashApi_Call(
+            rpl->h.status = LeafApi_Call(
                 API_GET_DYNAMIC_PORT_FROM_PID, 2,
                 (ULONG_PTR)hPid,
                 (ULONG_PTR)rpl->wszPortName);
@@ -239,7 +239,7 @@ MSG_HEADER *EpMapperServer::EpmapperGetPortNameHandler(MSG_HEADER *msg)
         //  * implemented in driver
         //
 
-        if(!CrashApi_QueryConfBool(boxname, (std::wstring(L"Open") + req->wszPortId + L"Endpoint").c_str(), FALSE)) 
+        if(!LeafApi_QueryConfBool(boxname, (std::wstring(L"Open") + req->wszPortId + L"Endpoint").c_str(), FALSE)) 
         {
             //
             // For security reasons the setting RpcPortFilter=[Name],[message_id],[function_name] 
@@ -263,7 +263,7 @@ MSG_HEADER *EpMapperServer::EpmapperGetPortNameHandler(MSG_HEADER *msg)
         // Param 3 is the port type/identifier
         // Param 4 Filter ID count, array count
         // Param 5 Filter ID buffer, UCHAR Array
-        rpl->h.status = CrashApi_Call(API_OPEN_DYNAMIC_PORT, 5,
+        rpl->h.status = LeafApi_Call(API_OPEN_DYNAMIC_PORT, 5,
             (ULONG_PTR)rpl->wszPortName,
             (ULONG_PTR)0, 
             (ULONG_PTR)req->wszPortId,

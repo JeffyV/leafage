@@ -75,7 +75,7 @@ _FX BOOLEAN Gui_InitTitle(HMODULE module)
 
         NTSTATUS status;
 		WCHAR BoxAlias[MAX_PATH];
-		status = CrashApi_QueryConfAsIs(NULL, L"BoxAlias", 0, BoxAlias, ARRAYSIZE(BoxAlias));
+		status = LeafApi_QueryConfAsIs(NULL, L"BoxAlias", 0, BoxAlias, ARRAYSIZE(BoxAlias));
         if (NT_SUCCESS(status) && *BoxAlias)
             BoxName = BoxAlias;
 

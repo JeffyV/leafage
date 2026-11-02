@@ -33,7 +33,7 @@
 //---------------------------------------------------------------------------
 
 
-const WCHAR *_CrashRpcSs = L"CrashRpcSs.exe";
+const WCHAR *_LeafRpcSs = L"LeafRpcSs.exe";
 const WCHAR *_msiexec = L"msiexec.exe";
 
 static HMODULE KernelBase = NULL;
@@ -130,27 +130,27 @@ _FX ULONG FindProcessId(
     HANDLE process;
 
     process = (HANDLE)(ULONG_PTR)GetCurrentProcessId();
-    CrashApi_QueryProcess(process, NULL, NULL, this_sid, NULL);
+    LeafApi_QueryProcess(process, NULL, NULL, this_sid, NULL);
 
     ULONG pid_count = 0;
-    CrashApi_EnumProcessEx(NULL, FALSE, -1, NULL, &pid_count); // query count
+    LeafApi_EnumProcessEx(NULL, FALSE, -1, NULL, &pid_count); // query count
     pid_count += 128;
 
     pids = HeapAlloc(
         GetProcessHeap(), HEAP_GENERATE_EXCEPTIONS, sizeof(ULONG) * pid_count);
-    CrashApi_EnumProcessEx(NULL, FALSE, -1, pids, &pid_count); // query pids
+    LeafApi_EnumProcessEx(NULL, FALSE, -1, pids, &pid_count); // query pids
 
     for (i = 0; i < pid_count; ++i) {
 
         HANDLE pids_i = (HANDLE)(ULONG_PTR)pids[i];
-        CrashApi_QueryProcess(pids_i, NULL, image, that_sid, NULL);
+        LeafApi_QueryProcess(pids_i, NULL, image, that_sid, NULL);
         if (_wcsicmp(image, ProcessName) == 0 &&
             _wcsicmp(this_sid, that_sid) == 0) {
 
             BOOL found = FALSE;
 
             if (FindSystemToken) {
-                CrashApi_OpenProcess(&process, pids_i);
+                LeafApi_OpenProcess(&process, pids_i);
                 if (!process) {
                     process = OpenProcess(
                         PROCESS_QUERY_INFORMATION, FALSE, pids[i]);
@@ -262,8 +262,8 @@ _FX void InitComplete(PROCESS_DATA *data) {
 _FX BOOL my_SetServiceStatus(SERVICE_STATUS_HANDLE hServiceStatus, LPSERVICE_STATUS lpServiceStatus) {
     int i = 0;
     //
-    // update service status in CrashDll
-    // needed for CrashCrypto which hooks SetServiceStatus
+    // update service status in LeafDll
+    // needed for LeafCrypto which hooks SetServiceStatus
     //
 #ifdef SANDBOXIECRYPTO
 
@@ -369,7 +369,7 @@ SC_HANDLE my_OpenServiceW(
     }
     else {
 
-        // fallback to CrashDll SCM implementation
+        // fallback to LeafDll SCM implementation
 
         typedef SC_HANDLE(*P_OpenService)(
             SC_HANDLE hSCManager,
@@ -471,7 +471,7 @@ BOOL my_QueryServiceStatusEx(
         if (hService == SC_HANDLE_RPCSS) {
 
             buf->dwServiceType = SERVICE_WIN32_SHARE_PROCESS;
-            buf->dwProcessId = FindProcessId(_CrashRpcSs, FALSE);
+            buf->dwProcessId = FindProcessId(_LeafRpcSs, FALSE);
 
         }
         else if (hService == SC_HANDLE_MSISERVER) {
@@ -527,7 +527,7 @@ BOOL my_QueryServiceStatusEx(
         }
         else {
 
-            // fallback to CrashDll SCM implementation
+            // fallback to LeafDll SCM implementation
 
             typedef BOOL(*P_QueryServiceStatusEx)(
                 SC_HANDLE hService, SC_STATUS_TYPE InfoLevel,

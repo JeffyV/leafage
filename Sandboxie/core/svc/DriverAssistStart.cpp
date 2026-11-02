@@ -63,7 +63,7 @@ ULONG DriverAssist::StartDriverAsync(void *arg)
 
     bool ok = false;
 
-    LONG rc = CrashApi_GetVersionEx(NULL, NULL);
+    LONG rc = LeafApi_GetVersionEx(NULL, NULL);
     if (rc == 0) {
         ok = true;
         goto driver_started;
@@ -131,7 +131,7 @@ driver_started:
 
         for (ULONG retries = 0; retries < 20; ++retries) {
 
-            rc = CrashApi_GetVersionEx(NULL, &drv_abi_ver);
+            rc = LeafApi_GetVersionEx(NULL, &drv_abi_ver);
             if (rc == 0)
                 break;
             Sleep(500);
@@ -149,7 +149,7 @@ driver_started:
     //
 
     if (ok) {
-        rc = CrashApi_Call(API_SET_SERVICE_PORT, 1, (ULONG_PTR)m_instance->m_PortHandle);
+        rc = LeafApi_Call(API_SET_SERVICE_PORT, 1, (ULONG_PTR)m_instance->m_PortHandle);
         if (rc != 0) {
             LogEvent(MSG_9234, 0x9361, rc);
             ok = false;
@@ -171,7 +171,7 @@ driver_started:
             InitClipboard();
         }
 
-        rc = CrashApi_Call(API_INIT_GUI, 0);
+        rc = LeafApi_Call(API_INIT_GUI, 0);
 
         if (rc != 0) {
             LogEvent(MSG_9234, 0x9156, rc);
@@ -204,7 +204,7 @@ driver_started:
                     LsaHandle, &AuthPkgName, &AuthPkgNum);
 
                 if (rc == 0)
-                    CrashApi_Call(API_SET_LSA_AUTH_PKG, 1, (ULONG_PTR)AuthPkgNum);
+                    LeafApi_Call(API_SET_LSA_AUTH_PKG, 1, (ULONG_PTR)AuthPkgNum);
 
                 LsaDeregisterLogonProcess(LsaHandle);
             }
@@ -229,7 +229,7 @@ driver_started:
         //
 
         extern BOOLEAN DisableCHPE;
-        DisableCHPE = CrashApi_QueryConfBool(NULL, L"DisableCHPE", TRUE);
+        DisableCHPE = LeafApi_QueryConfBool(NULL, L"DisableCHPE", TRUE);
 
         if (DisableCHPE) {
             HKEY hkey = NULL;
@@ -271,7 +271,7 @@ driver_started:
         WCHAR boxname[BOXNAME_COUNT];
         for (ULONG i = 0; ; ++i) {
 
-            rc = CrashApi_QueryConfAsIs(
+            rc = LeafApi_QueryConfAsIs(
                 NULL, L"StartSystemBox", i, boxname, (BOXNAME_COUNT - 2) * sizeof(WCHAR));
             if (rc != 0)
                 break;
@@ -341,7 +341,7 @@ void DriverAssist::InitClipboard()
                 SetClipboardData(0x333333, hGlobal2);
                 SetClipboardData(0x444444, hGlobal2);
 
-                CrashApi_Call(API_GUI_CLIPBOARD, 1, (ULONG_PTR)-1);
+                LeafApi_Call(API_GUI_CLIPBOARD, 1, (ULONG_PTR)-1);
 
                 EmptyClipboard();
                 CloseClipboard();

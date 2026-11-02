@@ -285,24 +285,24 @@ bool DoAboutDialog(bool bReminder)
     if (g_bReminder) {
 
         SCertInfo CertInfo = { 0 };
-        CrashApi_QueryDrvInfo(-1, &CertInfo, sizeof(CertInfo));
+        LeafApi_QueryDrvInfo(-1, &CertInfo, sizeof(CertInfo));
         if (CertInfo.active)
             return true;
 
         time_t InstallDate = 0;
-        CrashApi_Call(API_GET_SECURE_PARAM, 3, L"InstallationDate", (ULONG_PTR)&InstallDate, sizeof(InstallDate));
+        LeafApi_Call(API_GET_SECURE_PARAM, 3, L"InstallationDate", (ULONG_PTR)&InstallDate, sizeof(InstallDate));
 
         time_t CurrentTime;
         time(&CurrentTime);
 
         if (InstallDate == 0 || InstallDate > CurrentTime) {
             InstallDate = CurrentTime;
-            CrashApi_Call(API_SET_SECURE_PARAM, 3, L"InstallationDate", (ULONG_PTR)&InstallDate, sizeof(InstallDate));
+            LeafApi_Call(API_SET_SECURE_PARAM, 3, L"InstallationDate", (ULONG_PTR)&InstallDate, sizeof(InstallDate));
         }
 
         Days = (int)((CurrentTime - InstallDate) / (24 * 3600));
 
-        if (!CrashApi_QueryConfBool(L"GlobalSettings", L"AlwaysShowReminder", FALSE)) {
+        if (!LeafApi_QueryConfBool(L"GlobalSettings", L"AlwaysShowReminder", FALSE)) {
 
             if (Days < 40)
                 return true;
@@ -320,13 +320,13 @@ bool DoAboutDialog(bool bReminder)
 		    USHORT CurReminderRevision = 1;
 
 		    USHORT ReminderRevision = 0;
-            CrashApi_Call(API_GET_SECURE_PARAM, 3, L"ReminderRevision", (ULONG_PTR)&ReminderRevision, sizeof(ReminderRevision));
+            LeafApi_Call(API_GET_SECURE_PARAM, 3, L"ReminderRevision", (ULONG_PTR)&ReminderRevision, sizeof(ReminderRevision));
 		    if (ReminderRevision < CurReminderRevision) {
-                CrashApi_Call(API_SET_SECURE_PARAM, 3, L"ReminderShedule", (ULONG_PTR)&ReminderShedule, sizeof(ReminderShedule));
-                CrashApi_Call(API_SET_SECURE_PARAM, 3, L"ReminderRevision", (ULONG_PTR)&ReminderRevision, sizeof(ReminderRevision));
+                LeafApi_Call(API_SET_SECURE_PARAM, 3, L"ReminderShedule", (ULONG_PTR)&ReminderShedule, sizeof(ReminderShedule));
+                LeafApi_Call(API_SET_SECURE_PARAM, 3, L"ReminderRevision", (ULONG_PTR)&ReminderRevision, sizeof(ReminderRevision));
 		    }
 		    else if (ReminderRevision > CurReminderRevision)
-                CrashApi_Call(API_GET_SECURE_PARAM, 3, L"ReminderShedule", (ULONG_PTR)&ReminderShedule, sizeof(ReminderShedule));
+                LeafApi_Call(API_GET_SECURE_PARAM, 3, L"ReminderShedule", (ULONG_PTR)&ReminderShedule, sizeof(ReminderShedule));
 
             for (USHORT* Cur = ReminderShedule; (ULONG_PTR)Cur < (ULONG_PTR)ReminderShedule + sizeof(ReminderShedule) && *Cur != 0; Cur += 2) {
 				if (Days > Cur[0]) {
@@ -336,7 +336,7 @@ bool DoAboutDialog(bool bReminder)
 			}
 
 			time_t LastReminder = 0;
-            CrashApi_Call(API_GET_SECURE_PARAM, 3, L"LastReminder", (ULONG_PTR)&LastReminder, sizeof(LastReminder));
+            LeafApi_Call(API_GET_SECURE_PARAM, 3, L"LastReminder", (ULONG_PTR)&LastReminder, sizeof(LastReminder));
 			if (LastReminder > 0 && LastReminder < CurrentTime) {
 				if (CurrentTime - LastReminder < (time_t(Interval) * 3600))
 					return true;
@@ -358,7 +358,7 @@ bool DoAboutDialog(bool bReminder)
             return !!retval;
 	    }
 
-	    CrashApi_Call(API_SET_SECURE_PARAM, 3, L"LastReminder", (ULONG_PTR)&CurrentTime, sizeof(CurrentTime));
+	    LeafApi_Call(API_SET_SECURE_PARAM, 3, L"LastReminder", (ULONG_PTR)&CurrentTime, sizeof(CurrentTime));
     }
 
     if (! initialized) {

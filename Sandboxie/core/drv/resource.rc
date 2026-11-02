@@ -65,10 +65,10 @@ BEGIN
             VALUE "CompanyName", MY_COMPANY_NAME_STRING "\0"
             VALUE "FileDescription", MY_PRODUCT_NAME_STRING " Kernel Mode Driver\0"
             VALUE "FileVersion", MY_VERSION_STRING "\0"
-   OPTIONAL_VALUE("InternalName", "CrashDrv\0")
+   OPTIONAL_VALUE("InternalName", "LeafDrv\0")
             VALUE "LegalCopyright", MY_COPYRIGHT_STRING "\0"
             VALUE "LegalTrademarks", "\0"
-   OPTIONAL_VALUE("OriginalFilename", "CrashDrv.sys\0")
+   OPTIONAL_VALUE("OriginalFilename", "LeafDrv.sys\0")
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", MY_PRODUCT_NAME_STRING "\0"
             VALUE "ProductVersion", MY_VERSION_STRING "\0"

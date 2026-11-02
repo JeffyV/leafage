@@ -71,7 +71,7 @@ _FX BOOLEAN File_InitFileMigration(void)
 
     File_InitCopyLimit();
 
-    File_NotifyNoCopy = CrashApi_QueryConfBool(NULL, L"NotifyNoCopy", FALSE);
+    File_NotifyNoCopy = LeafApi_QueryConfBool(NULL, L"NotifyNoCopy", FALSE);
 
     return TRUE;
 }
@@ -96,7 +96,7 @@ _FX VOID File_MigrateFile_Message(const WCHAR* TruePath, ULONGLONG file_size, in
     Sbie_snwprintf(text, (TruePathNameLen + 64), L"%s [%s / %I64u]",
         name, Dll_BoxName, file_size);
 
-    CrashApi_Log(MsgID, text);
+    LeafApi_Log(MsgID, text);
 
     Dll_Free(text);
 }
@@ -114,7 +114,7 @@ _FX ULONG File_MigrateFile_GetMode(const WCHAR* TruePath, ULONGLONG file_size)
     ULONG path_len = (wcslen(TruePath) + 1) * sizeof(WCHAR);
     WCHAR* path_lwr = Dll_AllocTemp(path_len);
     if (!path_lwr) {
-        CrashApi_Log(2305, NULL);
+        LeafApi_Log(2305, NULL);
         return FILE_DONT_COPY;
     }
     memcpy(path_lwr, TruePath, path_len);
@@ -174,7 +174,7 @@ found_match:
     MAN_FILE_MIGRATION_RPL* rpl = NULL;
     BOOLEAN ok = FALSE;
 
-    if (CrashApi_QueryConfBool(NULL, L"PromptForFileMigration", TRUE))
+    if (LeafApi_QueryConfBool(NULL, L"PromptForFileMigration", TRUE))
     {
         req.msgid = MAN_FILE_MIGRATION;
         req.file_size = file_size;
@@ -214,7 +214,7 @@ _FX void File_InitCopyLimit(void)
     static const WCHAR* _CopyLimitSilent = L"CopyLimitSilent";
 
     //
-    // if this is one of CrashCrypto, CrashWUAU or WUAUCLT,
+    // if this is one of LeafCrypto, LeafWUAU or WUAUCLT,
     // or TrustedInstaller, then we don't impose a CopyLimit
     //
 
@@ -239,8 +239,8 @@ _FX void File_InitCopyLimit(void)
     // get configuration settings for CopyLimitKb and CopyLimitSilent
     //
 
-    File_CopyLimitKb = CrashApi_QueryConfNumber64(NULL, _CopyLimitKb, -1);
-    File_CopyLimitSilent = CrashApi_QueryConfBool(NULL, _CopyLimitSilent, FALSE);
+    File_CopyLimitKb = LeafApi_QueryConfNumber64(NULL, _CopyLimitKb, -1);
+    File_CopyLimitSilent = LeafApi_QueryConfBool(NULL, _CopyLimitSilent, FALSE);
 }
 
 
@@ -286,7 +286,7 @@ _FX NTSTATUS File_MigrateFile(
 
     if (status == STATUS_SHARING_VIOLATION) {
 
-        status = CrashApi_OpenFile(&TrueHandle, TruePath);
+        status = LeafApi_OpenFile(&TrueHandle, TruePath);
 
         if (!NT_SUCCESS(status)) {
 
@@ -436,7 +436,7 @@ _FX NTSTATUS File_MigrateFile(
                 WCHAR size_str[32];
                 Sbie_snwprintf(size_str, 32, L"%I64u", file_size);
                 const WCHAR* strings[] = { Dll_BoxName, TruePath, size_str, NULL };
-                CrashApi_LogMsgExt(-1, 2198, strings);
+                LeafApi_LogMsgExt(-1, 2198, strings);
             }
         }
 
@@ -522,7 +522,7 @@ _FX NTSTATUS File_MigrateJunction(
 
     if (status == STATUS_SHARING_VIOLATION) {
 
-        status = CrashApi_OpenFile(&TrueHandle, TruePath);
+        status = LeafApi_OpenFile(&TrueHandle, TruePath);
     }*/
 
     if (!NT_SUCCESS(status))

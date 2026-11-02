@@ -484,7 +484,7 @@ MSG_HEADER *TerminalServer::Disconnect(MSG_HEADER *msg)
 
         err = ERROR_SERVICE_DOES_NOT_EXIST;
 
-    } else if (0 != CrashApi_QueryProcess(
+    } else if (0 != LeafApi_QueryProcess(
                         idProcess, NULL, NULL, NULL, &session_id)) {
 
         err = ERROR_ACCESS_DENIED;
@@ -522,7 +522,7 @@ MSG_HEADER *TerminalServer::GetUserToken(MSG_HEADER *msg)
 
         err = ERROR_INVALID_PARAMETER;
 
-    } else if (0 != CrashApi_QueryProcess(idProcess, NULL, NULL, NULL, &session_id)) {
+    } else if (0 != LeafApi_QueryProcess(idProcess, NULL, NULL, NULL, &session_id)) {
 
         err = ERROR_ACCESS_DENIED;
 
@@ -530,7 +530,7 @@ MSG_HEADER *TerminalServer::GetUserToken(MSG_HEADER *msg)
 
         WCHAR boxname[BOXNAME_COUNT];
         boxname[0] = L'\0';
-        CrashApi_QueryProcess(idProcess, boxname, NULL, NULL, NULL);
+        LeafApi_QueryProcess(idProcess, boxname, NULL, NULL, NULL);
 
         HANDLE hCallerProcess = OpenProcess(PROCESS_DUP_HANDLE, FALSE, (ULONG)(ULONG_PTR)idProcess);
         if (!hCallerProcess)
@@ -538,25 +538,25 @@ MSG_HEADER *TerminalServer::GetUserToken(MSG_HEADER *msg)
         else {
             HANDLE pHandle;
 
-            HANDLE hToken; //hToken = (HANDLE)CrashApi_QueryProcessInfoEx((HANDLE)idProcess, 'ptok', 0);
+            HANDLE hToken; //hToken = (HANDLE)LeafApi_QueryProcessInfoEx((HANDLE)idProcess, 'ptok', 0);
             if (WTSQueryUserToken(session_id, &hToken)) {
                 
                 HANDLE hFilteredToken = NULL;
 
-                ULONG64 ProcessFlags = CrashApi_QueryProcessInfo(idProcess, 0);
+                ULONG64 ProcessFlags = LeafApi_QueryProcessInfo(idProcess, 0);
                 BOOLEAN CompartmentMode = (ProcessFlags & SBIE_FLAG_APP_COMPARTMENT) != 0;
 
                 // OriginalToken BEGIN
-                if (!CompartmentMode && !CrashApi_QueryConfBool(boxname, L"OriginalToken", FALSE)
+                if (!CompartmentMode && !LeafApi_QueryConfBool(boxname, L"OriginalToken", FALSE)
                 // OriginalToken END
                 // UnfilteredToken BEGIN
-                 && !CrashApi_QueryConfBool(boxname, L"UnfilteredToken", FALSE))
+                 && !LeafApi_QueryConfBool(boxname, L"UnfilteredToken", FALSE))
 	            // UnfilteredToken END
                 {
                     // if one of the above is true, we handle unfiltered tokens
                     // if not, we need to filter the token, otherwise security checks in the driver will fail!
 
-                    if (!NT_SUCCESS(CrashApi_Call(API_FILTER_TOKEN, 3, (ULONG_PTR)idProcess, (ULONG_PTR)hToken, (ULONG_PTR)&hFilteredToken)))
+                    if (!NT_SUCCESS(LeafApi_Call(API_FILTER_TOKEN, 3, (ULONG_PTR)idProcess, (ULONG_PTR)hToken, (ULONG_PTR)&hFilteredToken)))
                         goto fail;
                 }
 

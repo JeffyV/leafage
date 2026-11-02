@@ -149,7 +149,7 @@ void DriverAssist::InitSIDs()
 
 bool DriverAssist::GetSandboxieSID(const WCHAR* boxname, UCHAR* pSID, DWORD dwSidSize)
 {
-    if (boxname && !CrashApi_QueryConfBool(boxname, L"SandboxieLogon", FALSE))
+    if (boxname && !LeafApi_QueryConfBool(boxname, L"SandboxieLogon", FALSE))
         return false;
 
 	WCHAR szUserName[256], szDomainName[256];

@@ -141,7 +141,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>CrashDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>LeafDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <CETCompat>true</CETCompat>
     </Link>
   </ItemDefinitionGroup>
@@ -156,7 +156,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>CrashDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>LeafDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <CETCompat>true</CETCompat>
     </Link>
   </ItemDefinitionGroup>
@@ -173,7 +173,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>CrashDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>LeafDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|Win32'">
@@ -188,7 +188,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>CrashDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>LeafDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <CETCompat>true</CETCompat>
     </Link>
   </ItemDefinitionGroup>
@@ -204,7 +204,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>CrashDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>LeafDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <CETCompat>true</CETCompat>
     </Link>
   </ItemDefinitionGroup>
@@ -222,7 +222,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>CrashDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>LeafDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

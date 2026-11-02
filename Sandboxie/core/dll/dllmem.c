@@ -113,7 +113,7 @@ _FX void *Dll_AllocFromPool(POOL *pool, ULONG size)
     if (! ptr) {
         if (! Dll_BoxName)
             return NULL;
-        CrashApi_Log(2305, NULL);
+        LeafApi_Log(2305, NULL);
         ExitProcess(-1);
     }
 
@@ -186,7 +186,7 @@ _FX void Dll_Free(void *ptr)
             WCHAR txt[64];
             Sbie_snwprintf(txt, 64, L"Memory corrupted, ptr=%p\n", ptr);
             OutputDebugString(txt);
-            CrashApi_Log(2316, NULL);
+            LeafApi_Log(2316, NULL);
             while (! IsDebuggerPresent()) Sleep(500);
             __debugbreak();
         }
@@ -223,7 +223,7 @@ _FX void *Dll_AllocCode128(void)
 
     UCHAR *ptr = Pool_Alloc(Dll_PoolCode, 128);
     if (! ptr) {
-        CrashApi_Log(2305, NULL);
+        LeafApi_Log(2305, NULL);
         ExitProcess(-1);
     }
     return ptr;
@@ -339,7 +339,7 @@ ALIGNED WCHAR *Dll_GetTlsNameBuffer(THREAD_DATA *data, ULONG which, ULONG size)
 #endif
 
     if (which >= NAME_BUFFER_COUNT - 2)
-        CrashApi_Log(2310, L"%d", which);
+        LeafApi_Log(2310, L"%d", which);
     if (which >= NAME_BUFFER_COUNT) {
         ExitProcess(-1);
     }
@@ -408,7 +408,7 @@ ALIGNED void Dll_PushTlsNameBuffer(THREAD_DATA *data)
     ++data->name_buffer_depth;
     data->name_buffer_count[data->name_buffer_depth] = 0; // initialize
     if (data->name_buffer_depth > NAME_BUFFER_DEPTH - 4)
-        CrashApi_Log(2310, L"%d", data->name_buffer_depth);
+        LeafApi_Log(2310, L"%d", data->name_buffer_depth);
     if (data->name_buffer_depth >= NAME_BUFFER_DEPTH) {
         ExitProcess(-1);
     }
@@ -476,6 +476,6 @@ _FX void Dll_PopTlsNameBuffer(THREAD_DATA *data)
 
     --data->name_buffer_depth;
     if (data->name_buffer_depth < 0) {
-        CrashApi_Log(2310, L"%d", data->name_buffer_depth);
+        LeafApi_Log(2310, L"%d", data->name_buffer_depth);
     }
 }

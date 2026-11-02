@@ -191,7 +191,7 @@ _FX BOOLEAN NetApi_Hook_NetUseAdd(HMODULE module)
 
     //
     // if \Device\Mup is closed, don't hook NetUseAdd, which would cause
-    // use of the function to fail due to the use of RestrictToken in CrashSvc
+    // use of the function to fail due to the use of RestrictToken in LeafSvc
     //
 
     if (1) {
@@ -339,9 +339,9 @@ _FX ULONG NetApi_NetUseAdd(
     }
 
     //
-    // send request to CrashSvc and examine reply
-    // note that CrashSvc will call DefineDosDevice outside the sandbox,
-    // see CrashSvc!NetApiServer::LaunchSlave
+    // send request to LeafSvc and examine reply
+    // note that LeafSvc will call DefineDosDevice outside the sandbox,
+    // see LeafSvc!NetApiServer::LaunchSlave
     //
 
     drive_number = 0;
@@ -377,7 +377,7 @@ abort:
 
     if (req)
         Dll_Free(req);
-    CrashApi_Log(2205, L"NetUseAdd");
+    LeafApi_Log(2205, L"NetUseAdd");
     return ERROR_ACCESS_DENIED;
 }
 

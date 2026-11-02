@@ -275,7 +275,7 @@ _FX NTSTATUS Syscall_OpenHandle(
 
     //
     // During early process initializarion stage OpenDirectoryObject is invoked with DIRECTORY_ALL_ACCESS
-    // so we strip the "write" permissions here until the CrashDll finishes loading
+    // so we strip the "write" permissions here until the LeafDll finishes loading
     //
 
     if (strcmp(syscall_entry->name, "OpenDirectoryObject") == 0 && proc->ipc_namespace_isoaltion && !proc->sbiedll_loaded){
@@ -734,7 +734,7 @@ _FX NTSTATUS Syscall_DuplicateHandle(
     }
 
     //  if (! NT_SUCCESS(status)) {
-    //      if(!wcsicmp(proc->image_name,L"CrashBITS.exe") && status == STATUS_ACCESS_DENIED) { 
+    //      if(!wcsicmp(proc->image_name,L"LeafBITS.exe") && status == STATUS_ACCESS_DENIED) { 
     //          return status;
     //      }
     //

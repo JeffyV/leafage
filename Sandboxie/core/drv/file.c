@@ -958,7 +958,7 @@ _FX BOOLEAN File_InitPaths(PROCESS *proc,
     }
 
     //
-    // if this is a Sandboxie program (like CrashRpcSs), don't allow
+    // if this is a Sandboxie program (like LeafRpcSs), don't allow
     // the Windows compatibility (shim) DLLs to be loaded
     //
 
@@ -1601,9 +1601,9 @@ _FX NTSTATUS File_Generic_MyParseProc(
         KeLowerIrql(irql);
 
         //
-        // if process is trying to load a special DLL before CrashDll
+        // if process is trying to load a special DLL before LeafDll
         // has been initialized, then pretend the file does not exist,
-        // and add the DLL path so it can be loaded by CrashDll
+        // and add the DLL path so it can be loaded by LeafDll
         //
 
         if ((! proc->sbiedll_loaded) && status == STATUS_SUCCESS
@@ -1657,8 +1657,8 @@ skip_due_to_home_folder:
             //
             // we can't allow write access on sandbox directories as this
             // can be used to create a directory reparse point (junction) in
-            // a call to NtFsControlFile.  instead, CrashDll will use the
-            // CrashSvc FileServer proxy to adjust attributes on directories.
+            // a call to NtFsControlFile.  instead, LeafDll will use the
+            // LeafSvc FileServer proxy to adjust attributes on directories.
             //
             // note that the the sandbox cannot be circumvented by this, but
             // deleting the sandbox (recursively) would delete the contents
@@ -2448,7 +2448,7 @@ _FX NTSTATUS File_Api_Open(PROCESS *proc, ULONG64 *parms)
     //
     // if the path matches a ClosedFilePath setting, we only allow opening
     // directory files, and only for query attribute access;  this is used
-    // by File_NtQueryFullAttributesFile in CrashDll
+    // by File_NtQueryFullAttributesFile in LeafDll
     //
 
     DesiredAccess = FILE_GENERIC_READ;

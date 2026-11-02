@@ -1589,7 +1589,7 @@ _FX WCHAR *File_GetName_TranslateSymlinks(
             memcpy(path, objname.Buffer, objname.Length);
             path[objname.Length / sizeof(WCHAR)] = L'\0';
 
-            status = CrashApi_QuerySymbolicLink(path, 1024 * sizeof(WCHAR));
+            status = LeafApi_QuerySymbolicLink(path, 1024 * sizeof(WCHAR));
             if (NT_SUCCESS(status)) {
 
                 path_len = wcslen(path) * sizeof(WCHAR);
@@ -2418,8 +2418,8 @@ _FX ULONG File_MatchPath2(const WCHAR *path, ULONG *FileFlags, BOOLEAN bCheckObj
     // \Device\Mup\;LanmanRedirector\;Q:000000000000b09f\server\share\f1.txt
     // then translate to
     // \Device\Mup\server\share\f1.txt
-    // and test again.  We do this because the CrashDrv records paths
-    // in the \Device\Mup format.  See CrashDrv::File_TranslateShares.
+    // and test again.  We do this because the LeafDrv records paths
+    // in the \Device\Mup format.  See LeafDrv::File_TranslateShares.
     //
 
     if (PrefixLen) {
@@ -2522,7 +2522,7 @@ _FX NTSTATUS File_NtOpenFile(
 
     if (pRetAddr > Dll_xtajit64 && pRetAddr < Dll_xtajit64 + 0x180000) {
 
-        //CrashApi_Log(2301, L"NtOpenFile bypass on ARM64EC for %S", 
+        //LeafApi_Log(2301, L"NtOpenFile bypass on ARM64EC for %S", 
         // ObjectAttributes && ObjectAttributes->ObjectName && ObjectAttributes->ObjectName->Buffer ? ObjectAttributes->ObjectName->Buffer : L"[UNNAMED]");
 
         status = __sys_NtOpenFile(
@@ -2900,7 +2900,7 @@ _FX NTSTATUS File_NtCreateFileImpl(
 
     //
     // remove creation options that can't be honored because the
-    // CrashDrv has removed privileges
+    // LeafDrv has removed privileges
     //
 
     if (!Dll_CompartmentMode)
@@ -2936,7 +2936,7 @@ _FX NTSTATUS File_NtCreateFileImpl(
 
             if (Dll_CompartmentMode){
 
-                CrashApi_MonitorPut2(MONITOR_PIPE, TruePath, FALSE);
+                LeafApi_MonitorPut2(MONITOR_PIPE, TruePath, FALSE);
 
                 Dll_PopTlsNameBuffer(TlsData);
 
@@ -2951,7 +2951,7 @@ _FX NTSTATUS File_NtCreateFileImpl(
                     CreateOptions, EaBuffer, EaLength);
 
             } else {
-                CrashApi_MonitorPut2(MONITOR_PIPE | MONITOR_DENY, TruePath, FALSE);
+                LeafApi_MonitorPut2(MONITOR_PIPE | MONITOR_DENY, TruePath, FALSE);
             }
         }
     }
@@ -2959,7 +2959,7 @@ _FX NTSTATUS File_NtCreateFileImpl(
     if (Dll_ApiTrace || Dll_FileTrace) {
         WCHAR trace_str[2048];
         ULONG len = Sbie_snwprintf(trace_str, 2048, L"File_NtCreateFileImpl %s DesiredAccess=0x%08X CreateDisposition=0x%08X CreateOptions=0x%08X", TruePath, DesiredAccess, CreateDisposition, CreateOptions);
-        CrashApi_MonitorPut2Ex(MONITOR_APICALL | MONITOR_TRACE, len, trace_str, FALSE, FALSE);
+        LeafApi_MonitorPut2Ex(MONITOR_APICALL | MONITOR_TRACE, len, trace_str, FALSE, FALSE);
     }
 
     SkipOriginalTry = (status == STATUS_BAD_INITIAL_PC);
@@ -3036,7 +3036,7 @@ ReparseLoop:
                         && wcsncmp(ObjectAttributes->ObjectName->Buffer, L"\\??\\", 4) == 0
                         && (DesiredAccess & ~(SYNCHRONIZE | READ_CONTROL | FILE_READ_EA | FILE_READ_ATTRIBUTES)) != 0)
                     {
-                        if (!CrashApi_QueryConfBool(NULL, L"AllowRawDiskRead", FALSE))
+                        if (!LeafApi_QueryConfBool(NULL, L"AllowRawDiskRead", FALSE))
                         if ((ObjectAttributes->ObjectName->Length == (6 * sizeof(WCHAR)) && ObjectAttributes->ObjectName->Buffer[5] == L':') // \??\C:
                             || wcsncmp(&ObjectAttributes->ObjectName->Buffer[4], L"PhysicalDrive", 13) == 0 // \??\PhysicalDrive1
                             || wcsncmp(&ObjectAttributes->ObjectName->Buffer[4], L"Volume", 6) == 0) // \??\Volume{2b985816-4b6f-11ea-bd33-48a4725d5bbe}
@@ -3365,7 +3365,7 @@ ReparseLoop:
                 // for a write-only path, the directory must be the
                 // first (or: highest level) directory which matches
                 // the write-only setting.  note that File_GetFileType
-                // will need to use CrashApi_OpenFile in this case
+                // will need to use LeafApi_OpenFile in this case
                 //
                 // if the request is for a path below the highest level,
                 // we pretend the path does not exist
@@ -3409,7 +3409,7 @@ ReparseLoop:
 
         if (!Dll_CompartmentMode)
         if ((FileType & TYPE_EFS) != 0) {
-            CrashApi_Log(2225, TruePath);
+            LeafApi_Log(2225, TruePath);
         }
 
 		//
@@ -3585,7 +3585,7 @@ ReparseLoop:
                 }
 
                 //
-                // special case for CrashCrypto on Windows Vista,
+                // special case for LeafCrypto on Windows Vista,
                 // which tries to open catdb that are locked by
                 // the real CryptSvc process.  convert read-only access
                 // to write access so the files can be migrated
@@ -4124,7 +4124,7 @@ ReparseLoop:
     if (Dll_ApiTrace || Dll_FileTrace) {
         WCHAR trace_str[2048];
         ULONG len = Sbie_snwprintf(trace_str, 2048, L"File_NtCreateFileImpl status = 0x%08X", status);
-        CrashApi_MonitorPut2Ex(MONITOR_APICALL | MONITOR_TRACE, len, trace_str, FALSE, FALSE);
+        LeafApi_MonitorPut2Ex(MONITOR_APICALL | MONITOR_TRACE, len, trace_str, FALSE, FALSE);
     }
 
     if(pSecurityDescriptor)
@@ -4161,7 +4161,7 @@ _FX NTSTATUS File_NtCreateTrueFile(
 
     if (!Dll_CompartmentMode)
     if (status == STATUS_ACCESS_DENIED
-      && CrashApi_QueryConfBool(NULL, L"EnableEFS", FALSE)) {
+      && LeafApi_QueryConfBool(NULL, L"EnableEFS", FALSE)) {
 
         WCHAR* TruePath = ObjectAttributes->ObjectName->Buffer;
 
@@ -4201,7 +4201,7 @@ _FX NTSTATUS File_NtCreateTrueFile(
                 EaBuffer, EaLength);
 
             if(!NT_SUCCESS(status))
-                CrashApi_Log(2225, TruePath);
+                LeafApi_Log(2225, TruePath);
         }
     }
 
@@ -4265,7 +4265,7 @@ NTSTATUS File_NtCreateFileProxy(
 
     if (ObjectAttributes->RootDirectory != NULL || ObjectAttributes->ObjectName == NULL) {
 
-        CrashApi_Log(2205, L"NtCreateFile (EFS)");
+        LeafApi_Log(2205, L"NtCreateFile (EFS)");
         return STATUS_ACCESS_DENIED;
     }
 
@@ -5408,12 +5408,12 @@ _FX NTSTATUS File_QueryFullAttributesDirectoryFile(
     NTSTATUS status;
 
     //
-    // try to use CrashApi_OpenFile which will open the file, bypassing
+    // try to use LeafApi_OpenFile which will open the file, bypassing
     // ClosedFilePath settings, but only if it a directory file.  it
     // returns a handle that can only be used to query file attributes
     //
 
-    status = CrashApi_OpenFile(&FileHandle, TruePath);
+    status = LeafApi_OpenFile(&FileHandle, TruePath);
     if (NT_SUCCESS(status)) {
 
         status = __sys_NtQueryInformationFile(
@@ -5628,7 +5628,7 @@ _FX NTSTATUS File_NtQueryFullAttributesFileImpl(
     if (Dll_ApiTrace || Dll_FileTrace) {
         WCHAR trace_str[2048];
         ULONG len = Sbie_snwprintf(trace_str, 2048, L"File_NtQueryFullAttributesFileImpl %s", TruePath);
-        CrashApi_MonitorPut2Ex(MONITOR_APICALL | MONITOR_TRACE, len, trace_str, FALSE, FALSE);
+        LeafApi_MonitorPut2Ex(MONITOR_APICALL | MONITOR_TRACE, len, trace_str, FALSE, FALSE);
     }
 
     if (! NT_SUCCESS(status)) {
@@ -5830,7 +5830,7 @@ _FX NTSTATUS File_NtQueryFullAttributesFileImpl(
     if (Dll_ApiTrace || Dll_FileTrace) {
         WCHAR trace_str[2048];
         ULONG len = Sbie_snwprintf(trace_str, 2048, L"File_NtQueryFullAttributesFileImpl status = 0x%08X", status);
-        CrashApi_MonitorPut2Ex(MONITOR_APICALL | MONITOR_TRACE, len, trace_str, FALSE, FALSE);
+        LeafApi_MonitorPut2Ex(MONITOR_APICALL | MONITOR_TRACE, len, trace_str, FALSE, FALSE);
     }
 
     Dll_PopTlsNameBuffer(TlsData);
@@ -6125,7 +6125,7 @@ _FX NTSTATUS File_NtQueryInformationByName(
         if (Dll_ApiTrace || Dll_FileTrace) {
             WCHAR trace_str[2048];
             ULONG len = Sbie_snwprintf(trace_str, 2048, L"File_NtQueryInformationByName %s", TruePath);
-            CrashApi_MonitorPut2Ex(MONITOR_APICALL | MONITOR_TRACE, len, trace_str, FALSE, FALSE);
+            LeafApi_MonitorPut2Ex(MONITOR_APICALL | MONITOR_TRACE, len, trace_str, FALSE, FALSE);
         }
 
         if (! NT_SUCCESS(status)) {
@@ -6307,7 +6307,7 @@ _FX NTSTATUS File_NtQueryInformationByName(
     if (Dll_ApiTrace || Dll_FileTrace) {
         WCHAR trace_str[2048];
         ULONG len = Sbie_snwprintf(trace_str, 2048, L"File_NtQueryInformationByName status = 0x%08X", status);
-        CrashApi_MonitorPut2Ex(MONITOR_APICALL | MONITOR_TRACE, len, trace_str, FALSE, FALSE);
+        LeafApi_MonitorPut2Ex(MONITOR_APICALL | MONITOR_TRACE, len, trace_str, FALSE, FALSE);
     }
 
     Dll_PopTlsNameBuffer(TlsData);
@@ -6392,7 +6392,7 @@ _FX ULONG File_GetFinalPathNameByHandleW(
     if (Dll_ApiTrace || Dll_FileTrace) {
         WCHAR trace_str[2048];
         ULONG len = Sbie_snwprintf(trace_str, 2048, L"File_GetFinalPathNameByHandleW %s", lpszFilePath);
-        CrashApi_MonitorPut2Ex(MONITOR_APICALL | MONITOR_TRACE, len, trace_str, FALSE, FALSE);
+        LeafApi_MonitorPut2Ex(MONITOR_APICALL | MONITOR_TRACE, len, trace_str, FALSE, FALSE);
     }
 
     SetLastError(err);
@@ -7076,7 +7076,7 @@ _FX NTSTATUS File_SetAttributes(
 has_copy_path:
 
     //
-    // ask the FileServer proxy in CrashSvc to do the job.  this is needed
+    // ask the FileServer proxy in LeafSvc to do the job.  this is needed
     // because the driver always blocks FILE_WRITE_ATTRIBUTE access on
     // directory files, even in the sandbox, to block junction points
     //
@@ -7707,7 +7707,7 @@ _FX NTSTATUS File_RenameFile(
         if (! ReparsedPath)
             ReparsedPath = TargetTruePath;
 
-        status = CrashApi_RenameFile(SourceHandle, ReparsedPath, TargetFileName, ReplaceIfExists);
+        status = LeafApi_RenameFile(SourceHandle, ReparsedPath, TargetFileName, ReplaceIfExists);
 
         if (ReparsedPath != TargetTruePath)
             Dll_Free(ReparsedPath);

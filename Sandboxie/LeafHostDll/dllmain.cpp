@@ -17,17 +17,17 @@
 
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "stdafx.h"
-#include "CrashHostDll.h"
+#include "LeafHostDll.h"
 
 using namespace std;
 
 HANDLE  g_hInjectedGlobalNameObj = NULL;
 
-BOOLEAN InitHook( HINSTANCE hCrashDll );
+BOOLEAN InitHook( HINSTANCE hLeafDll );
 
-extern "C" __declspec(dllexport) void InjectDllMain(HINSTANCE hCrashDll, ULONG_PTR UnusedParameter)
+extern "C" __declspec(dllexport) void InjectDllMain(HINSTANCE hLeafDll, ULONG_PTR UnusedParameter)
 {
-    InitHook(hCrashDll);
+    InitHook(hLeafDll);
 }
 
 

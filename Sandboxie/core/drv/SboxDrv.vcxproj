@@ -122,37 +122,37 @@
     <TargetExt>.sys</TargetExt>
     <GenerateManifest>false</GenerateManifest>
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
-    <TargetName>CrashDrv</TargetName>
+    <TargetName>LeafDrv</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieDebug|x64'">
     <TargetExt>.sys</TargetExt>
     <GenerateManifest>false</GenerateManifest>
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
-    <TargetName>CrashDrv</TargetName>
+    <TargetName>LeafDrv</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieDebug|ARM64'">
     <TargetExt>.sys</TargetExt>
     <GenerateManifest>false</GenerateManifest>
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
-    <TargetName>CrashDrv</TargetName>
+    <TargetName>LeafDrv</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|Win32'">
     <TargetExt>.sys</TargetExt>
     <GenerateManifest>false</GenerateManifest>
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
-    <TargetName>CrashDrv</TargetName>
+    <TargetName>LeafDrv</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|x64'">
     <TargetExt>.sys</TargetExt>
     <GenerateManifest>false</GenerateManifest>
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
-    <TargetName>CrashDrv</TargetName>
+    <TargetName>LeafDrv</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|ARM64'">
     <TargetExt>.sys</TargetExt>
     <GenerateManifest>false</GenerateManifest>
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
-    <TargetName>CrashDrv</TargetName>
+    <TargetName>LeafDrv</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SbieDebug|Win32'">
     <ClCompile>

@@ -549,7 +549,7 @@ _FX ULONG IpHlp_CommonSend(         ULONG_PTR IcmpHandle,
 
 _FX ULONG IpHlp_CommonSendError(ULONG ErrorLevel, ULONG ErrorCode)
 {
-    CrashApi_Log(2205, L"IcmpSendEcho (%d)", ErrorLevel);
+    LeafApi_Log(2205, L"IcmpSendEcho (%d)", ErrorLevel);
     SetLastError(ErrorCode);
     return 0;
 }

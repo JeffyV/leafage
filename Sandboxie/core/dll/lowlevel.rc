@@ -16,7 +16,7 @@
 //
 
 //---------------------------------------------------------------------------
-// Low Level DLL embedded into CrashSvc as a binary resource
+// Low Level DLL embedded into LeafSvc as a binary resource
 //---------------------------------------------------------------------------
 
 //
@@ -24,7 +24,7 @@
 // whenever LowLevel.dll is rebuilt.  the difficulties are:
 //
 // - the build utility does not recognize the RCDATA statement below as a
-// dependency of CrashSvc on LowLevel
+// dependency of LeafSvc on LowLevel
 //
 // - DLLs files are linked during build pass 2, while resource files are
 // compiled during build step 1
@@ -40,15 +40,15 @@
 // - the sources file names LowLevel.lib as a dependency, along with
 // a corresponding BUILD_CONSUMES statement, and for good measure, also
 // the SYNCHRONIZE_PASS2_DRAIN statement.  all this to make sure that
-// CrashSvc.exe is linked only after LowLevel.dll has been linked.
+// LeafSvc.exe is linked only after LowLevel.dll has been linked.
 //
 // - the sources files names LowLevel.res (the compiled output for this
 // resource file) as a dependency for linking in build pass 2, and the
 // makefile.inc file names LowLevel.dll as a dependency for LowLevel.res.
 //
-// the end result is that if LowLevel.dll is newer than CrashSvc.exe, then
+// the end result is that if LowLevel.dll is newer than LeafSvc.exe, then
 // this resource file gets recompiled during build pass 2 (linking) for
-// CrashSvc.exe, after which CrashSvc.exe is relinked, thus embedding the
+// LeafSvc.exe, after which LeafSvc.exe is relinked, thus embedding the
 // most recent copy of LowLevel.dll.
 //
 

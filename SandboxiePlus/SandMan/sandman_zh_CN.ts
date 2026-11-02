@@ -5326,8 +5326,8 @@ Error: %1</source>
     </message>
     <message>
         <location filename="SandMan.cpp" line="4471"/>
-        <source>Sandboxie-Plus is an open source continuation of Sandboxie.&lt;br /&gt;Visit &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; for more information.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Features: %3&lt;br /&gt;&lt;br /&gt;Installation: %1&lt;br /&gt;CrashDrv.sys: %4&lt;br /&gt; CrashSvc.exe: %5&lt;br /&gt; CrashDll.dll: %6&lt;br /&gt;&lt;br /&gt;Icons from &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</source>
-        <translation>Sandboxie-Plus 是 Sandboxie 的开源延续。&lt;br /&gt;前往 &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; 了解更多信息。&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;特性: %3&lt;br /&gt;&lt;br /&gt;已安装: %1&lt;br /&gt;CrashDrv.sys: %4&lt;br /&gt; CrashSvc.exe: %5&lt;br /&gt; CrashDll.dll: %6&lt;br /&gt;&lt;br /&gt;图标来自于 &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</translation>
+        <source>Sandboxie-Plus is an open source continuation of Sandboxie.&lt;br /&gt;Visit &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; for more information.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Features: %3&lt;br /&gt;&lt;br /&gt;Installation: %1&lt;br /&gt;LeafDrv.sys: %4&lt;br /&gt; LeafSvc.exe: %5&lt;br /&gt; LeafDll.dll: %6&lt;br /&gt;&lt;br /&gt;Icons from &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</source>
+        <translation>Sandboxie-Plus 是 Sandboxie 的开源延续。&lt;br /&gt;前往 &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; 了解更多信息。&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;特性: %3&lt;br /&gt;&lt;br /&gt;已安装: %1&lt;br /&gt;LeafDrv.sys: %4&lt;br /&gt; LeafSvc.exe: %5&lt;br /&gt; LeafDll.dll: %6&lt;br /&gt;&lt;br /&gt;图标来自于 &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</translation>
     </message>
     <message>
         <source>Do you want to open %1 in a sandboxed (yes) or unsandboxed (no) Web browser?</source>
@@ -9271,9 +9271,9 @@ This is done to prevent rogue processes inside the sandbox from creating a renam
     </message>
     <message>
         <location filename="Forms/OptionsWindow.ui" line="4517"/>
-        <source>Sandboxie&apos;s functionality can be enhanced by using optional DLLs which can be loaded into each sandboxed process on start by the CrashDll.dll file, the add-on manager in the global settings offers a couple of useful extensions, once installed they can be enabled here for the current box.</source>
+        <source>Sandboxie&apos;s functionality can be enhanced by using optional DLLs which can be loaded into each sandboxed process on start by the LeafDll.dll file, the add-on manager in the global settings offers a couple of useful extensions, once installed they can be enabled here for the current box.</source>
         <oldsource>Sandboxies functionality can be enhanced using optional dll’s which can be loaded into each sandboxed process on start by the SbieDll.dll, the add-on manager in the global settings offers a couple useful extensions, once installed they can be enabled here for the current box.</oldsource>
-        <translation>沙箱功能可以使用可选的.dll文件来获得增强，这些.dll文件可以在CrashDll.dll启动时加载到每个沙箱进程中。全局设置中的插件管理器提供了一些有用的扩展。安装后，就可以在这里为当前的沙箱启用。</translation>
+        <translation>沙箱功能可以使用可选的.dll文件来获得增强，这些.dll文件可以在LeafDll.dll启动时加载到每个沙箱进程中。全局设置中的插件管理器提供了一些有用的扩展。安装后，就可以在这里为当前的沙箱启用。</translation>
     </message>
     <message>
         <location filename="Forms/OptionsWindow.ui" line="1876"/>

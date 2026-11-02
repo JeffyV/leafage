@@ -4846,8 +4846,8 @@ Ez a fájl a Sandboxie része, és minden rajta végzett módosítás vissza les
     </message>
     <message>
         <location filename="SandMan.cpp" line="4471"/>
-        <source>Sandboxie-Plus is an open source continuation of Sandboxie.&lt;br /&gt;Visit &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; for more information.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Features: %3&lt;br /&gt;&lt;br /&gt;Installation: %1&lt;br /&gt;CrashDrv.sys: %4&lt;br /&gt; CrashSvc.exe: %5&lt;br /&gt; CrashDll.dll: %6&lt;br /&gt;&lt;br /&gt;Icons from &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</source>
-        <translation>Sandboxie-Plus a Sandboxie nyílt forráskódú folytatása.&lt;br /&gt;Keresee fel &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; weblapot további információkért.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Funkciók: %3&lt;br /&gt;&lt;br /&gt;Telepítés: %1&lt;br /&gt;CrashDrv.sys: %4&lt;br /&gt; CrashSvc.exe: %5&lt;br /&gt; CrashDll.dll: %6&lt;br /&gt;&lt;br /&gt;Ikonok innen: &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</translation>
+        <source>Sandboxie-Plus is an open source continuation of Sandboxie.&lt;br /&gt;Visit &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; for more information.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Features: %3&lt;br /&gt;&lt;br /&gt;Installation: %1&lt;br /&gt;LeafDrv.sys: %4&lt;br /&gt; LeafSvc.exe: %5&lt;br /&gt; LeafDll.dll: %6&lt;br /&gt;&lt;br /&gt;Icons from &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</source>
+        <translation>Sandboxie-Plus a Sandboxie nyílt forráskódú folytatása.&lt;br /&gt;Keresee fel &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; weblapot további információkért.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Funkciók: %3&lt;br /&gt;&lt;br /&gt;Telepítés: %1&lt;br /&gt;LeafDrv.sys: %4&lt;br /&gt; LeafSvc.exe: %5&lt;br /&gt; LeafDll.dll: %6&lt;br /&gt;&lt;br /&gt;Ikonok innen: &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="SandMan.cpp" line="3246"/>
@@ -8342,9 +8342,9 @@ Ezzel megakadályozható, hogy a homokozón belüli rosszindulatúr folyamatok �
     </message>
     <message>
         <location filename="Forms/OptionsWindow.ui" line="4517"/>
-        <source>Sandboxie&apos;s functionality can be enhanced by using optional DLLs which can be loaded into each sandboxed process on start by the CrashDll.dll file, the add-on manager in the global settings offers a couple of useful extensions, once installed they can be enabled here for the current box.</source>
+        <source>Sandboxie&apos;s functionality can be enhanced by using optional DLLs which can be loaded into each sandboxed process on start by the LeafDll.dll file, the add-on manager in the global settings offers a couple of useful extensions, once installed they can be enabled here for the current box.</source>
         <oldsource>Sandboxies functionality can be enhanced using optional dll’s which can be loaded into each sandboxed process on start by the SbieDll.dll, the add-on manager in the global settings offers a couple useful extensions, once installed they can be enabled here for the current box.</oldsource>
-        <translation>A Sandboxie funkcionalitása javítható opcionális DLL-ek használatával, amelyek az CrashDll.dll fájl indításakor betölthetők az egyes homokozó folyamatokba. A globális beállításokban található bővítménykezelő néhány hasznos bővítményt kínál, a telepítést követően ezek itt engedélyezhetők az aktuális homokozóhoz.</translation>
+        <translation>A Sandboxie funkcionalitása javítható opcionális DLL-ek használatával, amelyek az LeafDll.dll fájl indításakor betölthetők az egyes homokozó folyamatokba. A globális beállításokban található bővítménykezelő néhány hasznos bővítményt kínál, a telepítést követően ezek itt engedélyezhetők az aktuális homokozóhoz.</translation>
     </message>
     <message>
         <location filename="Forms/OptionsWindow.ui" line="1876"/>

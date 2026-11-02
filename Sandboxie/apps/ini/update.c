@@ -127,7 +127,7 @@ int DoUpdate(void)
 		if(uOp == CONF_UPDATE_VALUE && _wcsicmp(CmdVerb(2), L"*") == 0)
             uOp = CONF_REMOVE_SECTION;
 
-        status = CrashApi_UpdateConf(
+        status = LeafApi_UpdateConf(
             uOp, CmdVerb(1), CmdVerb(2), CmdVerb(3));
     }
     else

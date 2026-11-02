@@ -310,7 +310,7 @@ void *GUI_CreateDialogTemplate(
     }
 
     if (*(ULONG *)((UCHAR *)newTmpl + alloc_size - sizeof(ULONG)) != tzuk)
-        CrashApi_Log(2316, NULL);
+        LeafApi_Log(2316, NULL);
 
     return newTmpl;
 }

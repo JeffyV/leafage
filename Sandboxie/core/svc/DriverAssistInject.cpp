@@ -78,14 +78,14 @@ void DriverAssist::InjectLow(void *_msg)
 	}
 
 	WCHAR boxname[BOXNAME_COUNT];
-    if (!NT_SUCCESS(CrashApi_QueryProcessEx2((HANDLE)msg->process_id, 0, boxname, NULL, NULL, NULL, NULL))) {
+    if (!NT_SUCCESS(LeafApi_QueryProcessEx2((HANDLE)msg->process_id, 0, boxname, NULL, NULL, NULL, NULL))) {
         errlvl = 0x11;
         goto finish;
     }
 
     ULONG file_len = 0;
     ULONG reg_len = 0;
-    if (!NT_SUCCESS(CrashApi_QueryProcessPath((HANDLE)msg->process_id, NULL, NULL, NULL, &file_len, &reg_len, NULL))) {
+    if (!NT_SUCCESS(LeafApi_QueryProcessPath((HANDLE)msg->process_id, NULL, NULL, NULL, &file_len, &reg_len, NULL))) {
         errlvl = 0x12;
         goto finish;
     }
@@ -95,12 +95,12 @@ void DriverAssist::InjectLow(void *_msg)
         errlvl = 0x13;
         goto finish;
     }
-    if (!NT_SUCCESS(CrashApi_QueryProcessPath((HANDLE)msg->process_id, file_root_path, reg_root_path, NULL, &file_len, &reg_len, NULL))) {
+    if (!NT_SUCCESS(LeafApi_QueryProcessPath((HANDLE)msg->process_id, file_root_path, reg_root_path, NULL, &file_len, &reg_len, NULL))) {
         errlvl = 0x14;
         goto finish;
     }
 
-    ULONG64 ProcessFlags = CrashApi_QueryProcessInfo((HANDLE)msg->process_id, 0);
+    ULONG64 ProcessFlags = LeafApi_QueryProcessInfo((HANDLE)msg->process_id, 0);
     BOOLEAN CompartmentMode = (ProcessFlags & SBIE_FLAG_APP_COMPARTMENT) != 0;
 
     //
@@ -123,10 +123,10 @@ void DriverAssist::InjectLow(void *_msg)
 #endif
     sbieLow.bHostInject = msg->bHostInject;
     // NoSysCallHooks BEGIN
-    sbieLow.bNoSysHooks = CompartmentMode || CrashApi_QueryConfBool(boxname, L"NoSysCallHooks", FALSE);
+    sbieLow.bNoSysHooks = CompartmentMode || LeafApi_QueryConfBool(boxname, L"NoSysCallHooks", FALSE);
     // NoSysCallHooks END
     // NoSbieCons BEGIN
-    sbieLow.bNoConsole = CompartmentMode || CrashApi_QueryConfBool(boxname, L"NoSandboxieConsole", FALSE);
+    sbieLow.bNoConsole = CompartmentMode || LeafApi_QueryConfBool(boxname, L"NoSandboxieConsole", FALSE);
     // NoSbieCons END
     //sbieLow.bIsFirst = IsFirst;
 
@@ -139,7 +139,7 @@ void DriverAssist::InjectLow(void *_msg)
     //
 
     // NoSbieDesk BEGIN
-    if (!(CompartmentMode || CrashApi_QueryConfBool(boxname, L"NoSandboxieDesktop", FALSE)))
+    if (!(CompartmentMode || LeafApi_QueryConfBool(boxname, L"NoSandboxieDesktop", FALSE)))
     // NoSbieDesk END
     if (!msg->bHostInject)
     {
@@ -168,9 +168,9 @@ void DriverAssist::InjectLow(void *_msg)
     //
 
     if (GetSandboxieSID(boxname, SandboxieLogonSid, sizeof(SandboxieLogonSid)))
-        status = CrashApi_Call(API_INJECT_COMPLETE, 2, (ULONG_PTR)msg->process_id, SandboxieLogonSid);
+        status = LeafApi_Call(API_INJECT_COMPLETE, 2, (ULONG_PTR)msg->process_id, SandboxieLogonSid);
     else // if that fails or is not enabled we fall back to using the anonymous logon token
-        status = CrashApi_Call(API_INJECT_COMPLETE, 1, (ULONG_PTR)msg->process_id);
+        status = LeafApi_Call(API_INJECT_COMPLETE, 1, (ULONG_PTR)msg->process_id);
 
     if (status == 0)
         errlvl = 0;
@@ -189,22 +189,22 @@ finish:
 
 #ifdef _M_ARM64
     if (errlvl == -1)
-        CrashApi_LogEx(msg->session_id, 2338, L"%S (ARM32)", msg->process_name);
+        LeafApi_LogEx(msg->session_id, 2338, L"%S (ARM32)", msg->process_name);
     else if (errlvl == -2)
-        CrashApi_LogEx(msg->session_id, 2338, L"%S (CHPE)", msg->process_name);
+        LeafApi_LogEx(msg->session_id, 2338, L"%S (CHPE)", msg->process_name);
     else 
 #endif
     if (errlvl) {
 
         ULONG err = GetLastError();
-        CrashApi_LogEx(msg->session_id, 2335,
+        LeafApi_LogEx(msg->session_id, 2335,
                         L"%S [%02X / %d]", msg->process_name, errlvl, err);
     }
 
     if (hProcess) {
 
         if (errlvl) {
-            CrashApi_Call(API_INJECT_COMPLETE, 3, (ULONG_PTR)msg->process_id, NULL, errlvl);
+            LeafApi_Call(API_INJECT_COMPLETE, 3, (ULONG_PTR)msg->process_id, NULL, errlvl);
             //TerminateProcess(hProcess, 1);
         }
 

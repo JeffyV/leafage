@@ -142,7 +142,7 @@ _FX BOOLEAN Config_MatchImageGroup(
         // if the setting is <passed_group_name>= then we accept it.
         //
 
-        NTSTATUS status = CrashApi_QueryConf(
+        NTSTATUS status = LeafApi_QueryConf(
             NULL, L"ProcessGroup", index, conf_buf, sizeof(conf_buf) - 16 * sizeof(WCHAR));
         if (!NT_SUCCESS(status))
             break;
@@ -317,7 +317,7 @@ _FX BOOLEAN Config_InitPatternList(const WCHAR* boxname, const WCHAR* setting, L
     ULONG index = 0;
     while (1) {
 
-        NTSTATUS status = CrashApi_QueryConf(
+        NTSTATUS status = LeafApi_QueryConf(
             boxname, setting, index, conf_buf, sizeof(conf_buf) - 16 * sizeof(WCHAR));
         if (!NT_SUCCESS(status))
             break;
@@ -371,7 +371,7 @@ _FX BOOLEAN SbieDll_GetSettingsForName(
     ULONG index = 0;
     while (1) {
 
-        NTSTATUS status = CrashApi_QueryConf(
+        NTSTATUS status = LeafApi_QueryConf(
             boxname, setting, index, conf_buf, sizeof(conf_buf) - 16 * sizeof(WCHAR));
         if (!NT_SUCCESS(status))
             break;
@@ -382,7 +382,7 @@ _FX BOOLEAN SbieDll_GetSettingsForName(
         if (!found_value || level > found_level)
             continue;
         //if (found_value) {
-        //    CrashApi_Log(2302, L"%S - %S [%S]", setting, Dll_ImageName, Dll_BoxName);
+        //    LeafApi_Log(2302, L"%S - %S [%S]", setting, Dll_ImageName, Dll_BoxName);
         //    break;
         //}
         wcscpy_s(value, value_size / sizeof(WCHAR), found_value);
@@ -416,7 +416,7 @@ BOOLEAN SbieDll_GetBorderColor(const WCHAR* box_name, COLORREF* color, BOOL* tit
 
     NTSTATUS status;
     WCHAR str[32];
-    status = CrashApi_QueryConfAsIs(box_name, L"BorderColor", 0, str, sizeof(str) - sizeof(WCHAR)); // BorderColor=#00ffff,ttl,6
+    status = LeafApi_QueryConfAsIs(box_name, L"BorderColor", 0, str, sizeof(str) - sizeof(WCHAR)); // BorderColor=#00ffff,ttl,6
 
     if (!NT_SUCCESS(status) || wcslen(str) < 7 || str[0] != L'#')
         return FALSE;
@@ -477,7 +477,7 @@ BOOLEAN SbieDll_MatchImage_Impl(const WCHAR* pat_str, ULONG pat_len, const WCHAR
             // if the setting is <passed_group_name>= then we accept it.
             //
 
-            NTSTATUS status = CrashApi_QueryConfAsIs(
+            NTSTATUS status = LeafApi_QueryConfAsIs(
                 BoxName, L"ProcessGroup", index, buf, CONF_LINE_LEN * sizeof(WCHAR));
             if (!NT_SUCCESS(status))
                 break;
@@ -560,7 +560,7 @@ SBIEDLL_EXPORT  BOOLEAN SbieDll_GetStringsForStringList(const WCHAR* string, con
     WCHAR buf[CONF_LINE_LEN];
     ULONG index = 0;
     while (1) {
-        NTSTATUS status = CrashApi_QueryConfAsIs(boxname, setting, index, buf, sizeof(buf) - 4);
+        NTSTATUS status = LeafApi_QueryConfAsIs(boxname, setting, index, buf, sizeof(buf) - 4);
         ++index;
         if (NT_SUCCESS(status)) {
             WCHAR* ptr = wcschr(buf, L',');
@@ -602,7 +602,7 @@ BOOLEAN SbieDll_CheckStringInList(const WCHAR* string, const WCHAR* boxname, con
     WCHAR buf[66];
     ULONG index = 0;
     while (1) {
-        NTSTATUS status = CrashApi_QueryConfAsIs(boxname, setting, index, buf, 64 * sizeof(WCHAR));
+        NTSTATUS status = LeafApi_QueryConfAsIs(boxname, setting, index, buf, 64 * sizeof(WCHAR));
         ++index;
         if (NT_SUCCESS(status)) {
             if (_wcsicmp(buf, string) == 0) {
@@ -626,7 +626,7 @@ BOOLEAN SbieDll_CheckStringInListA(const char* string, const WCHAR* boxname, con
     WCHAR buf[66];
     ULONG index = 0;
     while (1) {
-        NTSTATUS status = CrashApi_QueryConfAsIs(boxname, setting, index, buf, 64 * sizeof(WCHAR));
+        NTSTATUS status = LeafApi_QueryConfAsIs(boxname, setting, index, buf, 64 * sizeof(WCHAR));
         ++index;
         if (NT_SUCCESS(status)) {
             WCHAR* ptr = buf;
@@ -662,7 +662,7 @@ BOOLEAN SbieDll_CheckPatternInList(const WCHAR* string, ULONG length, const WCHA
     ULONG path_len = (length + 1) * sizeof(WCHAR);
     WCHAR* path_lwr = Dll_AllocTemp(path_len);
     if (!path_lwr) {
-        CrashApi_Log(2305, NULL);
+        LeafApi_Log(2305, NULL);
         goto finish;
     }
     memcpy(path_lwr, string, path_len);

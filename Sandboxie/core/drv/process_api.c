@@ -215,7 +215,7 @@ _FX NTSTATUS Process_Api_Query(PROCESS *proc, ULONG64 *parms)
     KIRQL irql;
 
     //
-    // this is the first SbieApi call by CrashDll
+    // this is the first SbieApi call by LeafDll
     //
 
     if (proc && !proc->sbiedll_loaded) {

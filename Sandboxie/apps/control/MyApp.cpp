@@ -125,7 +125,7 @@ BOOL CMyApp::InitInstance()
 
     WCHAR *home_path = (WCHAR *)HeapAlloc(
         GetProcessHeap(), HEAP_GENERATE_EXCEPTIONS, 1024 * sizeof(WCHAR));
-    CrashApi_GetHomePath(NULL, 0, home_path, 1020);
+    LeafApi_GetHomePath(NULL, 0, home_path, 1020);
     SetCurrentDirectory(home_path);
     HeapFree(GetProcessHeap(), HEAP_GENERATE_EXCEPTIONS, home_path);
 
@@ -244,7 +244,7 @@ BOOL CMyApp::InitInstance()
     // take over as the Sandboxie session leader
     //
 
-    CrashApi_SessionLeader(0, NULL);
+    LeafApi_SessionLeader(0, NULL);
 
     //
     // refresh processes

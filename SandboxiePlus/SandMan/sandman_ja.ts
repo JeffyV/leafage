@@ -4738,8 +4738,8 @@ This file is part of Sandboxie and all change done to it will be reverted next t
     </message>
     <message>
         <location filename="SandMan.cpp" line="4471"/>
-        <source>Sandboxie-Plus is an open source continuation of Sandboxie.&lt;br /&gt;Visit &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; for more information.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Features: %3&lt;br /&gt;&lt;br /&gt;Installation: %1&lt;br /&gt;CrashDrv.sys: %4&lt;br /&gt; CrashSvc.exe: %5&lt;br /&gt; CrashDll.dll: %6&lt;br /&gt;&lt;br /&gt;Icons from &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</source>
-        <translation>Sandboxie-Plusは、Sandboxieのオープンソース後継版です。&lt;br /&gt;詳細は&lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt;をご覧ください。&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;機能: %3&lt;br /&gt;&lt;br /&gt;インストール: %1&lt;br /&gt;CrashDrv.sys: %4&lt;br /&gt; CrashSvc.exe: %5&lt;br /&gt; CrashDll.dll: %6&lt;br /&gt;&lt;br /&gt;アイコン提供: &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</translation>
+        <source>Sandboxie-Plus is an open source continuation of Sandboxie.&lt;br /&gt;Visit &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; for more information.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Features: %3&lt;br /&gt;&lt;br /&gt;Installation: %1&lt;br /&gt;LeafDrv.sys: %4&lt;br /&gt; LeafSvc.exe: %5&lt;br /&gt; LeafDll.dll: %6&lt;br /&gt;&lt;br /&gt;Icons from &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</source>
+        <translation>Sandboxie-Plusは、Sandboxieのオープンソース後継版です。&lt;br /&gt;詳細は&lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt;をご覧ください。&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;機能: %3&lt;br /&gt;&lt;br /&gt;インストール: %1&lt;br /&gt;LeafDrv.sys: %4&lt;br /&gt; LeafSvc.exe: %5&lt;br /&gt; LeafDll.dll: %6&lt;br /&gt;&lt;br /&gt;アイコン提供: &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="SandManTray.cpp" line="47"/>
@@ -9229,8 +9229,8 @@ This is done to prevent rogue processes inside the sandbox from creating a renam
     </message>
     <message>
         <location filename="Forms/OptionsWindow.ui" line="4517"/>
-        <source>Sandboxie&apos;s functionality can be enhanced by using optional DLLs which can be loaded into each sandboxed process on start by the CrashDll.dll file, the add-on manager in the global settings offers a couple of useful extensions, once installed they can be enabled here for the current box.</source>
-        <translation>Sandboxieの機能は、CrashDll.dllファイルによって開始時に各サンドボックス化プロセスに読み込まれるオプションのDLLを使用することで強化できます。グローバル設定のアドオンマネージャーは、いくつか便利な拡張機能を提供しており、インストールされると、現在のボックスに対してここで有効にできます。</translation>
+        <source>Sandboxie&apos;s functionality can be enhanced by using optional DLLs which can be loaded into each sandboxed process on start by the LeafDll.dll file, the add-on manager in the global settings offers a couple of useful extensions, once installed they can be enabled here for the current box.</source>
+        <translation>Sandboxieの機能は、LeafDll.dllファイルによって開始時に各サンドボックス化プロセスに読み込まれるオプションのDLLを使用することで強化できます。グローバル設定のアドオンマネージャーは、いくつか便利な拡張機能を提供しており、インストールされると、現在のボックスに対してここで有効にできます。</translation>
     </message>
     <message>
         <location filename="Forms/OptionsWindow.ui" line="4560"/>

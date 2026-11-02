@@ -356,7 +356,7 @@ _FX NTSTATUS Thread_SetInformationProcess_PrimaryToken(
     PROCESS *proc2;
     NTSTATUS status;
     KIRQL irql;
-    BOOLEAN SpecialCallFromCrashDll;
+    BOOLEAN SpecialCallFromLeafDll;
 
     //
     // syscall handler for NtSetInformationProcess with info class
@@ -373,14 +373,14 @@ _FX NTSTATUS Thread_SetInformationProcess_PrimaryToken(
     // to change after this point
     //
 
-    SpecialCallFromCrashDll = FALSE;
+    SpecialCallFromLeafDll = FALSE;
     __try {
         status = STATUS_SUCCESS;
         if (InfoLength == sizeof(PROCESS_ACCESS_TOKEN)) {
             PROCESS_ACCESS_TOKEN *Info = (PROCESS_ACCESS_TOKEN *)InfoBuffer;
             ProbeForRead(InfoBuffer, InfoLength, sizeof(UCHAR));
             if ((! Info->Token) && (! Info->Thread))
-                SpecialCallFromCrashDll = TRUE;
+                SpecialCallFromLeafDll = TRUE;
         }
     } __except (EXCEPTION_EXECUTE_HANDLER) {
         status = GetExceptionCode();
@@ -413,18 +413,18 @@ _FX NTSTATUS Thread_SetInformationProcess_PrimaryToken(
         //
         // a process in the sandbox should only issue NtSetInformationProcess
         // with ProcessAccessToken as part of our CreateProcessInternalW hook
-        // in CrashDll, and in this case, InfoBuffer should contain zeroes,
-        // and SpecialCallFromCrashDll will be set by the code sequenece above
+        // in LeafDll, and in this case, InfoBuffer should contain zeroes,
+        // and SpecialCallFromLeafDll will be set by the code sequenece above
         //
 
-        if (! SpecialCallFromCrashDll) {
+        if (! SpecialCallFromLeafDll) {
 
             status = STATUS_ACCESS_DENIED;
 
         } else {
 
             //
-            // the special call from CrashDll is a request to copy the active
+            // the special call from LeafDll is a request to copy the active
             // impersonation token into the new process as its primary token,
             // or if no impersonation, copy the original unrestricted primary
             // token of this parent process into the new child process
@@ -636,12 +636,12 @@ _FX void *Thread_SetInformationProcess_PrimaryToken_3(
     }
 
     //
-    // permit also if the caller is CrashDcomLaunch, which is running
+    // permit also if the caller is LeafDcomLaunch, which is running
     // without system privileges (i.e. no SeAssignPrimaryTokenPrivilege)
     //
 
     if (proc->image_sbie &&
-            _wcsicmp(proc->image_name, L"CrashDcomLaunch.exe") == 0) {
+            _wcsicmp(proc->image_name, L"LeafDcomLaunch.exe") == 0) {
 
         return TokenObject2;
     }
@@ -1429,7 +1429,7 @@ _FX NTSTATUS Thread_CheckTokenForImpersonation(
 _FX NTSTATUS Thread_SetInformationThread_ChangeNotifyToken(PROCESS *proc)
 {
     //
-    // the call to SetProcessWindowStation by CrashDll during process
+    // the call to SetProcessWindowStation by LeafDll during process
     // initialization will fail in a non-zero session because the
     // \Session\N object directory does not grant access to Everyone,
     // and our highly restricted process token does not include the

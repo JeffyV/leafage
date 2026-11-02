@@ -303,7 +303,7 @@ _FX BOOLEAN RpcRt_Init(HMODULE module)
     
 
     WCHAR wsTraceOptions[4];
-    if (CrashApi_QueryConf(NULL, L"IpcTrace", 0, wsTraceOptions, sizeof(wsTraceOptions)) == STATUS_SUCCESS && wsTraceOptions[0] != L'\0')
+    if (LeafApi_QueryConf(NULL, L"IpcTrace", 0, wsTraceOptions, sizeof(wsTraceOptions)) == STATUS_SUCCESS && wsTraceOptions[0] != L'\0')
     {
         g_rpc_client_hooks = TRUE;
 
@@ -455,7 +455,7 @@ _FX NTSTATUS RpcRt_FindModulePreset(
     ULONG index = 0;
     while (1) {
 
-        NTSTATUS status = CrashApi_QueryConf(
+        NTSTATUS status = LeafApi_QueryConf(
             NULL, L"RpcPortBinding", index, conf_buf, sizeof(conf_buf) - 16 * sizeof(WCHAR));
         if (!NT_SUCCESS(status))
             break;
@@ -481,7 +481,7 @@ _FX NTSTATUS RpcRt_FindModulePreset(
         found_value = SbieDll_GetTagValue(found_value, NULL, &test_value, &test_len, L',');
 
         if (!test_value || !found_value || !*found_value) {
-            CrashApi_Log(2207, L"RpcPortBinding");
+            LeafApi_Log(2207, L"RpcPortBinding");
             continue;
         }
         //test_value[test_len] = L'\0';
@@ -559,7 +559,7 @@ WCHAR* GetDynamicLpcPortName(const WCHAR* wszPortId)
     rpl = (EPMAPPER_GET_PORT_NAME_RPL*)SbieDll_CallServer(&req.h);
 
     WCHAR   wsTraceOptions[4];
-    if (CrashApi_QueryConf(NULL, L"IpcTrace", 0, wsTraceOptions, sizeof(wsTraceOptions)) == STATUS_SUCCESS && wsTraceOptions[0] != L'\0')
+    if (LeafApi_QueryConf(NULL, L"IpcTrace", 0, wsTraceOptions, sizeof(wsTraceOptions)) == STATUS_SUCCESS && wsTraceOptions[0] != L'\0')
     {
         WCHAR text[130];
 
@@ -568,7 +568,7 @@ WCHAR* GetDynamicLpcPortName(const WCHAR* wszPortId)
         else
             Sbie_snwprintf(text, 130, L"Failed to resolve dynamic port: %s; status: %08X", req.wszPortId, rpl ? rpl->h.status : 0);
 
-        CrashApi_MonitorPutMsg(MONITOR_RPC | MONITOR_TRACE, text);
+        LeafApi_MonitorPutMsg(MONITOR_RPC | MONITOR_TRACE, text);
     }
 
     if (rpl && NT_SUCCESS(rpl->h.status))
@@ -713,7 +713,7 @@ _FX ULONG RpcRt_RpcBindingFromStringBindingW(
         // kernel32.dll!AicpCreateBindingHandle
         // kernel32.dll!AicGetPackageActivationTokenForSxS
         // KernelBase.dll!CreateProcessInternalW
-        // CrashDll.dll!Proc_CreateProcessInternalW_RS5
+        // LeafDll.dll!Proc_CreateProcessInternalW_RS5
 
         if (RpcRt_TestCallingModule(pRetAddr, pkernel32)) {
             use_RpcMgmtSetComTimeout = TRUE;
@@ -770,7 +770,7 @@ _FX ULONG RpcRt_RpcBindingFromStringBindingW(
 
     // If there are any IpcTrace options set, then output this debug string
     WCHAR   wsTraceOptions[4];
-    if (CrashApi_QueryConf(NULL, L"IpcTrace", 0, wsTraceOptions, sizeof(wsTraceOptions)) == STATUS_SUCCESS && wsTraceOptions[0] != L'\0')
+    if (LeafApi_QueryConf(NULL, L"IpcTrace", 0, wsTraceOptions, sizeof(wsTraceOptions)) == STATUS_SUCCESS && wsTraceOptions[0] != L'\0')
     {
         WCHAR msg[512];
 
@@ -780,7 +780,7 @@ _FX ULONG RpcRt_RpcBindingFromStringBindingW(
             CallingModule ? CallingModule : L"unknown");
 
         //OutputDebugString(msg);
-        CrashApi_MonitorPutMsg(MONITOR_RPC | MONITOR_TRACE, msg);
+        LeafApi_MonitorPutMsg(MONITOR_RPC | MONITOR_TRACE, msg);
     }
 
     if(use_RpcMgmtSetComTimeout) __sys_RpcMgmtSetComTimeout(*OutBinding, RPC_C_BINDING_TIMEOUT);
@@ -883,7 +883,7 @@ _FX RPC_STATUS RpcRt_RpcBindingCreateW(
 
     // If there are any IpcTrace options set, then output this debug string
     WCHAR   wsTraceOptions[4];
-    if (CrashApi_QueryConf(NULL, L"IpcTrace", 0, wsTraceOptions, sizeof(wsTraceOptions)) == STATUS_SUCCESS && wsTraceOptions[0] != L'\0')
+    if (LeafApi_QueryConf(NULL, L"IpcTrace", 0, wsTraceOptions, sizeof(wsTraceOptions)) == STATUS_SUCCESS && wsTraceOptions[0] != L'\0')
     {
         WCHAR msg[512];
 
@@ -894,7 +894,7 @@ _FX RPC_STATUS RpcRt_RpcBindingCreateW(
             CallingModule ? CallingModule : L"unknown");
 
         //OutputDebugString(msg);
-        CrashApi_MonitorPutMsg(MONITOR_RPC | MONITOR_TRACE, msg);
+        LeafApi_MonitorPutMsg(MONITOR_RPC | MONITOR_TRACE, msg);
     }
 
     __sys_RpcStringFreeW(&StringUuid);
@@ -1017,7 +1017,7 @@ void RpcRt_NdrClientCallX(const WCHAR* Function, void* ReturnAddress, PMIDL_STUB
         Sbie_snwprintf(text, 512, L"Calling %s, caused log exception, caller = '%s'", Function, CallingModule);
     }
 
-    CrashApi_MonitorPutMsg(MONITOR_RPC | MONITOR_TRACE, text);
+    LeafApi_MonitorPutMsg(MONITOR_RPC | MONITOR_TRACE, text);
 }
 
 #if defined(_M_ARM64) || defined(_M_ARM64EC)
@@ -1119,7 +1119,7 @@ ALIGNED BOOLEAN __cdecl RpcRt_Ndr64AsyncClientCallARM64(
         RpcRt_NdrClientCallX(L"Ndr64AsyncClientCall", ReturnAddress, pProxyInfo->pStubDesc, pProxyInfo->ProcFormatString, &pStack[1]);
     }
 
-    if (!CrashApi_QueryConfBool(NULL, L"NoUACProxy", FALSE))
+    if (!LeafApi_QueryConfBool(NULL, L"NoUACProxy", FALSE))
     if (Dll_OsBuild >= 6000) {
         return Secure_CheckElevation((struct SECURE_UAC_ARGS*)pStack);
     }
@@ -1149,7 +1149,7 @@ ALIGNED BOOLEAN __cdecl RpcRt_Ndr64AsyncClientCall_x64(
         RpcRt_NdrClientCallX(L"Ndr64AsyncClientCall", ReturnAddress, pProxyInfo->pStubDesc, pProxyInfo->ProcFormatString, &pStack[1]);
     }
 
-    if (!CrashApi_QueryConfBool(NULL, L"NoUACProxy", FALSE))
+    if (!LeafApi_QueryConfBool(NULL, L"NoUACProxy", FALSE))
     if (Dll_OsBuild >= 6000) {
         return Secure_CheckElevation((struct SECURE_UAC_ARGS*)pStack);
     }
@@ -1166,7 +1166,7 @@ ALIGNED BOOLEAN __cdecl RpcRt_NdrAsyncClientCall_x86(
         RpcRt_NdrClientCallX(L"NdrAsyncClientCall", ReturnAddress, pStubDescriptor, pFormat, &pStack[1]);
     }
 
-    if (!CrashApi_QueryConfBool(NULL, L"NoUACProxy", FALSE))
+    if (!LeafApi_QueryConfBool(NULL, L"NoUACProxy", FALSE))
     if (Dll_OsBuild >= 6000) {
         return Secure_CheckElevation((struct SECURE_UAC_ARGS*)pStack);
     }

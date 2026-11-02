@@ -72,7 +72,7 @@ static BOOLEAN Driver_FindMissingServices(void);
 static BOOLEAN Driver_FindKiServiceInternal(void);
 #endif
 
-static void CrashDrv_DriverUnload(DRIVER_OBJECT *DriverObject);
+static void LeafDrv_DriverUnload(DRIVER_OBJECT *DriverObject);
 
 
 //---------------------------------------------------------------------------
@@ -286,7 +286,7 @@ _FX NTSTATUS DriverEntry(
 
     if (! ok) {
         Log_Msg1(MSG_DRIVER_ENTRY_FAILED, Driver_Version);
-        CrashDrv_DriverUnload(Driver_Object);
+        LeafDrv_DriverUnload(Driver_Object);
         return STATUS_UNSUCCESSFUL;
     }
 
@@ -504,7 +504,7 @@ _FX BOOLEAN Driver_FindSystemRoot()
         return FALSE;
 
 	Driver_SystemRootPathNt_Len = wcslen(Driver_SystemRootPathNt);
-	//DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_ERROR_LEVEL, "CrashDrv: SystemRoot path is %ws\n", Driver_SystemRootPathNt);
+	//DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_ERROR_LEVEL, "LeafDrv: SystemRoot path is %ws\n", Driver_SystemRootPathNt);
     return TRUE;
 }
 
@@ -533,7 +533,7 @@ _FX BOOLEAN Driver_FindHomePath(UNICODE_STRING *RegistryPath)
     ULONG NameLength = 0;
 
     //
-    // find the path to CrashDrv.sys
+    // find the path to LeafDrv.sys
     //
 
     InitializeObjectAttributes(&objattrs,
@@ -565,7 +565,7 @@ _FX BOOLEAN Driver_FindHomePath(UNICODE_STRING *RegistryPath)
         return FALSE;
     }
 
-    // the path should be \??\<home>\CrashDrv.sys, where <home> is the
+    // the path should be \??\<home>\LeafDrv.sys, where <home> is the
     // Sandboxie installation directory.  We need to remove Sandbox.sys,
     // and prepend \??\ if it's missing
 
@@ -816,7 +816,7 @@ _FX BOOLEAN Driver_FindMissingServices(void)
 //---------------------------------------------------------------------------
 
 
-_FX void CrashDrv_DriverUnload(DRIVER_OBJECT *DriverObject)
+_FX void LeafDrv_DriverUnload(DRIVER_OBJECT *DriverObject)
 {
     Driver_Unloading = TRUE;
 
@@ -900,10 +900,10 @@ _FX NTSTATUS Driver_Api_Unload(PROCESS *proc, ULONG64 *parms)
     // begin unloading the driver
     //
 
-    CrashDrv_DriverUnload(Driver_Object);
+    LeafDrv_DriverUnload(Driver_Object);
 
     Driver_FullUnload = TRUE;
-    Driver_Object->DriverUnload = CrashDrv_DriverUnload;
+    Driver_Object->DriverUnload = LeafDrv_DriverUnload;
 
     return STATUS_SUCCESS;
 }

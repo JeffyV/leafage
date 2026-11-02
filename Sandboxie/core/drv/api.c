@@ -322,7 +322,7 @@ _FX BOOLEAN Api_Disable(void)
 
         //
         // disable the api device only if it is currently in use by a
-        // single client -- typically that's KmdUtil asking to stop CrashDrv
+        // single client -- typically that's KmdUtil asking to stop LeafDrv
         //
 
         KIRQL irql = Api_EnterCriticalSection();
@@ -878,7 +878,7 @@ _FX BOOLEAN Api_SendServiceMessage(ULONG msgid, ULONG data_len, void *data)
     memcpy(space + sizeof(PORT_MESSAGE) + sizeof(ULONG), data, data_len);
 
     //
-    // send the message to CrashSvc on the LPC port
+    // send the message to LeafSvc on the LPC port
     //
 
     irql = Api_EnterCriticalSection();

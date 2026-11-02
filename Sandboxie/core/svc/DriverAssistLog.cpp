@@ -42,7 +42,7 @@
 bool GetUserNameFromProcess(DWORD pid, WCHAR* user, DWORD userSize, WCHAR* domain, DWORD domainSize)
 {
     bool bRet = false;
-    HANDLE hToken = (HANDLE)CrashApi_QueryProcessInfo((HANDLE)pid, 'ptok');
+    HANDLE hToken = (HANDLE)LeafApi_QueryProcessInfo((HANDLE)pid, 'ptok');
     if(hToken != NULL)
     {
         BYTE data[64]; // needed 44 = sizeof(TOKEN_USER) + sizeof(SID_AND_ATTRIBUTES) + sizeof(SID)
@@ -90,7 +90,7 @@ void DriverAssist::LogMessage(void *_msg)
 		ULONG message_number = m_last_message_number;
 		ULONG code = -1;
 		ULONG pid = 0;
-		ULONG status = CrashApi_GetMessage(&message_number, -1, &code, &pid, (wchar_t*)m_MessageBuf, len);
+		ULONG status = LeafApi_GetMessage(&message_number, -1, &code, &pid, (wchar_t*)m_MessageBuf, len);
 
         if (status == STATUS_BUFFER_TOO_SMALL) {
             HeapFree(GetProcessHeap(), 0, m_MessageBuf);
@@ -280,7 +280,7 @@ void DriverAssist::LogMessage_Multi(
     wmemcpy(boxname, ptr + 1, ptr2 - ptr - 1);
     boxname[ptr2 - ptr - 1] = L'\0';
 
-    LONG rc = CrashApi_IsBoxEnabled(boxname);
+    LONG rc = LeafApi_IsBoxEnabled(boxname);
     if (rc != STATUS_SUCCESS && rc != STATUS_ACCOUNT_RESTRICTION)
         return;
 

@@ -374,9 +374,9 @@ _FX BOOLEAN Gui_Init(HMODULE module)
 
     const UCHAR *ProcName;
 
-    Gui_UseProtectScreen = CrashApi_QueryConfBool(NULL, L"CoverBoxedWindows", FALSE);
+    Gui_UseProtectScreen = LeafApi_QueryConfBool(NULL, L"CoverBoxedWindows", FALSE);
 
-    Gui_UseBlockCapture = CrashApi_QueryConfBool(NULL, L"BlockScreenCapture", FALSE);
+    Gui_UseBlockCapture = LeafApi_QueryConfBool(NULL, L"BlockScreenCapture", FALSE);
     if (Gui_UseBlockCapture)
         Gdi_InitDCCache();
 
@@ -391,7 +391,7 @@ _FX BOOLEAN Gui_Init(HMODULE module)
     // disable the use of the gui proxy
     //
 
-    Gui_UseProxyService = !(Dll_CompartmentMode || CrashApi_QueryConfBool(NULL, L"NoSandboxieDesktop", FALSE));
+    Gui_UseProxyService = !(Dll_CompartmentMode || LeafApi_QueryConfBool(NULL, L"NoSandboxieDesktop", FALSE));
     // NoSbieDesk END
 
 	GUI_IMPORT___(PrintWindow);
@@ -444,7 +444,7 @@ _FX BOOLEAN Gui_Init(HMODULE module)
     GUI_IMPORT___(ExitWindowsEx);
     GUI_IMPORT___(EndTask);
     // NoSbieCons BEGIN
-    if (!Dll_CompartmentMode && !CrashApi_QueryConfBool(NULL, L"NoSandboxieConsole", FALSE))
+    if (!Dll_CompartmentMode && !LeafApi_QueryConfBool(NULL, L"NoSandboxieConsole", FALSE))
 	// NoSbieCons END
     if (Dll_OsBuild >= 8400) {
         GUI_IMPORT___(ConsoleControl);
@@ -554,7 +554,7 @@ _FX BOOLEAN Gui_Init(HMODULE module)
 import_fail:
 
     if (ProcName)
-        CrashApi_Log(2303, L"%s (0)", ProcName);
+        LeafApi_Log(2303, L"%s (0)", ProcName);
 
     //
     // initialize sub-modules
@@ -583,7 +583,7 @@ import_fail:
     if (ok)
         ok = Gui_InitDlgTmpl(module);
 
-    if (ok && CrashApi_QueryConfBool(NULL, L"BlockRegisterDeviceNotification", FALSE))
+    if (ok && LeafApi_QueryConfBool(NULL, L"BlockRegisterDeviceNotification", FALSE))
         ok = Gui_Init3(module); // todo remove later
 
     if (Gui_UseProxyService) {
@@ -608,7 +608,7 @@ _FX BOOLEAN Gui_Init2(HMODULE module)
     SBIEDLL_HOOK_GUI(ExitWindowsEx);
     SBIEDLL_HOOK_GUI(EndTask);
     // NoSbieCons BEGIN
-    if (!Dll_CompartmentMode && !CrashApi_QueryConfBool(NULL, L"NoSandboxieConsole", FALSE))
+    if (!Dll_CompartmentMode && !LeafApi_QueryConfBool(NULL, L"NoSandboxieConsole", FALSE))
 	// NoSbieCons END
     if (__sys_ConsoleControl) {
         SBIEDLL_HOOK_GUI(ConsoleControl);
@@ -902,7 +902,7 @@ _FX BOOLEAN Gui_ConnectToWindowStationAndDesktop(HMODULE User32)
     ULONG errlvl = 0;
 
     // NoSbieDesk BEGIN
-	if (Dll_CompartmentMode || CrashApi_QueryConfBool(NULL, L"NoSandboxieDesktop", FALSE))
+	if (Dll_CompartmentMode || LeafApi_QueryConfBool(NULL, L"NoSandboxieDesktop", FALSE))
 		return TRUE;
 	// NoSbieDesk END
 
@@ -941,9 +941,9 @@ _FX BOOLEAN Gui_ConnectToWindowStationAndDesktop(HMODULE User32)
     // the difficulty with this is that SbieLow does not hook win32k
     // syscalls, so the window station/desktop connection is done with
     // the highly restricted process token, and this fails.  to solve
-    // this problem, the CrashSvc GUI Proxy Server creates dummy window
+    // this problem, the LeafSvc GUI Proxy Server creates dummy window
     // station and desktop objects with a NULL DACL which can be accessed
-    // even with our restricted token.  CrashSvc also gives us duplicated
+    // even with our restricted token.  LeafSvc also gives us duplicated
     // handles with full access to the real window station and desktop
     // objects that we need to use.
     //
@@ -961,7 +961,7 @@ _FX BOOLEAN Gui_ConnectToWindowStationAndDesktop(HMODULE User32)
     else {
 
         //
-        // ask CrashSvc for window station and desktop handles
+        // ask LeafSvc for window station and desktop handles
         //
 
         ULONG req = GUI_GET_WINDOW_STATION;
@@ -972,7 +972,7 @@ _FX BOOLEAN Gui_ConnectToWindowStationAndDesktop(HMODULE User32)
             errlvl = 2;
         else {
 
-            if (CrashApi_QueryConfBool(NULL, L"OpenWndStation", FALSE))
+            if (LeafApi_QueryConfBool(NULL, L"OpenWndStation", FALSE))
                 _ProcessDesktop = (HDESK)-1;
             else {
 
@@ -1026,7 +1026,7 @@ _FX BOOLEAN Gui_ConnectToWindowStationAndDesktop(HMODULE User32)
                     //
                     // note that the 64-bit PEB will be in the lower 32-bits in
                     // a 32-bit process, so it is accessible, but its address is
-                    // not available to us.   but the CrashSvc GUI Proxy process
+                    // not available to us.   but the LeafSvc GUI Proxy process
                     // is 64-bit so it can send us the address of the 64-bit PEB
                     // in the reply datagram
                     //
@@ -1065,7 +1065,7 @@ _FX BOOLEAN Gui_ConnectToWindowStationAndDesktop(HMODULE User32)
                     // path, and this would fail with our process token.
                     //
                     // to work around this, we issue a special request to
-                    // CrashDrv through NtSetInformationThread which causes
+                    // LeafDrv through NtSetInformationThread which causes
                     // it to return with an impersonation token that includes
                     // the change notify privilege but is otherwise restricted
                     //
@@ -1076,7 +1076,7 @@ _FX BOOLEAN Gui_ConnectToWindowStationAndDesktop(HMODULE User32)
                     rc = (ULONG_PTR)NtCurrentThread();
 
                     // OriginalToken BEGIN
-                    if (Dll_CompartmentMode || CrashApi_QueryConfBool(NULL, L"OriginalToken", FALSE))
+                    if (Dll_CompartmentMode || LeafApi_QueryConfBool(NULL, L"OriginalToken", FALSE))
                         rc = 0;
                     else
                         // OriginalToken END
@@ -1153,7 +1153,7 @@ ConnectThread:
     if (errlvl) {
         WCHAR errtxt[48];
         Sbie_snwprintf(errtxt, 48, L"Win32Init.%d (%08p)", errlvl, (void*)rc);
-        CrashApi_Log(2205, errtxt);
+        LeafApi_Log(2205, errtxt);
     }
 
     return (rc == 0) ? TRUE : FALSE;
@@ -1240,10 +1240,10 @@ _FX BOOLEAN Gui_IsSameBox(
         return TRUE;
 
     // not a valid sandboxed process. host injected process has boxname.
-    if ( (CrashApi_QueryProcessInfo((HANDLE)(ULONG_PTR)idProcess, 0) & SBIE_FLAG_VALID_PROCESS) != SBIE_FLAG_VALID_PROCESS )
+    if ( (LeafApi_QueryProcessInfo((HANDLE)(ULONG_PTR)idProcess, 0) & SBIE_FLAG_VALID_PROCESS) != SBIE_FLAG_VALID_PROCESS )
         return FALSE;
 
-    status = CrashApi_QueryProcess((HANDLE)(ULONG_PTR)idProcess,
+    status = LeafApi_QueryProcess((HANDLE)(ULONG_PTR)idProcess,
                                   boxname, NULL, NULL, &session_id);
     if (! NT_SUCCESS(status))
         return FALSE;
@@ -1678,7 +1678,7 @@ _FX LRESULT Gui_WindowProcW(
 
 	if (uMsg == WM_QUERYENDSESSION)
 	{
-		if (CrashApi_QueryConfBool(NULL, L"BlockInterferePower", FALSE))
+		if (LeafApi_QueryConfBool(NULL, L"BlockInterferePower", FALSE))
 			return TRUE;
 	}
 
@@ -1740,7 +1740,7 @@ _FX LRESULT Gui_WindowProcA(
 		
 	if (uMsg == WM_QUERYENDSESSION)
 	{
-		if (CrashApi_QueryConfBool(NULL, L"BlockInterferePower", FALSE))
+		if (LeafApi_QueryConfBool(NULL, L"BlockInterferePower", FALSE))
 			return TRUE;
 	}
     wndproc = __sys_GetPropW(hWnd, (LPCWSTR)Gui_WindowProcOldA_Atom);
@@ -1828,7 +1828,7 @@ _FX ULONG_PTR Gui_ActivateKeyboardLayout(ULONG_PTR hkl, UINT flags)
 
 _FX BOOL Gui_ExitWindowsEx(UINT uFlags, DWORD dwReason)
 {
-    CrashApi_Log(2104, L"%S [%S]", Dll_ImageName, Dll_BoxName);
+    LeafApi_Log(2104, L"%S [%S]", Dll_ImageName, Dll_BoxName);
     SetLastError(ERROR_PRIVILEGE_NOT_HELD);
     return FALSE;
 }
@@ -1875,7 +1875,7 @@ _FX BOOL Gui_IsWindowCommon(HWND hwnd, UCHAR which)
 
     //
     // if the specified hwnd isn't valid (which is probably due to
-    // job restrictions), then go through CrashSvc
+    // job restrictions), then go through LeafSvc
     //
 
     req.msgid = GUI_IS_WINDOW;
@@ -2038,7 +2038,7 @@ _FX BOOL Gui_SetWindowPos(
     }
 
     //
-    // use CrashSvc GUI Proxy if hWnd is accessible but outside the sandbox
+    // use LeafSvc GUI Proxy if hWnd is accessible but outside the sandbox
     //
 	
     if (Gui_DontAllowCoverTaskbar) {
@@ -2212,7 +2212,7 @@ _FX BOOL Gui_ConsoleControl(ULONG ctlcode, ULONG *data, ULONG_PTR unknown)
         BOOLEAN ok = SbieDll_KillOne(*data);
         if (ok)
             return STATUS_SUCCESS;
-        //CrashApi_Log(2205, L"ConsoleControl"); // don't log when the process was already killed
+        //LeafApi_Log(2205, L"ConsoleControl"); // don't log when the process was already killed
     }
     return __sys_ConsoleControl(ctlcode, data, unknown);
 }
@@ -2265,7 +2265,7 @@ _FX void Gui_AllowSetForegroundWindow(void)
 {
     //
     // this function is typically used prior to calling SbieDll_CallServer
-    // in a scenario where CrashSvc might display a pop up window and we
+    // in a scenario where LeafSvc might display a pop up window and we
     // want to let this window go to the foreground
     //
 
@@ -2308,7 +2308,7 @@ int Gui_MapWindowPoints(
     }*/
 
     //
-    // otherwise handle the request through CrashSvc GUI Proxy server
+    // otherwise handle the request through LeafSvc GUI Proxy server
     //
 
     req_len = sizeof(GUI_MAP_WINDOW_POINTS_REQ) + cPoints * sizeof(POINT);
@@ -2354,7 +2354,7 @@ _FX BOOL Gui_ClientToScreen(HWND hWnd, LPPOINT lpPoint)
         return retval;
 
     //
-    // otherwise handle the request through CrashSvc GUI Proxy server
+    // otherwise handle the request through LeafSvc GUI Proxy server
     //
 
     req.msgid = GUI_MAP_WINDOW_POINTS;
@@ -2397,7 +2397,7 @@ _FX BOOL Gui_ScreenToClient(HWND hWnd, LPPOINT lpPoint)
         return retval;
 
     //
-    // otherwise handle the request through CrashSvc GUI Proxy server
+    // otherwise handle the request through LeafSvc GUI Proxy server
     //
 
     req.msgid = GUI_MAP_WINDOW_POINTS;
@@ -2444,7 +2444,7 @@ _FX BOOL Gui_AnimateWindow(HWND hwnd, ULONG time, ULONG flags)
     }
 
     //
-    // we can't use the CrashSvc GUI Proxy to invoke the AnimateWindow API
+    // we can't use the LeafSvc GUI Proxy to invoke the AnimateWindow API
     // because that API causes messages to be sent to the window proc,
     // and our thread would be stuck in Gui_CallProxy and would not process
     // any window messages.  so we just do a basic show/hide instead
@@ -2650,7 +2650,7 @@ _FX HWND Gui_GetWindowFromProxy(ULONG which, HWND hwnd)
     //
     // if there was an error (probably ERROR_INVALID_WINDOW_HANDLE)
     // the request was probably denied by job restrictions, so go
-    // through CrashSvc.  otherwise just return
+    // through LeafSvc.  otherwise just return
     //
 
     if (GetLastError() == 0)
@@ -2760,7 +2760,7 @@ _FX void *Gui_CallProxyEx(
             // this thread, for example if waiting for a response for a
             // GUI_GET_CLIPBOARD_DATA request, and the calling thread owns
             // the clipboard, then we have to respond to window messages
-            // sent due to CrashSvc GUI Proxy calling GetClipboardData
+            // sent due to LeafSvc GUI Proxy calling GetClipboardData
             //
 
             ULONG StartTime = GetTickCount();
@@ -2850,7 +2850,7 @@ _FX void *Gui_CallProxyEx(
         }
     }
 
-    CrashApi_Log(2203, L"%S; MsgId: %d - %S [%08X]", _QueueName, *(ULONG*)req, Dll_ImageName, status);
+    LeafApi_Log(2203, L"%S; MsgId: %d - %S [%08X]", _QueueName, *(ULONG*)req, Dll_ImageName, status);
     SetLastError(ERROR_SERVER_DISABLED);
     return NULL;
 }

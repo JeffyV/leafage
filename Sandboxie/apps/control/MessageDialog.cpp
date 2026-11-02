@@ -261,7 +261,7 @@ BOOL CMessageDialog::IsHiddenMessage(
 void CMessageDialog::OnTimer()
 {
     //
-    // extract messages from CrashDrv and record them
+    // extract messages from LeafDrv and record them
     //
 
     bool seen_2218 = false;
@@ -272,7 +272,7 @@ void CMessageDialog::OnTimer()
 		ULONG message_number = m_last_message_number;
 		ULONG code = -1;
 		ULONG pid = 0;
-        ULONG status = CrashApi_GetMessage(&message_number, CMyApp::m_session_id, &code, &pid, m_buf, len);
+        ULONG status = LeafApi_GetMessage(&message_number, CMyApp::m_session_id, &code, &pid, m_buf, len);
 		if (status != 0)
 			break; // error or no more entries
 		m_last_message_number = message_number;
@@ -732,7 +732,7 @@ void CMessageDialog::OnListDoubleClick()
 
                 // tell driver to allow spooler print to file for this process
 				ULONG NewState = TRUE;
-				LONG rc = CrashApi_ProcessExemptionControl((HANDLE)process_id, 'splr', &NewState, NULL);
+				LONG rc = LeafApi_ProcessExemptionControl((HANDLE)process_id, 'splr', &NewState, NULL);
                 sbie.Format(SBIE_IN_MSGS L"%04d", 1319);
                 DiscardMessages(sbie, detail);
                 sbie.Format(SBIE_IN_MSGS L"%04d", 1320);

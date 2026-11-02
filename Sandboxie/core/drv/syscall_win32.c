@@ -673,7 +673,7 @@ _FX NTSTATUS Syscall_Api_Query32(PROCESS *proc, ULONG64 *parms)
     //
     // populate the buffer with syscall data.  first we store
     // the size of the buffer, and then we leave room for ULONG used
-    // by CrashSvc, and for the code for four ZwXxx stub functions
+    // by LeafSvc, and for the code for four ZwXxx stub functions
     //
 
     ptr = user_buf;

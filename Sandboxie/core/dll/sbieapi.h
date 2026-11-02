@@ -48,26 +48,26 @@ extern "C" {
 //---------------------------------------------------------------------------
 
 SBIEAPI_EXPORT
-long CrashApi_Ioctl(ULONG64* parms);
+long LeafApi_Ioctl(ULONG64* parms);
 
 SBIEAPI_EXPORT
-LONG CrashApi_Call(ULONG api_code, LONG arg_num, ...);
+LONG LeafApi_Call(ULONG api_code, LONG arg_num, ...);
 
-SBIEAPI_EXPORT LONG CrashApi_GetVersion(
+SBIEAPI_EXPORT LONG LeafApi_GetVersion(
     WCHAR *version_string);         // WCHAR [16]
 
-SBIEAPI_EXPORT LONG CrashApi_GetVersionEx(
+SBIEAPI_EXPORT LONG LeafApi_GetVersionEx(
     WCHAR* version_string,          // WCHAR [16]
     ULONG* abi_version);
 
 /*SBIEAPI_EXPORT
-LONG CrashApi_GetWork(
+LONG LeafApi_GetWork(
     ULONG SessionId,
     void *Buffer,
     ULONG *Length);*/
 
 SBIEAPI_EXPORT 
-ULONG CrashApi_GetMessage(
+ULONG LeafApi_GetMessage(
 	ULONG* MessageNum,
 	ULONG SessionId,
 	ULONG *MessageId,
@@ -75,23 +75,23 @@ ULONG CrashApi_GetMessage(
 	wchar_t *Buffer,
 	ULONG Length);
 
-SBIEAPI_EXPORT LONG CrashApi_Log(
+SBIEAPI_EXPORT LONG LeafApi_Log(
     ULONG msgid, const WCHAR *format, ...);
 
-SBIEAPI_EXPORT LONG CrashApi_LogEx(
+SBIEAPI_EXPORT LONG LeafApi_LogEx(
     ULONG session_id, ULONG msgid, const WCHAR *format, ...);
 
-SBIEAPI_EXPORT LONG CrashApi_vLogEx(
+SBIEAPI_EXPORT LONG LeafApi_vLogEx(
     ULONG session_id, ULONG msgid, const WCHAR *format, va_list va_args);
 
-SBIEAPI_EXPORT LONG CrashApi_LogMsgEx(
+SBIEAPI_EXPORT LONG LeafApi_LogMsgEx(
 	ULONG session_id, ULONG msgid, const WCHAR* msg_data, USHORT msg_len);
 
-SBIEAPI_EXPORT LONG CrashApi_LogMsgExt(
+SBIEAPI_EXPORT LONG LeafApi_LogMsgExt(
 	ULONG session_id, ULONG msgid, const WCHAR** strings);
 
 SBIEAPI_EXPORT
-LONG CrashApi_GetHomePath(
+LONG LeafApi_GetHomePath(
     WCHAR *NtPath, ULONG NtPathMaxLen,
     WCHAR *DosPath, ULONG DosPathMaxLen);
 
@@ -101,7 +101,7 @@ LONG CrashApi_GetHomePath(
 
 
 SBIEAPI_EXPORT
-LONG CrashApi_QueryProcess(
+LONG LeafApi_QueryProcess(
     HANDLE ProcessId,
     WCHAR *out_box_name_wchar34,        // WCHAR [34]
     WCHAR *out_image_name_wchar96,      // WCHAR [96]
@@ -109,7 +109,7 @@ LONG CrashApi_QueryProcess(
     ULONG *out_session_id);             // ULONG
 
 SBIEAPI_EXPORT
-LONG CrashApi_QueryProcessEx(
+LONG LeafApi_QueryProcessEx(
     HANDLE ProcessId,
     ULONG image_name_len_in_wchars,
     WCHAR *out_box_name_wchar34,        // WCHAR [34]
@@ -118,7 +118,7 @@ LONG CrashApi_QueryProcessEx(
     ULONG *out_session_id);             // ULONG
 
 SBIEAPI_EXPORT
-LONG CrashApi_QueryProcessEx2(
+LONG LeafApi_QueryProcessEx2(
     HANDLE ProcessId,
     ULONG image_name_len_in_wchars,
     WCHAR *out_box_name_wchar34,        // WCHAR [34]
@@ -128,25 +128,25 @@ LONG CrashApi_QueryProcessEx2(
     ULONG64 *out_create_time);          // ULONG64
 
 SBIEAPI_EXPORT
-ULONG64 CrashApi_QueryProcessInfo(
+ULONG64 LeafApi_QueryProcessInfo(
     HANDLE ProcessId,
     ULONG info_type);
 
 SBIEAPI_EXPORT
-ULONG64 CrashApi_QueryProcessInfoEx(
+ULONG64 LeafApi_QueryProcessInfoEx(
     HANDLE ProcessId,
     ULONG info_type,
     ULONG64 ext_data);
 
 SBIEAPI_EXPORT
-LONG CrashApi_QueryProcessInfoStr(
+LONG LeafApi_QueryProcessInfoStr(
     HANDLE ProcessId,
     ULONG info_type,
     WCHAR *out_str,
     ULONG *inout_str_len);
 
 SBIEAPI_EXPORT
-LONG CrashApi_QueryBoxPath(
+LONG LeafApi_QueryBoxPath(
     const WCHAR *box_name,              // WCHAR [34]
     WCHAR *out_file_path,
     WCHAR *out_key_path,
@@ -156,7 +156,7 @@ LONG CrashApi_QueryBoxPath(
     ULONG *inout_ipc_path_len);
 
 SBIEAPI_EXPORT
-LONG CrashApi_QueryProcessPath(
+LONG LeafApi_QueryProcessPath(
     HANDLE ProcessId,
     WCHAR *out_file_path,
     WCHAR *out_key_path,
@@ -166,7 +166,7 @@ LONG CrashApi_QueryProcessPath(
     ULONG *inout_ipc_path_len);
 
 SBIEAPI_EXPORT
-LONG CrashApi_QueryPathList(
+LONG LeafApi_QueryPathList(
     ULONG path_code,
     ULONG *path_len,
     WCHAR *path_str,
@@ -174,27 +174,27 @@ LONG CrashApi_QueryPathList(
     BOOLEAN prepend_level);
 
 SBIEAPI_EXPORT
-LONG CrashApi_EnumProcessEx(
+LONG LeafApi_EnumProcessEx(
     const WCHAR* box_name,          // WCHAR [34]
     BOOLEAN all_sessions,
     ULONG which_session,            // -1 for current session
     ULONG* boxed_pids,             // ULONG [512]
     ULONG* boxed_count);
 
-#define CrashApi_EnumProcess(box_name,boxed_pids) \
-    CrashApi_EnumProcessEx(box_name,FALSE,-1,boxed_pids, NULL)
+#define LeafApi_EnumProcess(box_name,boxed_pids) \
+    LeafApi_EnumProcessEx(box_name,FALSE,-1,boxed_pids, NULL)
 
 
 //---------------------------------------------------------------------------
 
 
 SBIEAPI_EXPORT
-LONG CrashApi_SessionLeader(
+LONG LeafApi_SessionLeader(
     ULONG session_id,
     HANDLE *ProcessId);
 
 SBIEAPI_EXPORT
-LONG CrashApi_DisableForceProcess(
+LONG LeafApi_DisableForceProcess(
     ULONG *NewState,
     ULONG *OldState);
 
@@ -203,28 +203,28 @@ LONG CrashApi_DisableForceProcess(
 
 
 SBIEAPI_EXPORT
-LONG CrashApi_MonitorControl(
+LONG LeafApi_MonitorControl(
     ULONG *NewState,
     ULONG *OldState);
 
 SBIEAPI_EXPORT
-    LONG CrashApi_MonitorPut(
+    LONG LeafApi_MonitorPut(
     ULONG Type,
     const WCHAR *Name);
 
 SBIEAPI_EXPORT
-LONG CrashApi_MonitorPut2(
+LONG LeafApi_MonitorPut2(
     ULONG Type,
     const WCHAR *Name,
     BOOLEAN bCheckObjectExists);
 
 SBIEAPI_EXPORT
-    LONG CrashApi_MonitorPutMsg(
+    LONG LeafApi_MonitorPutMsg(
     ULONG Type,
     const WCHAR *Message);
 
 SBIEAPI_EXPORT
-LONG CrashApi_MonitorPut2Ex(
+LONG LeafApi_MonitorPut2Ex(
     ULONG Type,
     ULONG NameLen,
     const WCHAR *Name,
@@ -232,19 +232,19 @@ LONG CrashApi_MonitorPut2Ex(
     BOOLEAN bIsMessage);
 
 SBIEAPI_EXPORT
-LONG CrashApi_MonitorPutEx(
+LONG LeafApi_MonitorPutEx(
     ULONG Type,
     ULONG Pid,
     ULONG Tid,
     const WCHAR *Message);          // WCHAR [256]
 
 //SBIEAPI_EXPORT
-//LONG CrashApi_MonitorGet(
+//LONG LeafApi_MonitorGet(
 //    ULONG *Type,
 //    WCHAR *Name);                   // WCHAR [256]
 
 SBIEAPI_EXPORT
-LONG CrashApi_MonitorGetEx(
+LONG LeafApi_MonitorGetEx(
 	ULONG *Type,
     ULONG *Pid,
     ULONG *Tid,
@@ -255,38 +255,38 @@ LONG CrashApi_MonitorGetEx(
 
 
 SBIEAPI_EXPORT
-LONG CrashApi_HookTramp(void *Source, void *Trampoline);
+LONG LeafApi_HookTramp(void *Source, void *Trampoline);
 
 
 //---------------------------------------------------------------------------
 
 
 //SBIEAPI_EXPORT
-LONG CrashApi_RenameFile(
+LONG LeafApi_RenameFile(
     HANDLE FileHandle,
     const WCHAR *TargetDir, const WCHAR *TargetName,
     BOOLEAN ReplaceIfExists);
 
 SBIEAPI_EXPORT
-LONG CrashApi_GetFileName(
+LONG LeafApi_GetFileName(
     HANDLE FileHandle,
     WCHAR *NameBuf,
     ULONG *NameLen,
     ULONG *ObjType);
 
 //SBIEAPI_EXPORT
-LONG CrashApi_OpenFile(
+LONG LeafApi_OpenFile(
     HANDLE *FileHandle,
     const WCHAR *Path);
 
 SBIEAPI_EXPORT
-LONG CrashApi_CheckInternetAccess(
+LONG LeafApi_CheckInternetAccess(
     HANDLE ProcessId,
     const WCHAR *DeviceName32,
     BOOLEAN IssueMessage);
 
 SBIEAPI_EXPORT
-LONG CrashApi_GetBlockedDll(
+LONG LeafApi_GetBlockedDll(
     WCHAR *DllNameBuf,
     ULONG DllNameLen);
 
@@ -295,12 +295,12 @@ LONG CrashApi_GetBlockedDll(
 
 
 //SBIEAPI_EXPORT
-LONG CrashApi_OpenKey(
+LONG LeafApi_OpenKey(
     HANDLE *KeyHandle,
     const WCHAR *Path);
 
 //SBIEAPI_EXPORT
-LONG CrashApi_SetLowLabelKey(
+LONG LeafApi_SetLowLabelKey(
     const WCHAR *Path);
 
 
@@ -308,7 +308,7 @@ LONG CrashApi_SetLowLabelKey(
 
 
 //SBIEAPI_EXPORT
-LONG CrashApi_CreateDirOrLink(
+LONG LeafApi_CreateDirOrLink(
     const WCHAR *ObjectName, const WCHAR *TargetName);
 
 
@@ -316,7 +316,7 @@ LONG CrashApi_CreateDirOrLink(
 
 
 //SBIEAPI_EXPORT
-LONG CrashApi_DuplicateObject(
+LONG LeafApi_DuplicateObject(
     HANDLE *TargetHandle,
     HANDLE OtherProcessHandle,
     HANDLE SourceHandle,
@@ -324,23 +324,23 @@ LONG CrashApi_DuplicateObject(
     ULONG Options);
 
 SBIEAPI_EXPORT
-LONG CrashApi_OpenProcess(
+LONG LeafApi_OpenProcess(
     HANDLE *ProcessHandle,
     HANDLE ProcessId);
 
 //SBIEAPI_EXPORT
-LONG CrashApi_OpenDeviceMap(
+LONG LeafApi_OpenDeviceMap(
     HANDLE *DirectoryHandle);
 
 //SBIEAPI_EXPORT
-LONG CrashApi_QuerySymbolicLink(
+LONG LeafApi_QuerySymbolicLink(
     WCHAR *NameBuf,
     ULONG NameLen);
 
 //---------------------------------------------------------------------------
 
 SBIEAPI_EXPORT
-LONG CrashApi_QueryDrvInfo(
+LONG LeafApi_QueryDrvInfo(
     ULONG info_class,
     VOID* info_data,
     ULONG info_size);
@@ -349,61 +349,61 @@ LONG CrashApi_QueryDrvInfo(
 
 
 SBIEAPI_EXPORT
-LONG CrashApi_ReloadConf(ULONG session_id, ULONG flags);
+LONG LeafApi_ReloadConf(ULONG session_id, ULONG flags);
 
 SBIEAPI_EXPORT
-ULONG CrashApi_UpdateConf(
+ULONG LeafApi_UpdateConf(
     ULONG op, 
     const WCHAR *section_name,
     const WCHAR *setting_name, 
     const WCHAR *value_ptr);
 
 SBIEAPI_EXPORT
-LONG CrashApi_QueryConf(
+LONG LeafApi_QueryConf(
     const WCHAR *section_name,      // WCHAR [66]
     const WCHAR *setting_name,      // WCHAR [66]
     ULONG setting_index,
     WCHAR *out_buffer,
     ULONG buffer_len);
 
-#define CrashApi_QueryConfAsIs(bx, st, idx, buf, buflen) \
-    CrashApi_QueryConf((bx), (st), ((idx) | CONF_GET_NO_EXPAND), buf, buflen)
+#define LeafApi_QueryConfAsIs(bx, st, idx, buf, buflen) \
+    LeafApi_QueryConf((bx), (st), ((idx) | CONF_GET_NO_EXPAND), buf, buflen)
 
 SBIEAPI_EXPORT
-BOOLEAN CrashApi_QueryConfBool(
+BOOLEAN LeafApi_QueryConfBool(
     const WCHAR *section_name,      // WCHAR [66]
     const WCHAR *setting_name,      // WCHAR [66]
     BOOLEAN def);
 
 SBIEAPI_EXPORT
-ULONG CrashApi_QueryConfNumber(
+ULONG LeafApi_QueryConfNumber(
     const WCHAR *section_name,      // WCHAR [66]
     const WCHAR *setting_name,      // WCHAR [66]
     ULONG def);
 
 SBIEAPI_EXPORT
-ULONG64 CrashApi_QueryConfNumber64(
+ULONG64 LeafApi_QueryConfNumber64(
     const WCHAR *section_name,      // WCHAR [66]
     const WCHAR *setting_name,      // WCHAR [66]
     ULONG64 def);
 
 SBIEAPI_EXPORT
-LONG CrashApi_EnumBoxes(
+LONG LeafApi_EnumBoxes(
     LONG index,                     // initialize to -1
     WCHAR *box_name);               // WCHAR [34]
 
 SBIEAPI_EXPORT
-LONG CrashApi_EnumBoxesEx(
+LONG LeafApi_EnumBoxesEx(
     LONG index,                     // initialize to -1
     WCHAR *box_name,                // WCHAR [34]
     BOOLEAN ignore_hidden);
 
 SBIEAPI_EXPORT
-LONG CrashApi_IsBoxEnabled(
+LONG LeafApi_IsBoxEnabled(
     const WCHAR *box_name);         // WCHAR [34]
 
 SBIEAPI_EXPORT
-LONG CrashApi_SetUserName(
+LONG LeafApi_SetUserName(
     const WCHAR *SidString,
     const WCHAR *UserName);
 
@@ -412,14 +412,14 @@ LONG CrashApi_SetUserName(
 
 
 SBIEAPI_EXPORT
-LONG CrashApi_GetUnmountHive(
+LONG LeafApi_GetUnmountHive(
     WCHAR *path);                   // WCHAR [256]
 
 
 //---------------------------------------------------------------------------
 
 SBIEAPI_EXPORT
-LONG CrashApi_ProcessExemptionControl(
+LONG LeafApi_ProcessExemptionControl(
 	HANDLE process_id,
 	ULONG action_id,
 	ULONG *NewState,

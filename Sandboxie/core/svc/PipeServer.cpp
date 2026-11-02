@@ -964,7 +964,7 @@ void PipeServer::FreeMsg(MSG_HEADER *msg)
     UCHAR *buf = (UCHAR *)msg;
     if (    *(ULONG *)(buf + msg->length) != 0 ||
             *(ULONG *)(buf + msg->length + sizeof(ULONG)) != tzuk) {
-        CrashApi_Log(2316, NULL);
+        LeafApi_Log(2316, NULL);
         __debugbreak();
     }
     Pool_Free(msg, msg->length + sizeof(ULONG) * 2);

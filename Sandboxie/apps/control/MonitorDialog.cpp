@@ -55,7 +55,7 @@ CMonitorDialog::CMonitorDialog(CWnd *pParentWnd)
 CMonitorDialog::~CMonitorDialog()
 {
     ULONG NewState = FALSE;
-    CrashApi_MonitorControl(&NewState, NULL);
+    LeafApi_MonitorControl(&NewState, NULL);
 }
 
 
@@ -83,7 +83,7 @@ BOOL CMonitorDialog::OnInitDialog()
     AddMinimizeButton();
 
     ULONG NewState = TRUE;
-    CrashApi_MonitorControl(&NewState, NULL);
+    LeafApi_MonitorControl(&NewState, NULL);
 
     return TRUE;
 }
@@ -121,13 +121,13 @@ void CMonitorDialog::OnIdle()
         ULONG type;
         ULONG pid;
         ULONG tid;
-        //ULONG status = CrashApi_MonitorGetEx(&seq_num, &type, &pid, &tid, &name[12]);
-        ULONG status = CrashApi_MonitorGetEx(&type, &pid, &tid, &name[12]);
+        //ULONG status = LeafApi_MonitorGetEx(&seq_num, &type, &pid, &tid, &name[12]);
+        ULONG status = LeafApi_MonitorGetEx(&type, &pid, &tid, &name[12]);
 		if (status != 0)
 			break; // error or no more entries
 
 		//if(seq_num != m_last_entry_seq_num + 1)
-		//	CrashApi_Log(MSG_1242, NULL); // MSG_MONITOR_OVERFLOW
+		//	LeafApi_Log(MSG_1242, NULL); // MSG_MONITOR_OVERFLOW
 		//m_last_entry_seq_num = seq_num;
 
 		if ((!type) || (!name[12]))

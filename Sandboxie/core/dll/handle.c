@@ -232,7 +232,7 @@ _FX BOOLEAN Handle_RegisterHandler(HANDLE FileHandle, P_HandlerFunc CloseHandler
     LeaveCriticalSection(&Handle_StatusData_CritSec);
 
     if (handler != NULL) {
-        //CrashApi_Log(2301, L"CloseHandlers already registered"); // todo
+        //LeafApi_Log(2301, L"CloseHandlers already registered"); // todo
         return FALSE;
     }
 

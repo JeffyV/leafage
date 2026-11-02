@@ -3526,7 +3526,7 @@ void CBoxPage::UserAccounts_OnOK(CBox &box)
     box.GetSetUserAccounts(TRUE, users);
 
     if ((! UserAccounts_restricted) && (STATUS_ACCOUNT_RESTRICTION ==
-                            CrashApi_IsBoxEnabled(box.GetName()))) {
+                            LeafApi_IsBoxEnabled(box.GetName()))) {
 
         UserAccounts_restricted = true;
         CMyApp::MsgBox(GetParent(), MSG_5107, MB_OK);

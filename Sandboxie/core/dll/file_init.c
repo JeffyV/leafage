@@ -143,26 +143,26 @@ _FX BOOLEAN File_Init(void)
 
     SbieDll_MatchPath(L'f', (const WCHAR *)-1); //File_InitPathList();
 
-    File_DriveAddSN = CrashApi_QueryConfBool(NULL, L"UseVolumeSerialNumbers", FALSE);
+    File_DriveAddSN = LeafApi_QueryConfBool(NULL, L"UseVolumeSerialNumbers", FALSE);
 
-    File_UseVolumeGuid = CrashApi_QueryConfBool(NULL, L"UseVolumeGuidWhenNoLetter", FALSE);
+    File_UseVolumeGuid = LeafApi_QueryConfBool(NULL, L"UseVolumeGuidWhenNoLetter", FALSE);
 
     if (! File_InitDrives(0xFFFFFFFF))
         return FALSE;
 
-    File_Delete_v2 = CrashApi_QueryConfBool(NULL, L"UseFileDeleteV2", FALSE);
+    File_Delete_v2 = LeafApi_QueryConfBool(NULL, L"UseFileDeleteV2", FALSE);
     if (File_Delete_v2)
         File_InitDelete_v2();
 
     // this is here as it requirers file stuff to be set up
     extern BOOLEAN Key_Delete_v2;
     BOOLEAN Key_InitDelete_v2();
-    Key_Delete_v2 = CrashApi_QueryConfBool(NULL, L"UseRegDeleteV2", FALSE);
+    Key_Delete_v2 = LeafApi_QueryConfBool(NULL, L"UseRegDeleteV2", FALSE);
     if (Key_Delete_v2)
         Key_InitDelete_v2();
 
     // this requirers key stuff to be set up
-	if (CrashApi_QueryConfBool(NULL, L"SeparateUserFolders", TRUE)) {
+	if (LeafApi_QueryConfBool(NULL, L"SeparateUserFolders", TRUE)) {
 		if (!File_InitUsers())
 			return FALSE;
 	}
@@ -191,10 +191,10 @@ _FX BOOLEAN File_Init(void)
         //
 
         ULONG BoxFileRawPathLen;
-        if (NT_SUCCESS(CrashApi_QueryProcessInfoStr(0, 'root', NULL, &BoxFileRawPathLen))) 
+        if (NT_SUCCESS(LeafApi_QueryProcessInfoStr(0, 'root', NULL, &BoxFileRawPathLen))) 
         {
             Dll_BoxFileRawPath = Dll_AllocTemp(BoxFileRawPathLen);
-            if (NT_SUCCESS(CrashApi_QueryProcessInfoStr(0, 'root', (WCHAR*)Dll_BoxFileRawPath, &BoxFileRawPathLen))) 
+            if (NT_SUCCESS(LeafApi_QueryProcessInfoStr(0, 'root', (WCHAR*)Dll_BoxFileRawPath, &BoxFileRawPathLen))) 
             {
                 Dll_BoxFileRawPathLen = wcslen(Dll_BoxFileRawPath);
 
@@ -316,7 +316,7 @@ _FX BOOLEAN File_Init(void)
 
 _FX BOOLEAN File_IsBlockedNetParam(const WCHAR *BoxName)
 {
-    return CrashApi_QueryConfBool(BoxName, L"BlockNetParam", TRUE);
+    return LeafApi_QueryConfBool(BoxName, L"BlockNetParam", TRUE);
 }
 
 
@@ -561,7 +561,7 @@ _FX BOOLEAN File_InitDrives(ULONG DriveMask)
             WCHAR *path2 = Dll_AllocTemp(1024 * sizeof(WCHAR));
             wcscpy(path2, path);
 
-            NTSTATUS status2 = CrashApi_QuerySymbolicLink(path2, 1024 * sizeof(WCHAR));
+            NTSTATUS status2 = LeafApi_QuerySymbolicLink(path2, 1024 * sizeof(WCHAR));
             if (NT_SUCCESS(status2)) {
 
                 Dll_Free(path);
@@ -597,7 +597,7 @@ _FX BOOLEAN File_InitDrives(ULONG DriveMask)
                 status != STATUS_ACCESS_DENIED) {
 
                 Sbie_snwprintf(error_str, 16, L"%c [%08X]", L'A' + drive, status);
-                CrashApi_Log(2307, error_str);
+                LeafApi_Log(2307, error_str);
             }
 
             if (old_drive) {
@@ -683,7 +683,7 @@ _FX BOOLEAN File_InitDrives(ULONG DriveMask)
                 File_Drives[drive] = file_drive;
                 //drive_count++;
 
-                CrashApi_MonitorPut(MONITOR_DRIVE, path);
+                LeafApi_MonitorPut(MONITOR_DRIVE, path);
             }
 
             Dll_Free(save_path);
@@ -699,13 +699,13 @@ _FX BOOLEAN File_InitDrives(ULONG DriveMask)
         if (! NT_SUCCESS(status)) {
 
             Sbie_snwprintf(error_str, 16, L"%c [%08X]", L'A' + drive, status);
-            CrashApi_Log(2307, error_str);
+            LeafApi_Log(2307, error_str);
         }
     }
 
     //if (drive_count == 0) {
     //    Sbie_snwprintf(error_str, 16, L"No Drives Found");
-    //    CrashApi_Log(2307, error_str);
+    //    LeafApi_Log(2307, error_str);
     //}
 
     //
@@ -820,7 +820,7 @@ _FX void File_InitLinks(THREAD_DATA *TlsData)
             MountPoint->SymbolicLinkNameLength / sizeof(WCHAR);
 
         Sbie_snwprintf(text, 256, L"Found Mountpoint: %.*s <-> %.*s", VolumeNameLen, VolumeName, DeviceNameLen, DeviceName);
-        CrashApi_MonitorPut2(MONITOR_DRIVE | MONITOR_TRACE, text, FALSE);
+        LeafApi_MonitorPut2(MONITOR_DRIVE | MONITOR_TRACE, text, FALSE);
 
         if (VolumeNameLen != 48 && VolumeNameLen != 49)
             continue;
@@ -884,7 +884,7 @@ _FX void File_InitLinks(THREAD_DATA *TlsData)
                 DosPath += DosPathLen + 1;
                 while (*DosPath) {
                     Sbie_snwprintf(text, 256, L"Mountpoint AddLink: %s <-> %s", DosPath, DeviceName);
-                    CrashApi_MonitorPut2(MONITOR_DRIVE | MONITOR_TRACE, text, FALSE);
+                    LeafApi_MonitorPut2(MONITOR_DRIVE | MONITOR_TRACE, text, FALSE);
                     File_AddLink(TRUE, DosPath, DeviceName);
                     DosPath += wcslen(DosPath) + 1;
                 }
@@ -902,12 +902,12 @@ _FX void File_InitLinks(THREAD_DATA *TlsData)
 
                 WCHAR *FirstDosPath = DosPath;
                 Sbie_snwprintf(text, 256, L"Mountpoint AddLink: %s <-> %s", FirstDosPath, DeviceName);
-                CrashApi_MonitorPut2(MONITOR_DRIVE | MONITOR_TRACE, text, FALSE);
+                LeafApi_MonitorPut2(MONITOR_DRIVE | MONITOR_TRACE, text, FALSE);
                 File_AddLink(TRUE, FirstDosPath, DeviceName);
                 DosPath += DosPathLen + 1;
                 while (*DosPath) {
                     Sbie_snwprintf(text, 256, L"Mountpoint AddLink: %s <-> %s", DosPath, DeviceName);
-                    CrashApi_MonitorPut2(MONITOR_DRIVE | MONITOR_TRACE, text, FALSE);
+                    LeafApi_MonitorPut2(MONITOR_DRIVE | MONITOR_TRACE, text, FALSE);
                     File_AddLink(TRUE, DosPath, DeviceName);
                     DosPath += wcslen(DosPath) + 1;
                 }
@@ -931,12 +931,12 @@ _FX void File_InitLinks(THREAD_DATA *TlsData)
 
                 WCHAR *FirstDosPath = DosPath;
                 Sbie_snwprintf(text, 256, L"Mountpoint AddLink: %s <-> %s", DeviceName, FirstDosPath);
-                CrashApi_MonitorPut2(MONITOR_DRIVE | MONITOR_TRACE, text, FALSE);
+                LeafApi_MonitorPut2(MONITOR_DRIVE | MONITOR_TRACE, text, FALSE);
                 File_AddLink(TRUE, DeviceName, FirstDosPath);
                 DosPath += DosPathLen + 1;
                 while (*DosPath) {
                     Sbie_snwprintf(text, 256, L"Mountpoint AddLink: %s <-> %s", DosPath, FirstDosPath);
-                    CrashApi_MonitorPut2(MONITOR_DRIVE | MONITOR_TRACE, text, FALSE);
+                    LeafApi_MonitorPut2(MONITOR_DRIVE | MONITOR_TRACE, text, FALSE);
                     File_AddLink(TRUE, DosPath, FirstDosPath);
                     DosPath += wcslen(DosPath) + 1;
                 }
@@ -1039,7 +1039,7 @@ _FX void File_AdjustDrives(
             Dll_Free(File_Drives[drive_index]);
             File_Drives[drive_index] = file_drive;
 
-            CrashApi_MonitorPut(MONITOR_DRIVE, new_path);
+            LeafApi_MonitorPut(MONITOR_DRIVE, new_path);
         }
     }
 }
@@ -1211,7 +1211,7 @@ _FX BOOLEAN File_InitUsers(void)
     if (errlvl) {
         WCHAR error_str[16];
         Sbie_snwprintf(error_str, 16, L"[%08X / %02X]", status, errlvl);
-        CrashApi_Log(2306, error_str);
+        LeafApi_Log(2306, error_str);
         return FALSE;
     }
 
@@ -1769,7 +1769,7 @@ _FX void File_GetSetDeviceMap(WCHAR *DeviceMap96)
     //
     // a sandboxed process starting under the SYSTEM account does not
     // have the local DosDevices directory that it parent, Start.exe,
-    // had.  but CrashDll may have recorded the directory, and we
+    // had.  but LeafDll may have recorded the directory, and we
     // can now restore it
     //
     // note:  the new processes initially inherits the device map of
@@ -1798,7 +1798,7 @@ _FX void File_GetSetDeviceMap(WCHAR *DeviceMap96)
             // the process may not be able to open its own device map,
             // for example if the device map has a DACL that specifies
             // only Administrators, and Drop Rights removed that group.
-            // work around that by getting CrashSvc to open the device map
+            // work around that by getting LeafSvc to open the device map
             //
 
             PROCESS_OPEN_DEVICE_MAP_REQ req;
@@ -1815,7 +1815,7 @@ _FX void File_GetSetDeviceMap(WCHAR *DeviceMap96)
 
         if (! NT_SUCCESS(status)) {
 
-            CrashApi_Log(2321, _fmt, status, 0x88);
+            LeafApi_Log(2321, _fmt, status, 0x88);
 
         } else {
 
@@ -1828,7 +1828,7 @@ _FX void File_GetSetDeviceMap(WCHAR *DeviceMap96)
 
                 //
                 // 32-bit process on 64-bit Windows can't set its device map
-                // due to an error in the wow64 api layer, so ask CrashSvc
+                // due to an error in the wow64 api layer, so ask LeafSvc
                 // to do it for us.  see also core/svc/ProcessServer.cpp
                 //
 
@@ -1851,7 +1851,7 @@ _FX void File_GetSetDeviceMap(WCHAR *DeviceMap96)
 
             if (! NT_SUCCESS(status)) {
 
-                CrashApi_Log(2321, _fmt, status, 0x77);
+                LeafApi_Log(2321, _fmt, status, 0x77);
             }
         }
 
@@ -1875,12 +1875,12 @@ _FX void File_GetSetDeviceMap(WCHAR *DeviceMap96)
             // so ask the driver to open it for us
             //
 
-            status = CrashApi_OpenDeviceMap(&handle);
+            status = LeafApi_OpenDeviceMap(&handle);
         }
 
         if (! NT_SUCCESS(status)) {
 
-            CrashApi_Log(2321, _fmt, status, 0x11);
+            LeafApi_Log(2321, _fmt, status, 0x11);
 
         } else {
 
@@ -1893,7 +1893,7 @@ _FX void File_GetSetDeviceMap(WCHAR *DeviceMap96)
 
             if (! NT_SUCCESS(status)) {
 
-                CrashApi_Log(2321, _fmt, status, 0x22);
+                LeafApi_Log(2321, _fmt, status, 0x22);
 
             } else {
 

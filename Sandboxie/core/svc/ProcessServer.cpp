@@ -142,7 +142,7 @@ BOOL ProcessServer::KillProcess(ULONG ProcessId)
         // also check if process was marked as critical process
         //
 
-        if (!CrashApi_QueryProcessInfo((HANDLE)(ULONG_PTR)ProcessId, 0))
+        if (!LeafApi_QueryProcessInfo((HANDLE)(ULONG_PTR)ProcessId, 0))
             ok = TRUE;
         else {
 
@@ -160,7 +160,7 @@ BOOL ProcessServer::KillProcess(ULONG ProcessId)
     }
 
     if (!ok)
-        ok = NT_SUCCESS(CrashApi_Call(API_KILL_PROCESS, 1, ProcessId));
+        ok = NT_SUCCESS(LeafApi_Call(API_KILL_PROCESS, 1, ProcessId));
 
     //WCHAR txt[512]; wsprintf(txt, L"Killing Process Id %d --> %d/%d\n", ProcessId, ok, LastError); OutputDebugString(txt);
     return ok;
@@ -193,7 +193,7 @@ MSG_HEADER *ProcessServer::KillOneHandler(MSG_HEADER *msg)
     // get session id and box name for target process
     //
 
-    status = CrashApi_QueryProcess((HANDLE)(ULONG_PTR)req->pid, TargetBoxName,
+    status = LeafApi_QueryProcess((HANDLE)(ULONG_PTR)req->pid, TargetBoxName,
                                   NULL, NULL, &TargetSessionId);
 
     if (status != STATUS_SUCCESS)
@@ -205,7 +205,7 @@ MSG_HEADER *ProcessServer::KillOneHandler(MSG_HEADER *msg)
 
     CallerProcessId = (HANDLE)(ULONG_PTR)PipeServer::GetCallerProcessId();
 
-    status = CrashApi_QueryProcess(CallerProcessId, CallerBoxName,
+    status = LeafApi_QueryProcess(CallerProcessId, CallerBoxName,
                                   NULL, NULL, &CallerSessionId);
 
     if (status == STATUS_INVALID_CID) {
@@ -274,7 +274,7 @@ MSG_HEADER *ProcessServer::KillAllHandler(MSG_HEADER *msg)
 
     CallerProcessId = (HANDLE)(ULONG_PTR)PipeServer::GetCallerProcessId();
 
-    status = CrashApi_QueryProcess(CallerProcessId, CallerBoxName,
+    status = LeafApi_QueryProcess(CallerProcessId, CallerBoxName,
                                   NULL, NULL, &CallerSessionId);
 
     if (status == STATUS_INVALID_CID) {
@@ -288,8 +288,8 @@ MSG_HEADER *ProcessServer::KillAllHandler(MSG_HEADER *msg)
 
     if (status != STATUS_INVALID_CID) // if this is true the caller is boxed, should be rpcss
         TerminateJob = FALSE; // if rpcss requests box termination, don't use the job method, fix-me: we get some stuck request in the queue
-    else if (!CrashApi_QueryConfBool(TargetBoxName, L"NoAddProcessToJob", FALSE) && !CrashApi_QueryConfBool(TargetBoxName, L"NoSecurityIsolation", FALSE))
-        TerminateJob = CrashApi_QueryConfBool(TargetBoxName, L"TerminateJobObject", FALSE);
+    else if (!LeafApi_QueryConfBool(TargetBoxName, L"NoAddProcessToJob", FALSE) && !LeafApi_QueryConfBool(TargetBoxName, L"NoSecurityIsolation", FALSE))
+        TerminateJob = LeafApi_QueryConfBool(TargetBoxName, L"TerminateJobObject", FALSE);
 
     //
     // match session id and box name
@@ -348,7 +348,7 @@ NTSTATUS ProcessServer::KillAllHelper(const WCHAR *BoxName, ULONG SessionId, BOO
     for (retries = 0; retries < 10; ) {
 
         count = pids_len;
-        status = CrashApi_EnumProcessEx(BoxName, FALSE, SessionId, pids, &count);
+        status = LeafApi_EnumProcessEx(BoxName, FALSE, SessionId, pids, &count);
         if (status != STATUS_SUCCESS)
             break;
         if (count == 0)
@@ -392,7 +392,7 @@ MSG_HEADER *ProcessServer::SetDeviceMap(MSG_HEADER *msg)
 
     HANDLE CallerProcessId = (HANDLE)(ULONG_PTR)PipeServer::GetCallerProcessId();
 
-    if (! CrashApi_QueryProcessInfo((HANDLE)(ULONG_PTR)CallerProcessId, 0))
+    if (! LeafApi_QueryProcessInfo((HANDLE)(ULONG_PTR)CallerProcessId, 0))
         return SHORT_REPLY(STATUS_ACCESS_DENIED);
 
     NTSTATUS status = STATUS_SUCCESS;
@@ -446,7 +446,7 @@ MSG_HEADER *ProcessServer::OpenDeviceMap(MSG_HEADER *msg)
 
     HANDLE CallerProcessId = (HANDLE)(ULONG_PTR)PipeServer::GetCallerProcessId();
 
-    if (! CrashApi_QueryProcessInfo((HANDLE)(ULONG_PTR)CallerProcessId, 0))
+    if (! LeafApi_QueryProcessInfo((HANDLE)(ULONG_PTR)CallerProcessId, 0))
         return SHORT_REPLY(STATUS_ACCESS_DENIED);
 
     NTSTATUS status = STATUS_SUCCESS;
@@ -553,9 +553,9 @@ MSG_HEADER *ProcessServer::RunSandboxedHandler(MSG_HEADER *msg)
             ULONG session_id;
             BOOL FilterHandles = FALSE;
 
-            if (CrashApi_QueryProcessInfo((HANDLE)(ULONG_PTR)CallerPid, 0)) {
+            if (LeafApi_QueryProcessInfo((HANDLE)(ULONG_PTR)CallerPid, 0)) {
                 CallerInSandbox = true;
-                CrashApi_QueryProcess((HANDLE)(ULONG_PTR)CallerPid, boxname, NULL, sid, &session_id);
+                LeafApi_QueryProcess((HANDLE)(ULONG_PTR)CallerPid, boxname, NULL, sid, &session_id);
                 BoxNameOrModelPid = -(LONG_PTR)(LONG)CallerPid;
                 if ((req->si_flags & 0x80000000) != 0) { // bsession0 - this is only allowed for unsandboxed processes
                     lvl = 0xFF;
@@ -566,7 +566,7 @@ MSG_HEADER *ProcessServer::RunSandboxedHandler(MSG_HEADER *msg)
                 CallerInSandbox = false;
                 if (*req->boxname == L'-') {
                     int Pid = _wtoi(req->boxname + 1);
-                    CrashApi_QueryProcess((HANDLE)(ULONG_PTR)Pid, boxname, NULL, sid, &session_id);
+                    LeafApi_QueryProcess((HANDLE)(ULONG_PTR)Pid, boxname, NULL, sid, &session_id);
                     BoxNameOrModelPid = -Pid;
                 } else {
                     BoxNameOrModelPid = (LONG_PTR)req->boxname;
@@ -578,10 +578,10 @@ MSG_HEADER *ProcessServer::RunSandboxedHandler(MSG_HEADER *msg)
             if (CallerInSandbox && wcscmp(req->boxname, L"*UNBOXED*") == 0 && *cmd == L'\"') {
 
                 //ULONG flags = 0;
-                //if (!NT_SUCCESS(CrashApi_Call(API_QUERY_DRIVER_INFO, 2, 0, (ULONG_PTR)&flags)) || (flags & SBIE_FEATURE_FLAG_CERTIFIED) == 0) {
+                //if (!NT_SUCCESS(LeafApi_Call(API_QUERY_DRIVER_INFO, 2, 0, (ULONG_PTR)&flags)) || (flags & SBIE_FEATURE_FLAG_CERTIFIED) == 0) {
                 //    ULONG SessionId = PipeServer::GetCallerSessionId();
                 //    const WCHAR* strings[] = { boxname, L"Breakout*", NULL };
-                //    CrashApi_LogMsgExt(SessionId, 6004, strings);
+                //    LeafApi_LogMsgExt(SessionId, 6004, strings);
                 //    lvl = 0x66;
                 //    err = ERROR_NOT_SUPPORTED;
                 //    goto end;
@@ -617,10 +617,10 @@ MSG_HEADER *ProcessServer::RunSandboxedHandler(MSG_HEADER *msg)
                             WCHAR BoxName[BOXNAME_COUNT];
                             int index = -1;
                             while (1) {
-                                index = CrashApi_EnumBoxesEx(index, BoxName, TRUE);
+                                index = LeafApi_EnumBoxesEx(index, BoxName, TRUE);
                                 if (index == -1)
                                     break;
-                                if (!NT_SUCCESS(CrashApi_Call(API_IS_BOX_ENABLED, 3, (ULONG_PTR)BoxName, (ULONG_PTR)sid, (ULONG_PTR)session_id)))
+                                if (!NT_SUCCESS(LeafApi_Call(API_IS_BOX_ENABLED, 3, (ULONG_PTR)BoxName, (ULONG_PTR)sid, (ULONG_PTR)session_id)))
                                     continue;
 
                                 if (SbieDll_CheckStringInList(lpProgram + 1, BoxName, L"ForceProcess")
@@ -744,7 +744,7 @@ MSG_HEADER *ProcessServer::RunSandboxedHandler(MSG_HEADER *msg)
 
         if (show_msg) {
             ULONG SessionId = PipeServer::GetCallerSessionId();
-            CrashApi_LogEx(SessionId, 2337, L"[%02X / %d]", lvl, err);
+            LeafApi_LogEx(SessionId, 2337, L"[%02X / %d]", lvl, err);
         }
     }
 
@@ -833,17 +833,17 @@ WCHAR *ProcessServer::RunSandboxedCopyString(
 
 bool ProcessServer__RunRpcssAsSystem(const WCHAR* boxname, BOOLEAN CompartmentMode)
 {
-    if (CrashApi_QueryConfBool(boxname, L"RunRpcssAsSystem", FALSE))
+    if (LeafApi_QueryConfBool(boxname, L"RunRpcssAsSystem", FALSE))
         return true;
     // OriginalToken BEGIN
-    if (CompartmentMode || CrashApi_QueryConfBool(boxname, L"OriginalToken", FALSE)) {
+    if (CompartmentMode || LeafApi_QueryConfBool(boxname, L"OriginalToken", FALSE)) {
     // OriginalToken END
     
         //
         // if we run MSIServer as system we need to run the sandboxed Rpcss as system to or else it will fail
         //
 
-        if (CrashApi_QueryConfBool(boxname, L"MsiInstallerExemptions", FALSE) || CrashApi_QueryConfBool(boxname, L"RunServicesAsSystem", FALSE))
+        if (LeafApi_QueryConfBool(boxname, L"MsiInstallerExemptions", FALSE) || LeafApi_QueryConfBool(boxname, L"RunServicesAsSystem", FALSE))
             return TRUE;
     }
     return FALSE;
@@ -869,7 +869,7 @@ HANDLE ProcessServer::RunSandboxedGetToken(
     bool ShouldAdjustSessionId = true;
     bool ShouldAdjustDacl = false;
 
-    ULONG64 ProcessFlags = CrashApi_QueryProcessInfo(CallerPid, 0);
+    ULONG64 ProcessFlags = LeafApi_QueryProcessInfo(CallerPid, 0);
     BOOLEAN CompartmentMode = (ProcessFlags & SBIE_FLAG_APP_COMPARTMENT) != 0;
 
     if (CallerInSandbox) {
@@ -906,7 +906,7 @@ HANDLE ProcessServer::RunSandboxedGetToken(
         }
         else
         // OriginalToken BEGIN
-        if (!CompartmentMode && !CrashApi_QueryConfBool(boxname, L"OriginalToken", FALSE))
+        if (!CompartmentMode && !LeafApi_QueryConfBool(boxname, L"OriginalToken", FALSE))
         // OriginalToken END
         {
             //
@@ -1004,15 +1004,15 @@ HANDLE ProcessServer::RunSandboxedGetToken(
         // then we want to adjust the DACL in the new token
         //
 
-		if (CrashApi_QueryConfBool(boxname, L"ExposeBoxedSystem", FALSE))
+		if (LeafApi_QueryConfBool(boxname, L"ExposeBoxedSystem", FALSE))
 			ok = RunSandboxedSetDacl(CallerProcessHandle, NewTokenHandle, GENERIC_ALL, TRUE);
-        else if (CrashApi_QueryConfBool(boxname, L"AdjustBoxedSystem", TRUE))
+        else if (LeafApi_QueryConfBool(boxname, L"AdjustBoxedSystem", TRUE))
             // OriginalToken BEGIN
-            if(!CompartmentMode && !CrashApi_QueryConfBool(boxname, L"OriginalToken", FALSE))
+            if(!CompartmentMode && !LeafApi_QueryConfBool(boxname, L"OriginalToken", FALSE))
             // OriginalToken END
 			ok = RunSandboxedSetDacl(CallerProcessHandle, NewTokenHandle, GENERIC_READ, FALSE);
     
-        if (ok && CrashApi_QueryConfBool(boxname, L"StripSystemPrivileges", TRUE)) {
+        if (ok && LeafApi_QueryConfBool(boxname, L"StripSystemPrivileges", TRUE)) {
 
             ok = RunSandboxedStripPrivileges(NewTokenHandle);
         }
@@ -1058,7 +1058,7 @@ BOOL ProcessServer::RunSandboxedSetDacl(
     BOOL ok;
 
     //
-    // When CrashSvc launches a service process as SYSTEM, make sure the
+    // When LeafSvc launches a service process as SYSTEM, make sure the
     // default DACL of the new process includes the caller's SID.  This
     // resolves a problem where a client MsiExec invokes the service
     // MsiExec, which in turn invokes a custom action MsiExec process,
@@ -1112,7 +1112,7 @@ BOOL ProcessServer::RunSandboxedSetDacl(
 
                 PSID TempSid;
                 WCHAR SidString[96];
-                CrashApi_QueryProcess(idProcess, NULL, NULL, SidString, NULL);
+                LeafApi_QueryProcess(idProcess, NULL, NULL, SidString, NULL);
                 if (SidString[0]) {
                     if (ConvertStringSidToSid(SidString, &TempSid)) {
                         memcpy(pUser + 1, TempSid, GetLengthSid(TempSid));
@@ -1280,12 +1280,12 @@ BOOL ProcessServer::RunSandboxedStartProcess(
         else if ((service = wcscmp(cmd, L"*RPCSS*") == 0 ? L"RpcSs" : NULL, service) 
               /*|| (service = wcscmp(cmd, L"*DCOM*") == 0 ? L"DcomLaunch" : NULL, service)*/) {
             WCHAR program[64];
-            wcscpy(program, L"Crash");
+            wcscpy(program, L"Leaf");
             wcscat(program, service);
             wcscat(program, L".exe");
 
             WCHAR homedir[MAX_PATH];
-            CrashApi_GetHomePath(NULL, 0, homedir, MAX_PATH);
+            LeafApi_GetHomePath(NULL, 0, homedir, MAX_PATH);
 
             cmd = (WCHAR *)HeapAlloc(GetProcessHeap(), 0, 512 * sizeof(WCHAR));
             if (! cmd) {
@@ -1353,10 +1353,10 @@ BOOL ProcessServer::RunSandboxedStartProcess(
 
             LONG rc;
             if(FakeAdmin)
-                rc = CrashApi_Call(API_START_PROCESS, 3,
+                rc = LeafApi_Call(API_START_PROCESS, 3,
                                       (ULONG_PTR)BoxNameOrModelPid, (ULONG_PTR)pi->dwProcessId, TRUE);
             else
-                rc = CrashApi_Call(API_START_PROCESS, 2,
+                rc = LeafApi_Call(API_START_PROCESS, 2,
                                       (ULONG_PTR)BoxNameOrModelPid, (ULONG_PTR)pi->dwProcessId);
             if (rc != 0) {
 
@@ -1403,23 +1403,23 @@ WCHAR *ProcessServer::RunSandboxedComServer(ULONG CallerProcessId)
     const ULONG _FlagsOff   = SBIE_FLAG_IMAGE_FROM_SANDBOX
                             | SBIE_FLAG_PROCESS_IN_PCA_JOB;
     ULONG CallerProcessFlags =
-                (ULONG)CrashApi_QueryProcessInfo(CallerPid, 0);
+                (ULONG)LeafApi_QueryProcessInfo(CallerPid, 0);
 
     if ((CallerProcessFlags & (_FlagsOn | _FlagsOff)) != _FlagsOn)
         return NULL;
 
     WCHAR CallerBoxName[BOXNAME_COUNT];
-    if (0 != CrashApi_QueryProcess(
+    if (0 != LeafApi_QueryProcess(
                             CallerPid, CallerBoxName, NULL, NULL, NULL))
         return NULL;
 
     //
     // create a new command line:
-    // CrashSvc.exe SANDBOXIE_ComProxy_ComServer:BoxName
+    // LeafSvc.exe SANDBOXIE_ComProxy_ComServer:BoxName
     //
 
 #ifdef _WIN64
-    ULONG ntdll32_base = (ULONG)CrashApi_QueryProcessInfo(CallerPid, 'nt32');
+    ULONG ntdll32_base = (ULONG)LeafApi_QueryProcessInfo(CallerPid, 'nt32');
 #else
     const ULONG ntdll32_base = 0;
 #endif _WIN64
@@ -1429,7 +1429,7 @@ WCHAR *ProcessServer::RunSandboxedComServer(ULONG CallerProcessId)
     if (! cmd)
         return NULL;
     cmd[0] = L'\"';
-    CrashApi_GetHomePath(NULL, 0, &cmd[1], MAX_PATH);
+    LeafApi_GetHomePath(NULL, 0, &cmd[1], MAX_PATH);
     if (ntdll32_base)
         wcscat(cmd, L"\\32");
     wcscat(cmd, L"\\" SBIESVC_EXE L"\" " SANDBOXIE L"_ComProxy_ComServer:");
@@ -1453,7 +1453,7 @@ BOOL ProcessServer::RunSandboxedDupAndCloseHandles(
 
     if (!FilterHandles) {      // *COMSRV* case or breakout process
 
-        if (! CrashApi_QueryProcessInfo( // check is sandboxed
+        if (! LeafApi_QueryProcessInfo( // check is sandboxed
                     (HANDLE)(ULONG_PTR)piInput->dwProcessId, 0)) {
 
             SetLastError(ERROR_PROCESS_ABORTED);
@@ -1535,7 +1535,7 @@ MSG_HEADER *ProcessServer::RunUpdaterHandler(MSG_HEADER *msg)
     // only unsandboxed signed programs are allowed to use this mechanism
     //
 
-    if(CrashApi_QueryProcessInfo((HANDLE)(ULONG_PTR)CallerPid, 0))
+    if(LeafApi_QueryProcessInfo((HANDLE)(ULONG_PTR)CallerPid, 0))
         return SHORT_REPLY(STATUS_ACCESS_DENIED);
 
 #ifndef WITH_DEBUG
@@ -1900,7 +1900,7 @@ MSG_HEADER *ProcessServer::ProcInfoHandler(MSG_HEADER *msg)
     // only unsandboxed programs are allowed to use this mechanism
     //
 
-    if(CrashApi_QueryProcessInfo((HANDLE)(ULONG_PTR)CallerProcessId, 0))
+    if(LeafApi_QueryProcessInfo((HANDLE)(ULONG_PTR)CallerProcessId, 0))
         return SHORT_REPLY(STATUS_ACCESS_DENIED);
 
     HANDLE ProcessHandle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, req->dwProcessId);
@@ -1945,7 +1945,7 @@ MSG_HEADER *ProcessServer::ProcInfoHandler(MSG_HEADER *msg)
 	        Info.IsWoW64 = isTargetWow64Process;
 
         // check original token
-	    HANDLE TokenHandle = (HANDLE)CrashApi_QueryProcessInfo((HANDLE)req->dwProcessId, 'ptok');
+	    HANDLE TokenHandle = (HANDLE)LeafApi_QueryProcessInfo((HANDLE)req->dwProcessId, 'ptok');
 	    if (!TokenHandle) // app compartment type box
 		    NtOpenProcessToken(ProcessHandle, TOKEN_QUERY, &TokenHandle);
 	    if (TokenHandle)
@@ -1978,12 +1978,12 @@ MSG_HEADER *ProcessServer::ProcInfoHandler(MSG_HEADER *msg)
 		    CloseHandle(TokenHandle);
 	    }
 
-        ULONG64 ProcessFlags = CrashApi_QueryProcessInfo((HANDLE)req->dwProcessId, 0);
+        ULONG64 ProcessFlags = LeafApi_QueryProcessInfo((HANDLE)req->dwProcessId, 0);
         if ((ProcessFlags & SBIE_FLAG_FAKE_ADMIN) != 0)
             Info.IsFakeAdmin = 1;
 
         // check sandboxed token
-        /*TokenHandle = (HANDLE)CrashApi_QueryProcessInfo((HANDLE)req->dwProcessId, 'ptok');
+        /*TokenHandle = (HANDLE)LeafApi_QueryProcessInfo((HANDLE)req->dwProcessId, 'ptok');
 	    NtOpenProcessToken(ProcessHandle, TOKEN_QUERY, &TokenHandle);
         if (TokenHandle)
 	    {
@@ -2141,7 +2141,7 @@ MSG_HEADER *ProcessServer::SuspendOneHandler(MSG_HEADER *msg)
     // get session id and box name for target process
     //
 
-    status = CrashApi_QueryProcess((HANDLE)(ULONG_PTR)req->pid, TargetBoxName,
+    status = LeafApi_QueryProcess((HANDLE)(ULONG_PTR)req->pid, TargetBoxName,
                                   NULL, NULL, &TargetSessionId);
 
     if (status != STATUS_SUCCESS)
@@ -2158,7 +2158,7 @@ MSG_HEADER *ProcessServer::SuspendOneHandler(MSG_HEADER *msg)
     // only unsandboxed programs are allowed to use this mechanism
     //
 
-    if(CrashApi_QueryProcessInfo((HANDLE)(ULONG_PTR)CallerProcessId, 0))
+    if(LeafApi_QueryProcessInfo((HANDLE)(ULONG_PTR)CallerProcessId, 0))
         return SHORT_REPLY(STATUS_ACCESS_DENIED);
 
     //
@@ -2223,7 +2223,7 @@ MSG_HEADER *ProcessServer::SuspendAllHandler(MSG_HEADER *msg)
     // only unsandboxed programs are allowed to use this mechanism
     //
 
-    if(CrashApi_QueryProcessInfo((HANDLE)(ULONG_PTR)CallerProcessId, 0))
+    if(LeafApi_QueryProcessInfo((HANDLE)(ULONG_PTR)CallerProcessId, 0))
         return SHORT_REPLY(STATUS_ACCESS_DENIED);
 
     //FreezeJob = FALSE;
@@ -2242,11 +2242,11 @@ MSG_HEADER *ProcessServer::SuspendAllHandler(MSG_HEADER *msg)
     //
 
     ULONG pid_count = 0;
-    CrashApi_EnumProcessEx(TargetBoxName, FALSE, TargetSessionId, NULL, &pid_count); // query count
+    LeafApi_EnumProcessEx(TargetBoxName, FALSE, TargetSessionId, NULL, &pid_count); // query count
     pid_count += 128;
 
     ULONG* pids = (ULONG*)HeapAlloc(GetProcessHeap(), HEAP_GENERATE_EXCEPTIONS, sizeof(ULONG) * pid_count);
-    CrashApi_EnumProcessEx(TargetBoxName, FALSE, TargetSessionId, pids, &pid_count); // query pids
+    LeafApi_EnumProcessEx(TargetBoxName, FALSE, TargetSessionId, pids, &pid_count); // query pids
 
     for (ULONG i = 0; i < pid_count; ++i) {
 

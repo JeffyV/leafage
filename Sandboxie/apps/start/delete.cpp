@@ -312,13 +312,13 @@ void DeleteSandbox(
     g_Logoff = bLogoff ? true : false;
     g_Silent = bSilent ? true : false;
 
-    if (CrashApi_QueryProcess(NULL, NULL, NULL, NULL, NULL) == 0) {
+    if (LeafApi_QueryProcess(NULL, NULL, NULL, NULL, NULL) == 0) {
         SetLastError(0);
         Error(SbieDll_FormatMessage0(MSG_3221), 0);
     }
 
     if ((phase <= 1) &&
-            CrashApi_QueryConfBool(g_BoxName, L"NeverDelete", FALSE)) {
+            LeafApi_QueryConfBool(g_BoxName, L"NeverDelete", FALSE)) {
 
         SetLastError(0);
         Error(SbieDll_FormatMessage0(MSG_3051), 0);
@@ -452,7 +452,7 @@ void RenameSandbox(void)
             status == STATUS_SHARING_VIOLATION) {
 
             ULONG pid_count = 0;
-            CrashApi_EnumProcessEx(g_BoxName, FALSE, -1, NULL, &pid_count);
+            LeafApi_EnumProcessEx(g_BoxName, FALSE, -1, NULL, &pid_count);
             if (pid_count) {
 
                 SetLastError(0);
@@ -543,7 +543,7 @@ NOINLINE void DeleteFiles(void)
     WCHAR boxname[BOXNAME_COUNT];
     int index = -1;
     while (1) {
-        index = CrashApi_EnumBoxes(index, boxname);
+        index = LeafApi_EnumBoxes(index, boxname);
         if (index == -1)
             break;
         g_BoxName = boxname;
@@ -590,7 +590,7 @@ void DeleteFilesInBox(const WCHAR *boxname)
     memzero(cmd, len);
     len -= 8;
 
-    CrashApi_QueryConfAsIs(boxname, _DeleteCommand, 0, cmd, len);
+    LeafApi_QueryConfAsIs(boxname, _DeleteCommand, 0, cmd, len);
 
     if (! cmd[0])
         wcscpy(cmd, _DefaultDeleteCommand);
@@ -1122,7 +1122,7 @@ ALIGNED WCHAR *GetBoxFilePath(const WCHAR *boxname, ULONG extra)
 
     len = 0;
 
-    status = CrashApi_QueryBoxPath(
+    status = LeafApi_QueryBoxPath(
         boxname, NULL, NULL, NULL, &len, NULL, NULL);
     if (status != 0)
         return NULL;
@@ -1130,7 +1130,7 @@ ALIGNED WCHAR *GetBoxFilePath(const WCHAR *boxname, ULONG extra)
     path = (WCHAR *)HeapAlloc(GetProcessHeap(), 0, len + extra);
     if (path) {
 
-        status = CrashApi_QueryBoxPath(
+        status = LeafApi_QueryBoxPath(
             boxname, path, NULL, NULL, &len, NULL, NULL);
 
         if (status == 0) {
@@ -1161,7 +1161,7 @@ int Delete_All_Sandboxes()
     int index = -1;
     WCHAR BoxName[BOXNAME_COUNT];
     while (1) {
-        index = CrashApi_EnumBoxes(index, BoxName);
+        index = LeafApi_EnumBoxes(index, BoxName);
         if (index == -1)
             break;
         WCHAR* buf = GetBoxFilePath(BoxName, 0);

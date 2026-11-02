@@ -99,7 +99,7 @@ _FX BOOLEAN Ipc_Filter_Sam_Msg(PROCESS* proc, UCHAR uMsg)
     {
     //case 0x00: //SamConnect
     //case 0x01: //SamCloseHandle
-    case 0x02: //SamSetSecurityObject // fixme: CrashCrypto.exe needs this some times #740 //if(proc->image_sbie) break;
+    case 0x02: //SamSetSecurityObject // fixme: LeafCrypto.exe needs this some times #740 //if(proc->image_sbie) break;
     //case 0x03: //SamQuerySecurityObject
     //case 0x05: //SamLookupDomainInSamServer
     //case 0x06: //SamEnumerateDomainsInSamServer

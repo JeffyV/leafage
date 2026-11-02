@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
 
 	//InitConsole(false);
 
-	bool IsBoxed = GetModuleHandleW(L"CrashDll.dll") != NULL;
+	bool IsBoxed = GetModuleHandleW(L"LeafDll.dll") != NULL;
 
 	if (!IsBoxed) {
 		SB_STATUS Status = CSbieUtils::DoAssist();

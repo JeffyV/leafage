@@ -98,7 +98,7 @@ _FX void File_InitRecoverFolders(void)
     // init list of recover folders
     //
 
-    if (CrashApi_QueryConfBool(NULL, L"AutoRecover", FALSE)) {
+    if (LeafApi_QueryConfBool(NULL, L"AutoRecover", FALSE)) {
 
         ULONG buf_len = 4096 * sizeof(WCHAR);
         WCHAR *buf = Dll_AllocTemp(buf_len);
@@ -130,7 +130,7 @@ _FX void File_InitRecoverList(
     ULONG index = 0;
     while (1) {
 
-        NTSTATUS status = CrashApi_QueryConf(
+        NTSTATUS status = LeafApi_QueryConf(
             NULL, setting, index, buf, buf_len - 16 * sizeof(WCHAR));
         if (! NT_SUCCESS(status))
             break;
@@ -199,8 +199,8 @@ _FX BOOLEAN File_IsRecoverable(
     // \Device\Mup\;LanmanRedirector\;Q:000000000000b09f\server\share\f1.txt
     // then translate to
     // \Device\Mup\server\share\f1.txt
-    // and test again.  We do this because the CrashDrv records paths
-    // in the \Device\Mup format.  See CrashDrv::File_TranslateShares.
+    // and test again.  We do this because the LeafDrv records paths
+    // in the \Device\Mup format.  See LeafDrv::File_TranslateShares.
     //
 
     save_TruePath = TruePath;
@@ -535,7 +535,7 @@ _FX void File_DoAutoRecover_2(BOOLEAN force, ULONG ticks)
 
         //
         // on Windows 8.1, NtQuerySystemInformation fails, probably because
-        // we are running without any privileges, so go through CrashSvc
+        // we are running without any privileges, so go through LeafSvc
         //
 
         MSG_HEADER req;
@@ -585,7 +585,7 @@ _FX void File_DoAutoRecover_2(BOOLEAN force, ULONG ticks)
                 status = File_GetName(NULL, &uni, &TruePath, &CopyPath, NULL);
 
 				const WCHAR* strings[] = { Dll_BoxName, rec->path, CopyPath, NULL };
-				CrashApi_LogMsgExt(-1, 2199, strings);
+				LeafApi_LogMsgExt(-1, 2199, strings);
 			}
             List_Remove(&File_RecPaths, rec);
         }

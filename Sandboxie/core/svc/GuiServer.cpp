@@ -403,7 +403,7 @@ ULONG GuiServer::StartSlave(ULONG session_id)
         return STATUS_INSUFFICIENT_RESOURCES;
 
     cmdline[0] = L'\"';
-    status = CrashApi_GetHomePath(NULL, 0, &cmdline[1], 512);
+    status = LeafApi_GetHomePath(NULL, 0, &cmdline[1], 512);
     if (status != 0)
         ok = FALSE;
     else {
@@ -539,7 +539,7 @@ ULONG GuiServer::StartSlave(ULONG session_id)
 
 void GuiServer::ReportError2336(ULONG session_id, ULONG errlvl, ULONG status)
 {
-    CrashApi_LogEx(session_id, 2336, L"[%02X / %08X]", errlvl, status);
+    LeafApi_LogEx(session_id, 2336, L"[%02X / %08X]", errlvl, status);
 }
 
 
@@ -583,7 +583,7 @@ void GuiServer::RunSlave(const WCHAR *cmdline)
     }
 
     //
-    // get process id for parent (which should be the main CrashSvc process)
+    // get process id for parent (which should be the main LeafSvc process)
     //
 
     NTSTATUS status;
@@ -883,7 +883,7 @@ bool GuiServer::QueueCallbackSlave2(void)
             if (msgid != GUI_INIT_PROCESS && msgid != GUI_KILL_JOB) {
 
                 ULONG session_id;
-                status = CrashApi_QueryProcess((HANDLE)(ULONG_PTR)args.pid,
+                status = LeafApi_QueryProcess((HANDLE)(ULONG_PTR)args.pid,
                                               NULL, NULL, NULL, &session_id);
 
                 if (status != 0)
@@ -1049,11 +1049,11 @@ HANDLE GuiServer::GetJobObjectForAssign(const WCHAR *boxname)
                 BOOL ok = FALSE;        // set TRUE to skip UIRestrictions
 
 				// OriginalToken BEGIN
-				if (CrashApi_QueryConfBool(boxname, L"OriginalToken", FALSE))
+				if (LeafApi_QueryConfBool(boxname, L"OriginalToken", FALSE))
 					ok = TRUE;
 				// OriginalToken END
 				// UnrestrictedToken BEGIN
-				if (CrashApi_QueryConfBool(boxname, L"UnrestrictedToken", FALSE))
+				if (LeafApi_QueryConfBool(boxname, L"UnrestrictedToken", FALSE))
 					ok = TRUE;
 				// UnrestrictedToken END
 
@@ -1062,7 +1062,7 @@ HANDLE GuiServer::GetJobObjectForAssign(const WCHAR *boxname)
                 // tries to call CreateDesktop this will BSOD the system someware in the win32k subsystem.
                 // This behaviour can be easily reproduced outside of sandboxie as well.
                 // 
-                if(CrashApi_QueryConfBool(boxname, L"OpenWndStation", FALSE))
+                if(LeafApi_QueryConfBool(boxname, L"OpenWndStation", FALSE))
                     ok = TRUE;
 
                 if (! ok) {
@@ -1105,9 +1105,9 @@ HANDLE GuiServer::GetJobObjectForAssign(const WCHAR *boxname)
                     JOBOBJECT_EXTENDED_LIMIT_INFORMATION jobELInfo = {0};
                     jobELInfo.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_BREAKAWAY_OK
                                                                 | JOB_OBJECT_LIMIT_SILENT_BREAKAWAY_OK;
-                    SIZE_T TotalMemoryLimit = (SIZE_T)CrashApi_QueryConfNumber64(boxname, L"TotalMemoryLimit", 0);
-                    ULONG ProcessNumberLimit = CrashApi_QueryConfNumber(boxname, L"ProcessNumberLimit", 0);
-                    SIZE_T ProcessMemoryLimit = (SIZE_T)CrashApi_QueryConfNumber64(boxname, L"ProcessMemoryLimit", 0);
+                    SIZE_T TotalMemoryLimit = (SIZE_T)LeafApi_QueryConfNumber64(boxname, L"TotalMemoryLimit", 0);
+                    ULONG ProcessNumberLimit = LeafApi_QueryConfNumber(boxname, L"ProcessNumberLimit", 0);
+                    SIZE_T ProcessMemoryLimit = (SIZE_T)LeafApi_QueryConfNumber64(boxname, L"ProcessMemoryLimit", 0);
 					if (TotalMemoryLimit != 0) {
 						jobELInfo.JobMemoryLimit = TotalMemoryLimit;
 						jobELInfo.BasicLimitInformation.LimitFlags |= JOB_OBJECT_LIMIT_JOB_MEMORY;
@@ -1167,7 +1167,7 @@ HANDLE GuiServer::GetJobObjectForGrant(ULONG pid)
 
     WCHAR BoxName[BOXNAME_COUNT];
     ULONG SessionId;
-    ULONG status = CrashApi_QueryProcess(
+    ULONG status = LeafApi_QueryProcess(
                     (HANDLE)(ULONG_PTR)pid, BoxName, NULL, NULL, &SessionId);
 
     if (status == 0 && SessionId == m_SessionId) {
@@ -1411,7 +1411,7 @@ ULONG GuiServer::InitProcessSlave(SlaveArgs *args)
         goto finish;
     }
 
-    status = CrashApi_QueryProcess((HANDLE)(ULONG_PTR)req->process_id,
+    status = LeafApi_QueryProcess((HANDLE)(ULONG_PTR)req->process_id,
                                   boxname, NULL, NULL, &session_id);
     if (status != 0) {
         errlvl = 0x92;
@@ -1480,7 +1480,7 @@ ULONG GuiServer::GetWindowStationSlave(SlaveArgs *args)
         goto finish;
     }
 
-    status = CrashApi_QueryProcess((HANDLE)(ULONG_PTR)args->pid,
+    status = LeafApi_QueryProcess((HANDLE)(ULONG_PTR)args->pid,
                                   NULL, NULL, NULL, &session_id);
     if (status != 0 || session_id != m_SessionId) {
 
@@ -1529,7 +1529,7 @@ ULONG GuiServer::GetWindowStationSlave(SlaveArgs *args)
                                   | WINSTA_READSCREEN;
 
         ULONG64 ProcessFlags =
-            CrashApi_QueryProcessInfo((HANDLE)(ULONG_PTR)args->pid, 0);
+            LeafApi_QueryProcessInfo((HANDLE)(ULONG_PTR)args->pid, 0);
         if (ProcessFlags & SBIE_FLAG_OPEN_ALL_WIN_CLASS) {
 
             _WinStaAccess |= WINSTA_WRITEATTRIBUTES;
@@ -1621,7 +1621,7 @@ ULONG GuiServer::CreateConsoleSlave(SlaveArgs *args)
     BOOL ok;
 
     ULONG session_id;
-    ULONG status = CrashApi_QueryProcess((HANDLE)(ULONG_PTR)args->pid, boxname,
+    ULONG status = LeafApi_QueryProcess((HANDLE)(ULONG_PTR)args->pid, boxname,
                                         image_name, NULL, &session_id);
     if (status != 0 || session_id != m_SessionId) {
 
@@ -1684,7 +1684,7 @@ ULONG GuiServer::CreateConsoleSlave(SlaveArgs *args)
     }
 
     cmdline[0] = L'\"';
-    status = CrashApi_GetHomePath(NULL, 0, &cmdline[1], 512);
+    status = LeafApi_GetHomePath(NULL, 0, &cmdline[1], 512);
     if (status != 0)
         goto finish;
     wcscat(cmdline, L"\\" SBIESVC_EXE L"\" ");
@@ -1729,7 +1729,7 @@ ULONG GuiServer::CreateConsoleSlave(SlaveArgs *args)
     //
     // register a callback that will be signalled when the client
     // process is terminated, in which case we will terminate the
-    // CrashSvc.exe console helper instance that we started
+    // LeafSvc.exe console helper instance that we started
     //
 
     HANDLE *WaitHandles = (HANDLE *)cmdline;
@@ -2186,7 +2186,7 @@ ULONG GuiServer::EnumWindowsFilterSlave(ULONG pid, void *rpl_buf)
         return 0;
 
     WCHAR boxname[BOXNAME_COUNT];
-    ULONG status = CrashApi_QueryProcess((HANDLE)(ULONG_PTR)pid,
+    ULONG status = LeafApi_QueryProcess((HANDLE)(ULONG_PTR)pid,
                                         boxname, NULL, NULL, NULL);
     if (status != 0)
         return status;
@@ -2427,7 +2427,7 @@ ULONG GuiServer::CloseClipboardSlave(SlaveArgs *args)
 
     else if (GetClipboardSequenceNumber() != _ClipboardSequence) {
 
-        ULONG caller_il = (ULONG)(ULONG_PTR)CrashApi_QueryProcessInfo(
+        ULONG caller_il = (ULONG)(ULONG_PTR)LeafApi_QueryProcessInfo(
                                     (HANDLE)(ULONG_PTR)args->pid, 'pril');
         if (caller_il == tzuk) // Windows XP
             status = STATUS_WRONG_PASSWORD;
@@ -2455,7 +2455,7 @@ ULONG GuiServer::CloseClipboardSlave(SlaveArgs *args)
                     ULONG fmt = 0;
 
                     while (1) {
-                        status = CrashApi_Call(API_GUI_CLIPBOARD, 1, (ULONG_PTR)0x4000);
+                        status = LeafApi_Call(API_GUI_CLIPBOARD, 1, (ULONG_PTR)0x4000);
                         if (status != 0)
                             break;
                         fmt = EnumClipboardFormats(fmt);
@@ -2481,7 +2481,7 @@ ULONG GuiServer::CloseClipboardSlave(SlaveArgs *args)
                         // always fails.  so we want clip_il to stay 0x4000
                         //
 
-                        status = CrashApi_Call(API_GUI_CLIPBOARD, 1, (ULONG_PTR)caller_il);
+                        status = LeafApi_Call(API_GUI_CLIPBOARD, 1, (ULONG_PTR)caller_il);
                     }*/
 
                     CloseClipboard();
@@ -2497,7 +2497,7 @@ ULONG GuiServer::CloseClipboardSlave(SlaveArgs *args)
             }
 
             if (status != 0)
-                CrashApi_Log(2205, L"CloseClipboard %08X", status);
+                LeafApi_Log(2205, L"CloseClipboard %08X", status);
         }
     }
 
@@ -2527,8 +2527,8 @@ ULONG GuiServer::GetClipboardDataSlave(SlaveArgs *args)
     // fail if the calling process should not have clipboard access
     WCHAR boxname[BOXNAME_COUNT] = { 0 };
     WCHAR exename[99] = { 0 };
-    CrashApi_QueryProcess((HANDLE)args->pid, boxname, exename, NULL, NULL);
-    if (!CrashApi_QueryConfBool(boxname, L"OpenClipboard", TRUE))
+    LeafApi_QueryProcess((HANDLE)args->pid, boxname, exename, NULL, NULL);
+    if (!LeafApi_QueryConfBool(boxname, L"OpenClipboard", TRUE))
     {
         rpl->error = ERROR_ACCESS_DENIED;
         goto finish;
@@ -2548,7 +2548,7 @@ ULONG GuiServer::GetClipboardDataSlave(SlaveArgs *args)
             // then we can't get it, see more in CloseClipboardSlave above.
             // work around that by setting IL to 0x4000
             //
-            if (CrashApi_Call(API_GUI_CLIPBOARD, 1, (ULONG_PTR)0x4000) == 0) {
+            if (LeafApi_Call(API_GUI_CLIPBOARD, 1, (ULONG_PTR)0x4000) == 0) {
                 mem_handle = GetClipboardData(req->format);
                 rpl->error = GetLastError();
             }
@@ -3211,7 +3211,7 @@ ULONG GuiServer::SplWow64Slave(SlaveArgs *args)
 
     if (req->set) {
 
-        status = CrashApi_QueryProcessEx2((HANDLE)(ULONG_PTR)args->pid, 0,
+        status = LeafApi_QueryProcessEx2((HANDLE)(ULONG_PTR)args->pid, 0,
                                     boxname, NULL, NULL, NULL, &create_time);
         if (status != 0) {
             // error, can't get information about new SplWow64 process
@@ -3232,7 +3232,7 @@ ULONG GuiServer::SplWow64Slave(SlaveArgs *args)
     // process running in some other sandbox
     //
 
-    status = CrashApi_QueryProcessEx2((HANDLE)(ULONG_PTR)_SplWow64Pid, 0,
+    status = LeafApi_QueryProcessEx2((HANDLE)(ULONG_PTR)_SplWow64Pid, 0,
                                     boxname, NULL, NULL, NULL, &create_time);
 
     if (status != 0
@@ -3257,7 +3257,7 @@ ULONG GuiServer::SplWow64Slave(SlaveArgs *args)
         return STATUS_SUCCESS;
     }
 
-    status = CrashApi_QueryProcessEx2((HANDLE)(ULONG_PTR)args->pid, 0,
+    status = LeafApi_QueryProcessEx2((HANDLE)(ULONG_PTR)args->pid, 0,
                                 boxname, NULL, NULL, NULL, NULL);
 
     if (status == 0 && _wcsicmp(boxname, _SplWow64BoxName) != 0) {
@@ -3343,7 +3343,7 @@ void GuiServer::SplWow64SlaveWin8()
                         WCHAR *ptr = wcsrchr(path, L'\\');
                         if (ptr && _wcsicmp(ptr + 1, L"splwow64.exe") == 0) {
 
-                            if (CrashApi_QueryProcessInfo(
+                            if (LeafApi_QueryProcessInfo(
                                         (HANDLE)(ULONG_PTR)pids[i], 0) == 0) {
 
                                 TerminateProcess(hProcess, 0);
@@ -3442,7 +3442,7 @@ BOOL isGuestProcessWindow(HWND hWnd)
 
     if (nPid)
     {
-        ULONG64 ProcessFlags = CrashApi_QueryProcessInfo((HANDLE)nPid, 0);
+        ULONG64 ProcessFlags = LeafApi_QueryProcessInfo((HANDLE)nPid, 0);
 
         if (ProcessFlags & SBIE_FLAG_VALID_PROCESS)
         {
@@ -3719,8 +3719,8 @@ ULONG GuiServer::GetProcessPathList(
     const HANDLE xpid = (HANDLE)(ULONG_PTR)pid;
 
     ULONG len;
-    LONG status = CrashApi_QueryPathList(path_code, &len, NULL, xpid, FALSE);
-    //LONG status = CrashApi_QueryPathList(path_code, &len, NULL, xpid, TRUE);
+    LONG status = LeafApi_QueryPathList(path_code, &len, NULL, xpid, FALSE);
+    //LONG status = LeafApi_QueryPathList(path_code, &len, NULL, xpid, TRUE);
     if (status != 0)
         return status;
 
@@ -3734,8 +3734,8 @@ ULONG GuiServer::GetProcessPathList(
     LIST *list = (LIST *)Pool_Alloc(pool, sizeof(LIST));
 
     if (path && list)
-        status = CrashApi_QueryPathList(path_code, NULL, path, xpid, FALSE);
-        //status = CrashApi_QueryPathList(path_code, NULL, path, xpid, TRUE);
+        status = LeafApi_QueryPathList(path_code, NULL, path, xpid, FALSE);
+        //status = LeafApi_QueryPathList(path_code, NULL, path, xpid, TRUE);
 
     if (status != STATUS_SUCCESS) {
         Pool_Delete(pool);
@@ -3799,14 +3799,14 @@ bool GuiServer::CheckSameProcessBoxes(
         return true;
 
     WCHAR boxname2[BOXNAME_COUNT];
-    ULONG status = CrashApi_QueryProcess((HANDLE)(ULONG_PTR)*out_pid,
+    ULONG status = LeafApi_QueryProcess((HANDLE)(ULONG_PTR)*out_pid,
                                         boxname2, NULL, NULL, NULL);
     if (! NT_SUCCESS(status))
         return false;
 
     if (! boxname) {
         WCHAR boxname1[BOXNAME_COUNT];
-        status = CrashApi_QueryProcess((HANDLE)(ULONG_PTR)in_pid,
+        status = LeafApi_QueryProcess((HANDLE)(ULONG_PTR)in_pid,
                                       boxname1, NULL, NULL, NULL);
         if (! NT_SUCCESS(status))
             return false;
@@ -3910,7 +3910,7 @@ bool GuiServer::CheckWindowAccessible(
 
 _FX bool GuiServer::CompareIntegrityLevels(ULONG src_pid, HWND dst_hwnd)
 {
-    ULONG src_il = (ULONG)(ULONG_PTR)CrashApi_QueryProcessInfo(
+    ULONG src_il = (ULONG)(ULONG_PTR)LeafApi_QueryProcessInfo(
                                         (HANDLE)(ULONG_PTR)src_pid, 'pril');
     if (src_il == tzuk) // Windows XP
         return true;
@@ -4064,7 +4064,7 @@ bool GuiServer::AllowSendPostMessage(
     //
 
     ULONG64 ProcessFlags =
-        CrashApi_QueryProcessInfo((HANDLE)(ULONG_PTR)pid, 0);
+        LeafApi_QueryProcessInfo((HANDLE)(ULONG_PTR)pid, 0);
 
     if (ProcessFlags & SBIE_FLAG_OPEN_ALL_WIN_CLASS)
         return true;
@@ -4208,7 +4208,7 @@ bool GuiServer::AllowSendPostMessage(
                  && ISWNDCLASS(14, L"MSTaskSwWClass")) {
 
                 WCHAR sender_exename[128];
-                CrashApi_QueryProcess((HANDLE)(ULONG_PTR)pid, NULL,
+                LeafApi_QueryProcess((HANDLE)(ULONG_PTR)pid, NULL,
                                      sender_exename, NULL, NULL);
 
                 if (   _wcsicmp(sender_exename, L"excel.exe")    == 0
@@ -4341,7 +4341,7 @@ void GuiServer::RunConsoleSlave(const WCHAR *evtname)
 
         if (AllocConsole()) {
 
-            if (boxname++ && CrashApi_QueryConfBool(boxname, L"DropConHostIntegrity", FALSE))
+            if (boxname++ && LeafApi_QueryConfBool(boxname, L"DropConHostIntegrity", FALSE))
                 DropConsoleIntegrity();
 
             AdjustConsoleTaskbarButton();

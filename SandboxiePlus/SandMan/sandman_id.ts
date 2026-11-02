@@ -4849,8 +4849,8 @@ File ini adalah bagian dari Sandboxie dan semua perubahan yang dilakukan padanya
     </message>
     <message>
         <location filename="SandMan.cpp" line="4471"/>
-        <source>Sandboxie-Plus is an open source continuation of Sandboxie.&lt;br /&gt;Visit &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; for more information.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Features: %3&lt;br /&gt;&lt;br /&gt;Installation: %1&lt;br /&gt;CrashDrv.sys: %4&lt;br /&gt; CrashSvc.exe: %5&lt;br /&gt; CrashDll.dll: %6&lt;br /&gt;&lt;br /&gt;Icons from &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</source>
-        <translation>Sandboxie-Plus adalah kelanjutan open source dari Sandboxie.&lt;br /&gt;Kunjungi &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; untuk informasi lebih lanjut.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Fitur: %3&lt;br /&gt;&lt;br /&gt;Instalasi: %1&lt;br /&gt;CrashDrv.sys: %4&lt;br /&gt; CrashSvc.exe: %5&lt;br /&gt; CrashDll.dll: %6&lt;br /&gt;&lt;br /&gt;Ikon dari &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</translation>
+        <source>Sandboxie-Plus is an open source continuation of Sandboxie.&lt;br /&gt;Visit &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; for more information.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Features: %3&lt;br /&gt;&lt;br /&gt;Installation: %1&lt;br /&gt;LeafDrv.sys: %4&lt;br /&gt; LeafSvc.exe: %5&lt;br /&gt; LeafDll.dll: %6&lt;br /&gt;&lt;br /&gt;Icons from &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</source>
+        <translation>Sandboxie-Plus adalah kelanjutan open source dari Sandboxie.&lt;br /&gt;Kunjungi &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; untuk informasi lebih lanjut.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Fitur: %3&lt;br /&gt;&lt;br /&gt;Instalasi: %1&lt;br /&gt;LeafDrv.sys: %4&lt;br /&gt; LeafSvc.exe: %5&lt;br /&gt; LeafDll.dll: %6&lt;br /&gt;&lt;br /&gt;Ikon dari &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="SandMan.cpp" line="3246"/>
@@ -8321,9 +8321,9 @@ Ini dilakukan untuk mencegah proses jahat di dalam sandbox membuat salinan dirin
     </message>
     <message>
         <location filename="Forms/OptionsWindow.ui" line="4517"/>
-        <source>Sandboxie&apos;s functionality can be enhanced by using optional DLLs which can be loaded into each sandboxed process on start by the CrashDll.dll file, the add-on manager in the global settings offers a couple of useful extensions, once installed they can be enabled here for the current box.</source>
+        <source>Sandboxie&apos;s functionality can be enhanced by using optional DLLs which can be loaded into each sandboxed process on start by the LeafDll.dll file, the add-on manager in the global settings offers a couple of useful extensions, once installed they can be enabled here for the current box.</source>
         <oldsource>Sandboxies functionality can be enhanced using optional dll’s which can be loaded into each sandboxed process on start by the SbieDll.dll, the add-on manager in the global settings offers a couple useful extensions, once installed they can be enabled here for the current box.</oldsource>
-        <translation>Fungsionalitas Sandboxie dapat ditingkatkan dengan menggunakan DLL opsional yang dapat dimuat ke setiap proses sandbox saat dimulai oleh file CrashDll.dll. Manajer add-on di pengaturan global menawarkan beberapa ekstensi yang berguna, setelah diinstal, ekstensi tersebut dapat diaktifkan di sini untuk kotak saat ini.</translation>
+        <translation>Fungsionalitas Sandboxie dapat ditingkatkan dengan menggunakan DLL opsional yang dapat dimuat ke setiap proses sandbox saat dimulai oleh file LeafDll.dll. Manajer add-on di pengaturan global menawarkan beberapa ekstensi yang berguna, setelah diinstal, ekstensi tersebut dapat diaktifkan di sini untuk kotak saat ini.</translation>
     </message>
     <message>
         <location filename="Forms/OptionsWindow.ui" line="1876"/>

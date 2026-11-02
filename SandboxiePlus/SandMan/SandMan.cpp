@@ -1186,7 +1186,7 @@ void CSandMan::CreateView(int iViewMode)
 
 		m_pLogTabs->addTab(m_pMessageLog, tr("Sbie Messages"));
 
-		foreach(const SCrashMsg & Msg, m_MessageLog) {
+		foreach(const SLeafMsg & Msg, m_MessageLog) {
 			QString Link, Message = FormatSbieMessage(Msg.MsgCode, Msg.MsgData, Msg.ProcessName, &Link);
 			AddLogMessage(Msg.TimeStamp, Message, Link);
 		}
@@ -2864,7 +2864,7 @@ QString CSandMan::FormatSbieMessage(quint32 MsgCode, const QStringList& MsgData,
 		Message = theAPI->GetSbieMsgStr(MsgCode, m_LanguageId);
 		if (pLink) {
 			Message.insert(8, "</a>");
-			*pLink = MakeCrashMsgLink(MsgCode, MsgData, ProcessName);
+			*pLink = MakeLeafMsgLink(MsgCode, MsgData, ProcessName);
 			Message.prepend("<a href=\"" + *pLink + "\">");
 		}
 	}
@@ -2880,7 +2880,7 @@ QString CSandMan::FormatSbieMessage(quint32 MsgCode, const QStringList& MsgData,
 	return Message;
 }
 
-QString CSandMan::MakeCrashMsgLink(quint32 MsgCode, const QStringList& MsgData, QString ProcessName)
+QString CSandMan::MakeLeafMsgLink(quint32 MsgCode, const QStringList& MsgData, QString ProcessName)
 {
 	QUrl Url("https://sandboxie-plus.com/go.php");
 	QUrlQuery Query;
@@ -2962,7 +2962,7 @@ void CSandMan::OnLogSbieMessage(quint32 MsgCode, const QStringList& MsgData, qui
 			ProcessName = QString("PID: %1").arg(ProcessId);
 	}
 
-	m_MessageLog.append(SCrashMsg{ QDateTime::currentDateTime(), MsgCode, MsgData, ProcessName });
+	m_MessageLog.append(SLeafMsg{ QDateTime::currentDateTime(), MsgCode, MsgData, ProcessName });
 
 	if (m_pMessageLog) {
 		QString Link, Message = FormatSbieMessage(MsgCode, MsgData, ProcessName, &Link);
@@ -2995,7 +2995,7 @@ void CSandMan::ShowMessageBox(QWidget* Widget, QMessageBox::Icon Icon, const QSt
 
 void CSandMan::SaveMessageLog(QIODevice* pFile)
 {
-	foreach(const SCrashMsg& Msg, m_MessageLog)
+	foreach(const SLeafMsg& Msg, m_MessageLog)
 		pFile->write((Msg.TimeStamp.toString("dd.MM.yyyy hh:mm:ss.zzz")  + "\t" + FormatSbieMessage(Msg.MsgCode, Msg.MsgData, Msg.ProcessName)).toLatin1() + "\n");
 }
 
@@ -4313,11 +4313,11 @@ void CSandMan::OnAbout()
 			"Features: %3<br />"
 			"<br />"
 			"Installation: %1<br />"
-			"CrashDrv.sys: %4<br /> CrashSvc.exe: %5<br /> CrashDll.dll: %6<br />"
+			"LeafDrv.sys: %4<br /> LeafSvc.exe: %5<br /> LeafDll.dll: %6<br />"
 			"<br />"
 			"Icons from <a href=\"https://icons8.com\">icons8.com</a>"
 		).arg(SbiePath).arg(CertInfo).arg(theAPI->GetFeatureStr())
-		.arg(GetProductVersion(SbiePath + "\\CrashDrv.sys")).arg(GetProductVersion(SbiePath + "\\CrashSvc.exe")).arg(GetProductVersion(SbiePath + "\\CrashDll.dll"));
+		.arg(GetProductVersion(SbiePath + "\\LeafDrv.sys")).arg(GetProductVersion(SbiePath + "\\LeafSvc.exe")).arg(GetProductVersion(SbiePath + "\\LeafDll.dll"));
 
 		QMessageBox *msgBox = new QMessageBox(this);
 		msgBox->setAttribute(Qt::WA_DeleteOnClose);

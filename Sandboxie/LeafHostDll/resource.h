@@ -15,11 +15,17 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// stdafx.cpp : source file that includes just the standard includes
-// CrashHostDll.pch will be the pre-compiled header
-// stdafx.obj will contain the pre-compiled type information
+//{{NO_DEPENDENCIES}}
+// Microsoft Visual C++ generated include file.
+// Used by LeafHostDll.rc
 
-#include "stdafx.h"
-
-// TODO: reference any additional headers you need in STDAFX.H
-// and not in this file
+// Next default values for new objects
+// 
+#ifdef APSTUDIO_INVOKED
+#ifndef APSTUDIO_READONLY_SYMBOLS
+#define _APS_NEXT_RESOURCE_VALUE        101
+#define _APS_NEXT_COMMAND_VALUE         40001
+#define _APS_NEXT_CONTROL_VALUE         1001
+#define _APS_NEXT_SYMED_VALUE           101
+#endif
+#endif

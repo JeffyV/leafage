@@ -64,13 +64,13 @@ typedef struct _MONITOR_PID {
 //---------------------------------------------------------------------------
 
 
-extern const WCHAR *_CrashRpcSs;
+extern const WCHAR *_LeafRpcSs;
 extern const WCHAR *_msiexec;
 
-static const WCHAR *_CrashDcomLaunch = L"CrashDcomLaunch.exe";
-static const WCHAR *_CrashCrypto     = L"CrashCrypto.exe";
-static const WCHAR *_CrashBITS       = L"CrashBITS.exe";
-static const WCHAR *_CrashWUAU       = L"CrashWUAU.exe";
+static const WCHAR *_LeafDcomLaunch = L"LeafDcomLaunch.exe";
+static const WCHAR *_LeafCrypto     = L"LeafCrypto.exe";
+static const WCHAR *_LeafBITS       = L"LeafBITS.exe";
+static const WCHAR *_LeafWUAU       = L"LeafWUAU.exe";
 static const WCHAR *_wuauclt             = L"wuauclt.exe";
 static const WCHAR *_TrustedInstaller    = L"TrustedInstaller.exe";
 static const WCHAR *_tiworker            = L"tiworker.exe";
@@ -147,12 +147,12 @@ DWORD ProcessStartMonitor(void *arg) {
         EnterCriticalSection(&ProcessCritSec);
 
         ULONG pid_count = 0;
-        CrashApi_EnumProcessEx(NULL, FALSE, -1, NULL, &pid_count); // query count
+        LeafApi_EnumProcessEx(NULL, FALSE, -1, NULL, &pid_count); // query count
         pid_count += 128;
 
         ULONG* pids = HeapAlloc(
             GetProcessHeap(), HEAP_GENERATE_EXCEPTIONS, sizeof(ULONG) * pid_count);
-        CrashApi_EnumProcessEx(NULL, FALSE, -1, pids, &pid_count); // query pids
+        LeafApi_EnumProcessEx(NULL, FALSE, -1, pids, &pid_count); // query pids
 
         AddPid(pids, pid_count);
 
@@ -262,7 +262,7 @@ int DoLingerLeader(void)
 
         while (1)
         {
-            rc = CrashApi_QueryConfAsIs(
+            rc = LeafApi_QueryConfAsIs(
                 NULL, L"LingerProcess", linger_count,
                 image, sizeof(WCHAR) * 120);
             if (rc != 0)
@@ -271,28 +271,28 @@ int DoLingerLeader(void)
             Add_LL_Entry(lingers, &linger_count, image);
         }
 
-        if (CrashApi_QueryConfBool(NULL, L"LingerLeniency", TRUE)) {
+        if (LeafApi_QueryConfBool(NULL, L"LingerLeniency", TRUE)) {
 
             //
             // see which of the LingerProcess programs were already active
-            // before CrashRpcSs started.  they will not be considered
+            // before LeafRpcSs started.  they will not be considered
             // LingerProcess programs and will not be terminated
             //
 
             ULONG pid_count = 0;
-            CrashApi_EnumProcessEx(NULL, FALSE, -1, NULL, &pid_count); // query count
+            LeafApi_EnumProcessEx(NULL, FALSE, -1, NULL, &pid_count); // query count
             pid_count += 128;
 
             ULONG* pids = HeapAlloc(
                 GetProcessHeap(), HEAP_GENERATE_EXCEPTIONS, sizeof(ULONG) * pid_count);
-            CrashApi_EnumProcessEx(NULL, FALSE, -1, pids, &pid_count); // query pids
+            LeafApi_EnumProcessEx(NULL, FALSE, -1, pids, &pid_count); // query pids
 
             AddPid(pids, pid_count);
 
             for (i = 0; i < pid_count; ++i) {
 
                 pids_i = (HANDLE)(ULONG_PTR)pids[i];
-                CrashApi_QueryProcess(pids_i, NULL, image, NULL, NULL);
+                LeafApi_QueryProcess(pids_i, NULL, image, NULL, NULL);
 
                 for (j = 0; j < linger_count; ++j) {
                     if (_wcsicmp(lingers[j]->image, image) == 0) {
@@ -310,10 +310,10 @@ int DoLingerLeader(void)
         // the following processes was already active before we started
         //
 
-        Add_LL_Entry(lingers, &linger_count, _CrashDcomLaunch);
-        Add_LL_Entry(lingers, &linger_count, _CrashCrypto);
-        Add_LL_Entry(lingers, &linger_count, _CrashBITS);
-        Add_LL_Entry(lingers, &linger_count, _CrashWUAU);
+        Add_LL_Entry(lingers, &linger_count, _LeafDcomLaunch);
+        Add_LL_Entry(lingers, &linger_count, _LeafCrypto);
+        Add_LL_Entry(lingers, &linger_count, _LeafBITS);
+        Add_LL_Entry(lingers, &linger_count, _LeafWUAU);
         Add_LL_Entry(lingers, &linger_count, _wuauclt);
         Add_LL_Entry(lingers, &linger_count, _TrustedInstaller);
         Add_LL_Entry(lingers, &linger_count, _tiworker);
@@ -328,7 +328,7 @@ int DoLingerLeader(void)
 
         while (1) {
 
-            rc = CrashApi_QueryConfAsIs(
+            rc = LeafApi_QueryConfAsIs(
                 NULL, L"LeaderProcess", leader_count,
                 image, sizeof(WCHAR) * 120);
             if (rc != 0)
@@ -355,7 +355,7 @@ int DoLingerLeader(void)
 
         for (i = 0; ; ++i) {
 
-            rc = CrashApi_QueryConfAsIs(
+            rc = LeafApi_QueryConfAsIs(
                 NULL, L"StartService", i, image, sizeof(WCHAR) * 120);
             if (rc != 0)
                 break;
@@ -368,7 +368,7 @@ int DoLingerLeader(void)
 
         for (i = 0; ; ++i) {
 
-            rc = CrashApi_QueryConfAsIs(
+            rc = LeafApi_QueryConfAsIs(
                 NULL, L"StartProgram", i, buf1, buf_len - 16);
             if (rc != 0)
                 break;
@@ -396,12 +396,12 @@ int DoLingerLeader(void)
         WaitForSingleObject(heventRpcSs, INFINITE);
         EnterCriticalSection(&ProcessCritSec);
 
-        CrashApi_EnumProcessEx(NULL, FALSE, -1, NULL, &process_count); // query count
+        LeafApi_EnumProcessEx(NULL, FALSE, -1, NULL, &process_count); // query count
         process_count += 128;
 
         ULONG* pids = HeapAlloc(
             GetProcessHeap(), HEAP_GENERATE_EXCEPTIONS, sizeof(ULONG) * (process_count + 1)); // allocate one more for the -1 marker
-        CrashApi_EnumProcessEx(NULL, FALSE, -1, pids, &process_count); // query pids
+        LeafApi_EnumProcessEx(NULL, FALSE, -1, pids, &process_count); // query pids
         pids[process_count] = -1; // set the end marker
 
         //
@@ -415,9 +415,9 @@ int DoLingerLeader(void)
             // then we do not treat the process as lingering.  except:
             //
             // - if the process is running as LocalSystem, it was probably
-            // spawned using Start.exe by CrashSvc::ServiceServer.
+            // spawned using Start.exe by LeafSvc::ServiceServer.
             //
-            // - if the process is CrashCrypto, which can get invoked
+            // - if the process is LeafCrypto, which can get invoked
             // by Start.exe in some cases
             //
 
@@ -427,8 +427,8 @@ int DoLingerLeader(void)
             pids_i = (HANDLE)(ULONG_PTR)pids[i];
             image[0] = L'\0';
 
-            if (0 == CrashApi_QueryProcess(pids_i, NULL, image, NULL, NULL)
-                && _wcsicmp(image, _CrashCrypto) != 0) {
+            if (0 == LeafApi_QueryProcess(pids_i, NULL, image, NULL, NULL)
+                && _wcsicmp(image, _LeafCrypto) != 0) {
 
                 //
                 // check if this is a local system process 
@@ -444,7 +444,7 @@ int DoLingerLeader(void)
                 //}
                 //
                 //if (!is_local_system_sid) 
-                if (CrashApi_QueryConfBool(NULL, L"LingerLeniency", TRUE))
+                if (LeafApi_QueryConfBool(NULL, L"LingerLeniency", TRUE))
                 {
                     //
                     // then check if the process was started explicitly
@@ -460,7 +460,7 @@ int DoLingerLeader(void)
                     //
 
                     ULONG64 ProcessFlags =
-                                CrashApi_QueryProcessInfo(pids_i, 0);
+                                LeafApi_QueryProcessInfo(pids_i, 0);
 
                     if (ProcessFlags & (SBIE_FLAG_FORCED_PROCESS        |
                                         SBIE_FLAG_PARENT_WAS_START_EXE  |
@@ -475,7 +475,7 @@ int DoLingerLeader(void)
             // ignore our own process
             //
 
-            if (_wcsicmp(image, _CrashRpcSs) == 0)
+            if (_wcsicmp(image, _LeafRpcSs) == 0)
                 continue;
 
             //
@@ -538,7 +538,7 @@ int DoLingerLeader(void)
         // don't terminate if a lingering process has an open window
         //
 
-        if (terminate_and_stop && CrashApi_QueryConfBool(NULL, L"LingerExemptWnds", TRUE)) {
+        if (terminate_and_stop && LeafApi_QueryConfBool(NULL, L"LingerExemptWnds", TRUE)) {
 
             //
             // if a process in the PID list has a window LingerEnumWindowsProc will return FALSE
@@ -554,10 +554,10 @@ int DoLingerLeader(void)
         // don't terminate if a lingering process has just started recently
         //
 
-        if (terminate_and_stop && CrashApi_QueryConfBool(NULL, L"LingerLeniency", TRUE)) {
+        if (terminate_and_stop && LeafApi_QueryConfBool(NULL, L"LingerLeniency", TRUE)) {
             for (i = 0; i < process_count; ++i) {
                 HANDLE hProcess = NULL;
-                ULONG64 ProcessFlags = CrashApi_QueryProcessInfo(
+                ULONG64 ProcessFlags = LeafApi_QueryProcessInfo(
                                 (HANDLE) (ULONG_PTR) pids[i], 0);
                 if (! (ProcessFlags & SBIE_FLAG_IMAGE_FROM_SBIE_DIR)) {
                     hProcess = OpenProcess(

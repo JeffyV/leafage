@@ -226,7 +226,7 @@ _FX BOOLEAN Gui_InitEnum(HMODULE module)
     }
 
 	// NoSbieDesk BEGIN
-    if (Dll_CompartmentMode || CrashApi_QueryConfBool(NULL, L"NoSandboxieDesktop", FALSE))
+    if (Dll_CompartmentMode || LeafApi_QueryConfBool(NULL, L"NoSandboxieDesktop", FALSE))
         return TRUE;
 	// NoSbieDesk END
 
@@ -234,7 +234,7 @@ _FX BOOLEAN Gui_InitEnum(HMODULE module)
     // hook desktop APIs
     //
 
-    if (CrashApi_QueryConfBool(NULL, L"OpenWndStation", FALSE))
+    if (LeafApi_QueryConfBool(NULL, L"OpenWndStation", FALSE))
         return TRUE;
 
     SBIEDLL_HOOK_GUI(EnumDesktopsW);
@@ -358,7 +358,7 @@ _FX BOOLEAN Gui_HookQueryWindow(HMODULE module)
 #endif
 
     if (!ok ){
-        CrashApi_Log(2303, L"%S (0)", _ProcName);
+        LeafApi_Log(2303, L"%S (0)", _ProcName);
     }
     __sys_NtUserQueryWindow = (P_NtUserQueryWindow)code;
     SBIEDLL_HOOK_GUI(NtUserQueryWindow);
@@ -398,7 +398,7 @@ _FX ULONG_PTR Gui_NtUserQueryWindow(HWND hWnd, ULONG_PTR type)
 
     //
     // if this isn't type 0,1,2 or the window is not accessible the process,
-    // take the indirect route through CrashSvc GUI Proxy
+    // take the indirect route through LeafSvc GUI Proxy
     //
 
     req.msgid = GUI_QUERY_WINDOW;
@@ -566,7 +566,7 @@ _FX HDESK Gui_OpenDesktopW(
     void *lpszDesktop, ULONG dwFlags, BOOL fInherit,
     ACCESS_MASK dwDesiredAccess)
 {
-    CrashApi_Log(2205, L"OpenDesktop");
+    LeafApi_Log(2205, L"OpenDesktop");
     return CreateEvent(NULL, FALSE, FALSE, NULL);
 }
 
@@ -580,7 +580,7 @@ _FX HDESK Gui_OpenDesktopA(
     void *lpszDesktop, ULONG dwFlags, BOOL fInherit,
     ACCESS_MASK dwDesiredAccess)
 {
-    CrashApi_Log(2205, L"OpenDesktop");
+    LeafApi_Log(2205, L"OpenDesktop");
     return CreateEvent(NULL, FALSE, FALSE, NULL);
 }
 
@@ -601,7 +601,7 @@ _FX HANDLE Gui_CreateWindowStationW (void *lpwinsta, DWORD dwFlags, ACCESS_MASK 
     if(Gui_Dummy_WinSta && (Config_GetSettingsForImageName_bool(L"UseSbieWndStation", TRUE) || (Dll_ImageType == DLL_IMAGE_GOOGLE_CHROME) || (Dll_ImageType == DLL_IMAGE_MOZILLA_FIREFOX)))
         return Gui_Dummy_WinSta;
 
-    CrashApi_Log(2205, L"CreateWindowStation");
+    LeafApi_Log(2205, L"CreateWindowStation");
     return 0;
 }
 
@@ -623,7 +623,7 @@ _FX HANDLE Gui_CreateWindowStationA (void *lpwinsta, DWORD dwFlags, ACCESS_MASK 
     if(Gui_Dummy_WinSta && (Config_GetSettingsForImageName_bool(L"UseSbieWndStation", TRUE) || (Dll_ImageType == DLL_IMAGE_GOOGLE_CHROME) || (Dll_ImageType == DLL_IMAGE_MOZILLA_FIREFOX)))
         return Gui_Dummy_WinSta;
 
-    CrashApi_Log(2205, L"CreateWindowStation");
+    LeafApi_Log(2205, L"CreateWindowStation");
     return 0;
 }
 
@@ -677,7 +677,7 @@ _FX HDESK Gui_CreateDesktopW(
     if (rc)
         return rc;
 
-    CrashApi_Log(2205, L"CreateDesktop");
+    LeafApi_Log(2205, L"CreateDesktop");
     return CreateEvent(NULL, FALSE, FALSE, NULL);
 }
 
@@ -724,7 +724,7 @@ _FX HDESK Gui_CreateDesktopA(
     if (rc)
         return rc;
 
-    CrashApi_Log(2205, L"CreateDesktop");
+    LeafApi_Log(2205, L"CreateDesktop");
     return CreateEvent(NULL, FALSE, FALSE, NULL);
 }
 
@@ -1054,7 +1054,7 @@ _FX void Gui_MonitorW(const WCHAR *clsnm, ULONG monflag, HWND hwnd)
         Sbie_snwprintf(text, 130, L"#%d", PtrToUlong(clsnm) & 0xFFFF);
     if ((! hwnd) && (! monflag))
         monflag |= MONITOR_DENY;
-    CrashApi_MonitorPut2(MONITOR_WINCLASS | monflag, text, FALSE);
+    LeafApi_MonitorPut2(MONITOR_WINCLASS | monflag, text, FALSE);
 }
 
 

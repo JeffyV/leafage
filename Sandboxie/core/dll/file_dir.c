@@ -1740,7 +1740,7 @@ _FX NTSTATUS File_GetMergedInformation(
         //if (ptr_info->FileId.QuadPart == -1) {
         //    WCHAR msg[1024];
         //    Sbie_snwprintf(msg, 1024, L"File_MergeDummy simulate %s", ptr_info->FileName);
-        //    CrashApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, msg);
+        //    LeafApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, msg);
         //}
 
         if (File_Delete_v2) {
@@ -3446,7 +3446,7 @@ _FX NTSTATUS File_SetReparsePoint(
 
     /*
     //
-    // send request to CrashSvc
+    // send request to LeafSvc
     //
 
     if (SourcePath && TargetPath) {
@@ -3558,14 +3558,14 @@ _FX void File_CreateBaseFolders()
 
     //File_CreateBoxedPath(File_SysVolume);
     // 
-    //if (CrashApi_QueryConfBool(NULL, L"SeparateUserFolders", TRUE)) {
+    //if (LeafApi_QueryConfBool(NULL, L"SeparateUserFolders", TRUE)) {
     //    File_CreateBoxedPath(File_AllUsers);
     //    File_CreateBoxedPath(File_CurrentUser);
     //}
 
     for (ULONG index = 0; ; ++index) {
 
-        status = CrashApi_QueryConf(
+        status = LeafApi_QueryConf(
             L"TemplateDefaultFolders", L"DefaultFolder", index | CONF_GET_NO_GLOBAL, conf_buf, sizeof(conf_buf) - 16 * sizeof(WCHAR));
         if (!NT_SUCCESS(status))
             break;
@@ -3575,7 +3575,7 @@ _FX void File_CreateBaseFolders()
 
     for (ULONG index = 0; ; ++index) {
 
-        status = CrashApi_QueryConf(
+        status = LeafApi_QueryConf(
             NULL, L"DefaultFolder", index | CONF_GET_NO_EXPAND, conf_buf, sizeof(conf_buf) - 16 * sizeof(WCHAR));
         if (!NT_SUCCESS(status))
             break;

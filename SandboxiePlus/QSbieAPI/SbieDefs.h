@@ -5,20 +5,20 @@
 #define REQUEST_LEN     4096
 #define CONF_LINE_LEN   2000
 
-#define SBIESVC_PORT	L"\\RPC Control\\CrashSvcPort"
+#define SBIESVC_PORT	L"\\RPC Control\\LeafSvcPort"
 
 //#define SANDBOXIE_INI   L"Sandboxie.ini"
 
-#define SBIEDRV         L"CrashDrv"
-#define SBIEDRV_SYS     L"CrashDrv.sys"
+#define SBIEDRV         L"LeafDrv"
+#define SBIEDRV_SYS     L"LeafDrv.sys"
 
-#define SBIESVC         L"CrashSvc"
-#define SBIESVC_EXE     L"CrashSvc.exe"
+#define SBIESVC         L"LeafSvc"
+#define SBIESVC_EXE     L"LeafSvc.exe"
 
 #define SBIELDR_EXE     L"SbieLdr.exe"
 
 #define SBIESTART_EXE   L"Start.exe"
 
-#define SBIEMSG_DLL     L"CrashMsg.dll"
+#define SBIEMSG_DLL     L"LeafMsg.dll"
 
 #define MAX_REQUEST_LENGTH      (2048 * 1024)

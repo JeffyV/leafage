@@ -84,7 +84,7 @@ typedef NTSTATUS(*P_Api_Function)(PROCESS *, ULONG64 *parms);
 void Api_SetFunction(ULONG func_code, P_Api_Function func_ptr);
 
 //
-// Resets the recorded information for CrashSvc process, when it terminates
+// Resets the recorded information for LeafSvc process, when it terminates
 //
 
 void Api_ResetServiceProcess(void);

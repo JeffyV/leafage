@@ -184,7 +184,7 @@ void CPopUpWindow::AddLogMessage(quint32 MsgCode, const QStringList& MsgData, qu
 	}
 
 	QString Message = theGUI->FormatSbieMessage(MsgCode, MsgData, ProcessName);
-	QString Link = theGUI->MakeCrashMsgLink(MsgCode, MsgData, ProcessName);
+	QString Link = theGUI->MakeLeafMsgLink(MsgCode, MsgData, ProcessName);
 
 	int RowCounter = ui.table->rowCount();
 	if (RowCounter > 0) {

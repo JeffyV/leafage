@@ -296,7 +296,7 @@ _FX void Gui_Check_OpenWinClass(PROCESS *proc)
 // Gui_CloseClipboard in file core/dll/gui.c.
 //
 // unfortunately the structure of the internal clipboard item structure
-// varies randomly between versions of Windows, so we have CrashSvc put
+// varies randomly between versions of Windows, so we have LeafSvc put
 // some data on the clipboard and make a special request which allows us
 // to look at the clipboard contents and figure it out.
 //
@@ -422,7 +422,7 @@ _FX void Gui_InitClipboard(void)
     //
     // now we need to scan the data area to see which ULONG contains
     // the integrity level number.  it should be 0x4000 because we are
-    // called from CrashSvc.  we make sure it is 0x4000 in all four
+    // called from LeafSvc.  we make sure it is 0x4000 in all four
     // entries, then we can assume we have the right ULONG
     //
 
@@ -505,7 +505,7 @@ _FX NTSTATUS Gui_Api_Clipboard(PROCESS *proc, ULONG64 *parms)
         return STATUS_NOT_SUPPORTED;
 
     //
-    // make sure we are called from an CrashSvc process, which would be either
+    // make sure we are called from an LeafSvc process, which would be either
     // the main process (for the init call in core/svc/DriverAssistStart.cpp)
     // or the GUI proxy process (for the call from core/svc/GuiServer.cpp)
     //

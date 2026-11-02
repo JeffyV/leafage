@@ -47,7 +47,7 @@
 // sake of consistenty, this code is used on Windows XP as well.
 //
 // the workaround includes one dummy proxy window in the sandbox and
-// a second, smarter proxy window in the CrashSvc GUI Proxy process.
+// a second, smarter proxy window in the LeafSvc GUI Proxy process.
 //
 // the sequence of events for a DDE client out of the sandbox:
 //
@@ -71,17 +71,17 @@
 //      uses the TLS data saved by Gui_DDE_INITIATE_Received to replace
 //      the target HWND on the message being sent
 //
-// 3.   the request to send WM_DDE_ACK goes through CrashSvc GUI Proxy,
+// 3.   the request to send WM_DDE_ACK goes through LeafSvc GUI Proxy,
 //      and GuiServer::SendPostMessageSlave in core/svc/GuiServer.cpp
 //      intercepts that and instead creates a proxy and a proxy window
 //      in a work thread (see DdeProxyThreadSlave there).
 //
-//      that proxy window in CrashSvc will actually send the WM_DDE_ACK
+//      that proxy window in LeafSvc will actually send the WM_DDE_ACK
 //      to the client, and will present itself as the server for the
 //      DDE conversation, so it can receive any posted WM_DDE_EXECUTE
 //      messages without IL limitations (per the introduction above).
 //
-// 4.   the proxy window in CrashSvc GUI Proxy receives the WM_DDE_EXECUTE
+// 4.   the proxy window in LeafSvc GUI Proxy receives the WM_DDE_EXECUTE
 //      message, extracts the command text given in the message LPARAM,
 //      and sends a WM_COPYDATA to the server window in the sandbox.
 //      the Gui_DDE_COPYDATA_Received function gets this message through
@@ -93,8 +93,8 @@
 //
 // 5.   after handling the WM_DDE_EXECUTE, the server posts a WM_DDE_ACK
 //      message to the client window of the conversation, which is really
-//      the proxy window in CrashSvc GUI Proxy.  the message is permitted
-//      by CrashSvc because it always allows posting WM_DDE_ACK messages
+//      the proxy window in LeafSvc GUI Proxy.  the message is permitted
+//      by LeafSvc because it always allows posting WM_DDE_ACK messages
 //      (see GuiServer::AllowSendPostMessage).  in response, the proxy
 //      window posts a WM_DDE_ACK to the real client of the conversation.
 //
@@ -340,7 +340,7 @@ _FX BOOLEAN Gui_DDE_COPYDATA_Received(
     // a WM_COPYDATA message is received
     //
     // the WPARAM should specify the proxy window from DdeProxyThreadSlave
-    // in CrashSvc GUI Proxy, which we can check by looking for a special
+    // in LeafSvc GUI Proxy, which we can check by looking for a special
     // property on the window.
     //
     // if the calling thread has gui_dde_client_hwnd is -1, indicating an
@@ -556,7 +556,7 @@ _FX BOOLEAN Gui_DDE_Post_In_Box(
 
     } else {
 
-        CrashApi_Log(2205, L"DDE %08X", uMsg);
+        LeafApi_Log(2205, L"DDE %08X", uMsg);
         SetLastError(ERROR_INVALID_PARAMETER);
         return FALSE;
     }
@@ -643,6 +643,6 @@ _FX LRESULT Gui_DDE_DATA_Posting(HWND hWnd, WPARAM wParam, LPARAM lParam)
     }
 
     if (! result)
-        CrashApi_Log(2205, L"DDE DATA");
+        LeafApi_Log(2205, L"DDE DATA");
     return result;
 }

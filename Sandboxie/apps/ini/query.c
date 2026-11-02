@@ -48,13 +48,13 @@ void DoListSections(void)
     while (1) {
 
         WCHAR section_name[BOXNAME_COUNT];
-        index = CrashApi_EnumBoxesEx(
+        index = LeafApi_EnumBoxesEx(
                     index, section_name, TRUE);
         if (index == -1)
             break;
 
         if (boxes) {
-            ULONG rc = CrashApi_IsBoxEnabled(section_name);
+            ULONG rc = LeafApi_IsBoxEnabled(section_name);
             if (rc != 0)
                 continue;
         }
@@ -76,7 +76,7 @@ void DoListSettings(void)
 
     while (1) {
 
-        ULONG status = CrashApi_QueryConfAsIs(
+        ULONG status = LeafApi_QueryConfAsIs(
             CmdVerb(1), NULL, setting_idx | CONF_GET_NO_TEMPLS,
             setting_name, sizeof(WCHAR) * 66);
 
@@ -108,7 +108,7 @@ void DoQuerySetting(void)
 
     while (1) {
 
-        ULONG status = CrashApi_QueryConf(
+        ULONG status = LeafApi_QueryConf(
             CmdVerb(1), CmdVerb(2), index, value, sizeof(WCHAR) * 510);
 
         if (status != 0)

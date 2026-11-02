@@ -35,7 +35,7 @@ class CSbieIni
 
     CSbieIni();
 
-    BOOL CallCrashSvc(
+    BOOL CallLeafSvc(
         ULONG msgid,
         const CString &Section, const CString &Setting,
         const CString &Value);

@@ -132,10 +132,10 @@ _FX BOOLEAN SysInfo_Init(void)
     }
 
     extern BOOLEAN Gui_OpenAllWinClasses;
-    SysInfo_UseSbieJob = !Gui_OpenAllWinClasses && !CrashApi_QueryConfBool(NULL, L"NoAddProcessToJob", FALSE);
+    SysInfo_UseSbieJob = !Gui_OpenAllWinClasses && !LeafApi_QueryConfBool(NULL, L"NoAddProcessToJob", FALSE);
 
     if (Dll_OsBuild >= 8400)
-        SysInfo_CanUseJobs = CrashApi_QueryConfBool(NULL, L"AllowBoxedJobs", FALSE);
+        SysInfo_CanUseJobs = LeafApi_QueryConfBool(NULL, L"AllowBoxedJobs", FALSE);
 
     SBIEDLL_HOOK(SysInfo_, NtCreateJobObject);
     SBIEDLL_HOOK(SysInfo_, NtOpenJobObject);
@@ -212,7 +212,7 @@ _FX NTSTATUS SysInfo_NtQuerySystemInformation(
 {
     NTSTATUS status;
 
-    if ((SystemInformationClass == SystemFirmwareTableInformation) && CrashApi_QueryConfBool(NULL, L"HideFirmwareInfo", FALSE)) {
+    if ((SystemInformationClass == SystemFirmwareTableInformation) && LeafApi_QueryConfBool(NULL, L"HideFirmwareInfo", FALSE)) {
 
         PSYSTEM_FIRMWARE_TABLE_INFORMATION firmwareTableInfo = (PSYSTEM_FIRMWARE_TABLE_INFORMATION)Buffer;
 
@@ -347,9 +347,9 @@ _FX void SysInfo_DiscardProcesses(SYSTEM_PROCESS_INFORMATION *buf)
     SYSTEM_PROCESS_INFORMATION *next;
     WCHAR boxname[BOXNAME_COUNT];
 
-	BOOL hideOther = CrashApi_QueryConfBool(NULL, L"HideOtherBoxes", TRUE);
-    BOOL hideNonSys = CrashApi_QueryConfBool(NULL, L"HideNonSystemProcesses", FALSE);
-    BOOL hideSbie = CrashApi_QueryConfBool(NULL, L"HideSbieProcesses", FALSE);
+	BOOL hideOther = LeafApi_QueryConfBool(NULL, L"HideOtherBoxes", TRUE);
+    BOOL hideNonSys = LeafApi_QueryConfBool(NULL, L"HideNonSystemProcesses", FALSE);
+    BOOL hideSbie = LeafApi_QueryConfBool(NULL, L"HideSbieProcesses", FALSE);
 
 	WCHAR* hiddenProcesses = NULL;
 	WCHAR* hiddenProcessesPtr = NULL;
@@ -360,7 +360,7 @@ _FX void SysInfo_DiscardProcesses(SYSTEM_PROCESS_INFORMATION *buf)
     ULONG tempSession = 0;
 
 	for (ULONG index = 0; ; ++index) {
-		NTSTATUS status = CrashApi_QueryConfAsIs(NULL, L"HideHostProcess", index, hiddenProcess, 108 * sizeof(WCHAR));
+		NTSTATUS status = LeafApi_QueryConfAsIs(NULL, L"HideHostProcess", index, hiddenProcess, 108 * sizeof(WCHAR));
 		if (NT_SUCCESS(status)) {
 			if (hiddenProcesses == NULL) {
 				hiddenProcesses = (WCHAR*)HeapAlloc(GetProcessHeap(), 0, hiddenProcessesLen * sizeof(WCHAR));
@@ -370,7 +370,7 @@ _FX void SysInfo_DiscardProcesses(SYSTEM_PROCESS_INFORMATION *buf)
 			}
 			ULONG nameLen = wcslen(hiddenProcess) + 1; // include terminating 0
 			if ((hiddenProcessesPtr - hiddenProcesses) + nameLen + 1 > hiddenProcessesLen) {
-				CrashApi_Log(2310, L", 'HideProcess'"); // todo add custom message
+				LeafApi_Log(2310, L", 'HideProcess'"); // todo add custom message
 				break;
 			}
 			wmemcpy(hiddenProcessesPtr, hiddenProcess, nameLen);
@@ -399,7 +399,7 @@ _FX void SysInfo_DiscardProcesses(SYSTEM_PROCESS_INFORMATION *buf)
 			else			imagename = next->ImageName.Buffer;
         }
 
-		CrashApi_QueryProcess(next->UniqueProcessId, boxname, NULL, tempSid, &tempSession);
+		LeafApi_QueryProcess(next->UniqueProcessId, boxname, NULL, tempSid, &tempSession);
 		BOOL hideProcess = FALSE;
         if (hideNonSys && !*boxname
           && _wcsnicmp(tempSid, L"S-1-5-18", 8) != 0
@@ -488,7 +488,7 @@ static NTSTATUS SysInfo_NtDeleteWnfStateData(
     ULONG_PTR UnknownParameter1, ULONG_PTR UnknownParameter2)
 {
     if (Dll_ImageType != DLL_IMAGE_SANDBOXIE_RPCSS)
-        CrashApi_Log(2205, L"NtDeleteWnfStateData (%S)", Dll_ImageName);
+        LeafApi_Log(2205, L"NtDeleteWnfStateData (%S)", Dll_ImageName);
     return STATUS_SUCCESS;
 }
 

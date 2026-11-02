@@ -588,9 +588,9 @@ bool CheckDropRights(const WCHAR *BoxName, const WCHAR *ExeName)
 {
     // Allow setting of DropAdminRights to suppress UAC prompts / elevation from the sandboxed realm
     // NOTE: use the SBIE_FLAG_APP_COMPARTMENT !!!!
-    //if (CrashApi_QueryConfBool(BoxName, L"NoSecurityIsolation", FALSE))
+    //if (LeafApi_QueryConfBool(BoxName, L"NoSecurityIsolation", FALSE))
     //    return false; // if we are not swapping the token we can not drop admin rights so keep this consistent
-    if (CrashApi_QueryConfBool(BoxName, L"UseSecurityMode", FALSE))
+    if (LeafApi_QueryConfBool(BoxName, L"UseSecurityMode", FALSE))
         return true;
     if (SbieDll_GetSettingsForName_bool(BoxName, ExeName, L"DropAdminRights", FALSE))
         return true;
@@ -685,14 +685,14 @@ bool IsHostPath(HANDLE idProcess, WCHAR* dos_path)
     // get the box file path for the calling process
     //
 
-    if (!NT_SUCCESS(CrashApi_QueryProcessPath(idProcess, NULL, NULL, NULL, &len, NULL, NULL)))
+    if (!NT_SUCCESS(LeafApi_QueryProcessPath(idProcess, NULL, NULL, NULL, &len, NULL, NULL)))
         goto finish;
 
     sandbox_path = (WCHAR*)HeapAlloc(GetProcessHeap(), 0, len + 8 * sizeof(WCHAR));
     if (!sandbox_path)
         goto finish;
 
-    if (!NT_SUCCESS(CrashApi_QueryProcessPath(idProcess, sandbox_path, NULL, NULL, &len, NULL, NULL)))
+    if (!NT_SUCCESS(LeafApi_QueryProcessPath(idProcess, sandbox_path, NULL, NULL, &len, NULL, NULL)))
         goto finish;
 
     //

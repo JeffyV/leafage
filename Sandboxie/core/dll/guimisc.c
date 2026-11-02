@@ -187,9 +187,9 @@ _FX BOOLEAN Gui_InitMisc(HMODULE module)
 {
     if (! Gui_OpenAllWinClasses) {
 
-        Gui_BlockInterferenceControl = CrashApi_QueryConfBool(NULL, L"BlockInterferenceControl", FALSE);
+        Gui_BlockInterferenceControl = LeafApi_QueryConfBool(NULL, L"BlockInterferenceControl", FALSE);
         if(Gui_BlockInterferenceControl)
-            Gui_DontAllowCoverTaskbar = !CrashApi_QueryConfBool(NULL, L"AllowCoverTaskbar", FALSE);
+            Gui_DontAllowCoverTaskbar = !LeafApi_QueryConfBool(NULL, L"AllowCoverTaskbar", FALSE);
         
         SBIEDLL_HOOK_GUI(SetParent);
         if (Gui_UseProxyService) {
@@ -293,12 +293,12 @@ _FX BOOLEAN Gui_InitMisc(HMODULE module)
 		Ldr_GetProcAddrNew(DllName_user32, L"GetThreadDpiAwarenessContext","GetThreadDpiAwarenessContext");
 
 
-    if (CrashApi_QueryConfBool(NULL, L"BlockInterferePower", FALSE)) {
+    if (LeafApi_QueryConfBool(NULL, L"BlockInterferePower", FALSE)) {
 
         SBIEDLL_HOOK_GUI(ShutdownBlockReasonCreate);
     }
 	
-	if (CrashApi_QueryConfBool(NULL, L"UseChangeSpeed", FALSE)) 	{
+	if (LeafApi_QueryConfBool(NULL, L"UseChangeSpeed", FALSE)) 	{
 		P_SetTimer SetTimer = Ldr_GetProcAddrNew(DllName_user32, L"SetTimer", "SetTimer");
         if (SetTimer) {
             SBIEDLL_HOOK(Gui_, SetTimer);
@@ -376,7 +376,7 @@ _FX HWND Gui_SetParent(HWND hWndChild, HWND hWndNewParent)
         if (hWndNewParent == __sys_GetDesktopWindow())
             hWndNewParent = NULL;
         else {
-            //CrashApi_Log(2205, L"SetParent");
+            //LeafApi_Log(2205, L"SetParent");
             SetLastError(ERROR_INVALID_WINDOW_HANDLE);
             return NULL;
         }
@@ -512,7 +512,7 @@ _FX HCURSOR Gui_SetCursor(HCURSOR hCursor)
 
         //
         // the cursor handle is probably not yet accessible to our
-        // job object so ask CrashSvc GUI Proxy server to grant us access
+        // job object so ask LeafSvc GUI Proxy server to grant us access
         //
 
         if (Gui_GrantHandle((ULONG_PTR)hCursor)) {
@@ -537,7 +537,7 @@ _FX BOOL Gui_GetIconInfo(HICON hIcon, PICONINFO piconinfo)
 
         //
         // the icon handle is probably not yet accessible to our
-        // job object so ask CrashSvc GUI Proxy server to grant us access
+        // job object so ask LeafSvc GUI Proxy server to grant us access
         //
 
         if (Gui_GrantHandle((ULONG_PTR)hIcon)) {
@@ -769,7 +769,7 @@ _FX BOOL Gui_GetUserObjectInformationW(
 // data to the clipboard with integrity level zero.  this prevents a
 // process outside the sandbox from pasting (perhaps a bug in win32k).
 //
-// to work around both issues we use the CrashSvc GUI Proxy.
+// to work around both issues we use the LeafSvc GUI Proxy.
 //
 //---------------------------------------------------------------------------
 
@@ -808,7 +808,7 @@ _FX BOOL Gui_CloseClipboard(void)
     // (registered via SetClipboardViewer or AddClipboardFormatListener),
     // in which case we have a race condition:  do we get to fix the
     // clipboard before the viewer gets the clipboard notification?
-    // CrashSvc is an "above normal" priority process, so we rely on that.
+    // LeafSvc is an "above normal" priority process, so we rely on that.
     //
 
     BOOL ok = __sys_CloseClipboard();
@@ -867,7 +867,7 @@ _FX BOOL Gui_CloseClipboard(void)
 
 _FX HANDLE Gui_SetClipboardData(UINT uFormat, HANDLE hMem)
 {
-    if (!CrashApi_QueryConfBool(NULL, L"OpenClipboard", TRUE))
+    if (!LeafApi_QueryConfBool(NULL, L"OpenClipboard", TRUE))
         return NULL;
 
     return __sys_SetClipboardData(uFormat, hMem);
@@ -881,7 +881,7 @@ _FX HANDLE Gui_SetClipboardData(UINT uFormat, HANDLE hMem)
 
 _FX BOOL Gui_EmptyClipboard()
 {
-    if (!CrashApi_QueryConfBool(NULL, L"OpenClipboard", TRUE))
+    if (!LeafApi_QueryConfBool(NULL, L"OpenClipboard", TRUE))
         return FALSE;
 
     return __sys_EmptyClipboard();
@@ -911,11 +911,11 @@ _FX HANDLE Gui_GetClipboardData(UINT uFormat)
     // access to handles outside the job, and the clipboard data belongs
     // to a process outside the job
     //
-    // in either case, we go to CrashSvc GUI Proxy Server to ask for the
+    // in either case, we go to LeafSvc GUI Proxy Server to ask for the
     // clipboard data
     //
 
-    if (!CrashApi_QueryConfBool(NULL, L"OpenClipboard", TRUE))
+    if (!LeafApi_QueryConfBool(NULL, L"OpenClipboard", TRUE))
         return NULL;
 
     hGlobalRet = __sys_GetClipboardData(uFormat);
@@ -927,7 +927,7 @@ _FX HANDLE Gui_GetClipboardData(UINT uFormat)
 
     //
     // we have to close the clipboard before another process can access it
-    // (the other process being the CrashSvc GuiProxy process)
+    // (the other process being the LeafSvc GuiProxy process)
     //
     // if we can't close the clipboard (which means the thread has not
     // actually opened the clipboard), then abort
@@ -947,7 +947,7 @@ _FX HANDLE Gui_GetClipboardData(UINT uFormat)
     }
 
     //
-    // ask CrashSvc to call GetClipboardData for us
+    // ask LeafSvc to call GetClipboardData for us
     //
 
     req.msgid = GUI_GET_CLIPBOARD_DATA;
@@ -1096,7 +1096,7 @@ _FX void Gui_GetClipboardData_BMP(void *buf, ULONG fmt)
 {
     //
     // GetClipboardData(CF_BITMAP) returns an HBITMAP that is valid in the
-    // context of CrashSvc.  GuiServer::GetClipboardBitmapSlave already sent
+    // context of LeafSvc.  GuiServer::GetClipboardBitmapSlave already sent
     // us the bitmap data in the reply buffer, we just need to turn it into
     // a local HBITMAP handle
     //
@@ -1109,7 +1109,7 @@ _FX void Gui_GetClipboardData_BMP(void *buf, ULONG fmt)
     HBITMAP hBitmap = NULL;
 
     if (fmt != CF_BITMAP)
-        CrashApi_Log(2205, L"Clipboard Bitmap (fmt %04X)", fmt);
+        LeafApi_Log(2205, L"Clipboard Bitmap (fmt %04X)", fmt);
 
     else {
         BITMAPINFO *pBitmapInfo = (BITMAPINFO *)buf;
@@ -1156,7 +1156,7 @@ _FX void Gui_GetClipboardData_EnhMF(void *buf, ULONG sz, ULONG fmt)
     HENHMETAFILE hEnhMetaFile;
 
     if (fmt != CF_ENHMETAFILE) {
-        CrashApi_Log(2205, L"Clipboard Enhanced MetaFile (fmt %04X sz %d)", fmt, sz);
+        LeafApi_Log(2205, L"Clipboard Enhanced MetaFile (fmt %04X sz %d)", fmt, sz);
         return;
     }
 
@@ -1182,16 +1182,16 @@ _FX void Gui_GetClipboardData_MF(void *buf, ULONG sz, ULONG fmt)
 
     //
     // GetClipboardData(CF_METAFILEPICT) returns a structure which contains
-    // an HMETAFILE handle that is valid in the context of CrashSvc, so we
-    // make a secondary call to CrashSvc to get the data bytes so that we can
+    // an HMETAFILE handle that is valid in the context of LeafSvc, so we
+    // make a secondary call to LeafSvc to get the data bytes so that we can
     // create a local HMETAFILE handle
     //
 
-    if (!CrashApi_QueryConfBool(NULL, L"OpenClipboard", TRUE))
+    if (!LeafApi_QueryConfBool(NULL, L"OpenClipboard", TRUE))
         return;
 
     if ((fmt != CF_METAFILEPICT) || (sz != sizeof(METAFILEPICT))) {
-        CrashApi_Log(2205, L"Clipboard MetaFile (fmt %04X sz %d)", fmt, sz);
+        LeafApi_Log(2205, L"Clipboard MetaFile (fmt %04X sz %d)", fmt, sz);
         return;
     }
 
@@ -1260,7 +1260,7 @@ _FX LONG Gui_ChangeDisplaySettingsEx_impl(
     GUI_CHANGE_DISPLAY_SETTINGS_RPL* rpl;
 
     if ((dwflags & ~(CDS_UNKNOWNFLAG | CDS_RESET | CDS_FULLSCREEN | CDS_TEST)) || lParam || hwnd) {
-        CrashApi_Log(2205, L"ChangeDisplaySettingsEx %08X", dwflags);
+        LeafApi_Log(2205, L"ChangeDisplaySettingsEx %08X", dwflags);
         SetLastError(ERROR_ACCESS_DENIED);
         return DISP_CHANGE_FAILED;
     }
@@ -1472,7 +1472,7 @@ static P_ImmCreateContext       __sys_ImmCreateContext      = NULL;
 _FX BOOLEAN Gui_Init_IMM32(HMODULE module)
 {
     // NoSbieDesk BEGIN
-    if (Dll_CompartmentMode || CrashApi_QueryConfBool(NULL, L"NoSandboxieDesktop", FALSE))
+    if (Dll_CompartmentMode || LeafApi_QueryConfBool(NULL, L"NoSandboxieDesktop", FALSE))
         return TRUE;
 	// NoSbieDesk END
 
@@ -1678,7 +1678,7 @@ _FX BOOL Gui_ShutdownBlockReasonCreate(HWND hWnd, LPCWSTR pwszReason)
 
 _FX UINT_PTR Gui_SetTimer(HWND hWnd, UINT_PTR nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc)
 {
-	ULONG add = CrashApi_QueryConfNumber(NULL, L"AddTimerSpeed", 1), low = CrashApi_QueryConfNumber(NULL, L"LowTimerSpeed", 1);
+	ULONG add = LeafApi_QueryConfNumber(NULL, L"AddTimerSpeed", 1), low = LeafApi_QueryConfNumber(NULL, L"LowTimerSpeed", 1);
 	if (add != 0 && low != 0) {
         UINT64 newElapse = uElapse;
         newElapse = newElapse * low / add;
@@ -1696,7 +1696,7 @@ _FX UINT_PTR Gui_SetTimer(HWND hWnd, UINT_PTR nIDEvent, UINT uElapse, TIMERPROC 
 
 _FX DWORD Wimm_timeGetTime()
 {
-    ULONG add = CrashApi_QueryConfNumber(NULL, L"AddTimerSpeed", 1), low = CrashApi_QueryConfNumber(NULL, L"LowTimerSpeed", 1);
+    ULONG add = LeafApi_QueryConfNumber(NULL, L"AddTimerSpeed", 1), low = LeafApi_QueryConfNumber(NULL, L"LowTimerSpeed", 1);
     ULONG64 time = __sys_timeGetTime();
     if(add != 0 && low != 0) {
         time = Dll_FirsttimeGetTimeValue + (time - Dll_FirsttimeGetTimeValue) * add / low; // multi
@@ -1713,7 +1713,7 @@ _FX DWORD Wimm_timeGetTime()
 
 _FX MMRESULT Wimm_timeSetEvent(UINT uDelay, UINT uResolution, LPTIMECALLBACK lpTimeProc, DWORD_PTR dwUser, UINT fuEvent)
 {
-	ULONG add = CrashApi_QueryConfNumber(NULL, L"AddTimerSpeed", 1), low = CrashApi_QueryConfNumber(NULL, L"LowTimerSpeed", 1);
+	ULONG add = LeafApi_QueryConfNumber(NULL, L"AddTimerSpeed", 1), low = LeafApi_QueryConfNumber(NULL, L"LowTimerSpeed", 1);
 	if (add != 0 && low != 0) {
         UINT64 newDelay = uDelay;
         newDelay = newDelay * low / add;

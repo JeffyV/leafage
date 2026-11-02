@@ -17,4 +17,4 @@
 
 #pragma once
 
-#define SBOX_HOST_DLL_LOADED L"Global\\CrashHostDllLoaded"
+#define SBOX_HOST_DLL_LOADED L"Global\\LeafHostDllLoaded"

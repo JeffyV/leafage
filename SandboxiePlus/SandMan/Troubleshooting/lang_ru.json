@@ -79,9 +79,9 @@
 "SBIE2115: File is too large to copy into sandbox, opening in read only": "SBIE2115: Файл слишком большой для копирования в песочницу, открытие в режиме только для чтения",
 "File is too large to copy into sandbox, opening in read only": "Файл слишком большой для копирования в песочницу, открытие в режиме только для чтения",
 
-"SBIE2181: Failed to load CrashDll.dll": "SBIE2181: Не удалось загрузить CrashDll.dll",
+"SBIE2181: Failed to load LeafDll.dll": "SBIE2181: Не удалось загрузить LeafDll.dll",
 "Fix the DACLs of Sandboxie's home folder": "Исправьте DACLs в домашней папке Sandboxie",
-"Failures to load CrashDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.": "Сбой загрузки CrashDll.dll, если он возникает в Chrome или другом ПО, использующем контейнеры приложений, часто вызван недействительными записями DACL для домашней директории Sandboxie. Эта мера устранения проблемы исправит их, поэтому будет запрошено предоставление привилегий администратора для kmdutil.exe.",
+"Failures to load LeafDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.": "Сбой загрузки LeafDll.dll, если он возникает в Chrome или другом ПО, использующем контейнеры приложений, часто вызван недействительными записями DACL для домашней директории Sandboxie. Эта мера устранения проблемы исправит их, поэтому будет запрошено предоставление привилегий администратора для kmdutil.exe.",
 "The DACLs have been adjusted, please try to run your application again and indicate if the issue has been resolved.": "DACLs были скорректированы, попробуйте снова запустить ваше приложение и укажите, решена ли проблема.",
 "DACLs fix did not resolve the issue": "Исправление DACLs не решило проблему",
 

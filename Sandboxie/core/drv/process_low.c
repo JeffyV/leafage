@@ -136,7 +136,7 @@ _FX BOOLEAN Process_Low_Inject(
 #endif _WIN64
 
     //
-    // send message to CrashSvc DriverAssist
+    // send message to LeafSvc DriverAssist
     //
 
     if (NT_SUCCESS(status)) {
@@ -160,7 +160,7 @@ _FX BOOLEAN Process_Low_Inject(
     }
 
     //
-    // wait for response from CrashSvc DriverAssist
+    // wait for response from LeafSvc DriverAssist
     //
     // note that our original process structure may disappear at any
     // moment (as discussed in Process_NotifyProcess_Create) so we
@@ -197,7 +197,7 @@ _FX BOOLEAN Process_Low_Inject(
             ++retries;
         }
 
-        if (! done)           // if no response from CrashSvc
+        if (! done)           // if no response from LeafSvc
             status = STATUS_TIMEOUT;
     }
 
@@ -326,12 +326,12 @@ _FX BOOLEAN Process_Low_InitConsole(PROCESS *proc)
     // structure as if the process was started with the CreateProcess flag
     // DETACHED_PROCESS so the process doesn't try to connect to a console.
     //
-    // later on, CrashDll will ask CrashSvc to create conhost.exe on behalf
+    // later on, LeafDll will ask LeafSvc to create conhost.exe on behalf
     // of the process in the sandbox, and then connect to that console.
     // see core/dll/guicon.c for more about this.
     //
     // this code should be invoked before the process token is replaced,
-    // so CrashSvc can create the console process based on the real token
+    // so LeafSvc can create the console process based on the real token
     //
     // note that none of this is needed prior to Windows 7
     //

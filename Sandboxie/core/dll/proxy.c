@@ -97,7 +97,7 @@ _FX BOOLEAN socks5_handshake(SOCKET s, BOOLEAN auth, WCHAR login[SOCKS_AUTH_MAX_
         goto on_error;
 
     if (res[0] != SOCKS_VERSION) {
-        CrashApi_Log(2360, L"SOCKS version mismatch: expected '%d', got '%d'", SOCKS_VERSION, res[0]);
+        LeafApi_Log(2360, L"SOCKS version mismatch: expected '%d', got '%d'", SOCKS_VERSION, res[0]);
         goto on_error;
     }
 
@@ -106,7 +106,7 @@ _FX BOOLEAN socks5_handshake(SOCKET s, BOOLEAN auth, WCHAR login[SOCKS_AUTH_MAX_
         return TRUE;
     case SOCKS_USERNAME_PASSWORD:
         if (!auth || !login || !pass) {
-            CrashApi_Log(2360, L"authentication required, but no credentials provided");
+            LeafApi_Log(2360, L"authentication required, but no credentials provided");
             goto on_error;
         }
         char l[SOCKS_AUTH_MAX_SIZE];
@@ -117,7 +117,7 @@ _FX BOOLEAN socks5_handshake(SOCKET s, BOOLEAN auth, WCHAR login[SOCKS_AUTH_MAX_
         size_t auth_buf_len = 1 + 1 + login_len + 1 + pass_len;
         char* auth_buf = Dll_AllocTemp(auth_buf_len);
         if (!auth_buf) {
-            CrashApi_Log(2305, NULL);
+            LeafApi_Log(2305, NULL);
             goto on_error;
         }
 
@@ -140,18 +140,18 @@ _FX BOOLEAN socks5_handshake(SOCKET s, BOOLEAN auth, WCHAR login[SOCKS_AUTH_MAX_
             goto on_error;
 
         if (res[0] != SOCKS_SUBVERSION) {
-            CrashApi_Log(2360, L"subnegotiation version mismatch: expected '%d', got '%d'", SOCKS_SUBVERSION, res[0]);
+            LeafApi_Log(2360, L"subnegotiation version mismatch: expected '%d', got '%d'", SOCKS_SUBVERSION, res[0]);
             goto on_error;
         }
 
         if (res[1] != SOCKS_SUCCESS) {
-            CrashApi_Log(2360, L"authentication failed");
+            LeafApi_Log(2360, L"authentication failed");
             goto on_error;
         }
 
         return TRUE;
     default:
-        CrashApi_Log(2360, L"no acceptable authentication method");
+        LeafApi_Log(2360, L"no acceptable authentication method");
         break;
     }
 
@@ -226,25 +226,25 @@ _FX void socks5_report_error(int code, const char* buf)
 
     switch (code) {
     case SOCKS_SERVER_FAILURE:
-        CrashApi_Log(2360, L"general server failure (%s:%hu)", host, port);
+        LeafApi_Log(2360, L"general server failure (%s:%hu)", host, port);
         break;
     case SOCKS_DENIED:
-        CrashApi_Log(2360, L"connection denied by server ruleset (%s:%hu)", host, port);
+        LeafApi_Log(2360, L"connection denied by server ruleset (%s:%hu)", host, port);
         break;
     case SOCKS_NETWORK_UNREACHABLE:
-        CrashApi_Log(2360, L"network unreachable (%s:%hu)", host, port);
+        LeafApi_Log(2360, L"network unreachable (%s:%hu)", host, port);
         break;
     case SOCKS_HOST_UNREACHABLE:
-        CrashApi_Log(2360, L"host unreachable (%s:%hu)", host, port);
+        LeafApi_Log(2360, L"host unreachable (%s:%hu)", host, port);
         break;
     case SOCKS_CONNECTION_REFUSED:
-        CrashApi_Log(2360, L"connection refused (%s:%hu)", host, port);
+        LeafApi_Log(2360, L"connection refused (%s:%hu)", host, port);
         break;
     case SOCKS_TTL_EXPIRED:
-        CrashApi_Log(2360, L"TTL expired (%s:%hu)", host, port);
+        LeafApi_Log(2360, L"TTL expired (%s:%hu)", host, port);
         break;
     default:
-        CrashApi_Log(2360, L"request failed with status %d (%s:%hu)", code, host, port);
+        LeafApi_Log(2360, L"request failed with status %d (%s:%hu)", code, host, port);
         break;
     }
 

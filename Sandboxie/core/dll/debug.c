@@ -34,14 +34,14 @@
 
 _FX void Debug_Wait()
 {
-    BOOL Found = CrashApi_QueryConfBool(NULL, L"WaitForDebuggerAll", FALSE) ||
+    BOOL Found = LeafApi_QueryConfBool(NULL, L"WaitForDebuggerAll", FALSE) ||
         SbieDll_CheckStringInList(Dll_ImageName, NULL, L"WaitForDebugger");
 
     const WCHAR *CmdLine = GetCommandLine();
     WCHAR buf[66];
     ULONG index = 0;
     while (!Found) {
-        NTSTATUS status = CrashApi_QueryConfAsIs(NULL, L"WaitForDebuggerCmdLine", index, buf, 64 * sizeof(WCHAR));
+        NTSTATUS status = LeafApi_QueryConfAsIs(NULL, L"WaitForDebuggerCmdLine", index, buf, 64 * sizeof(WCHAR));
         ++index;
         if (NT_SUCCESS(status)) {
             if (wcsstr(CmdLine, buf) != 0) {
@@ -57,7 +57,7 @@ _FX void Debug_Wait()
             OutputDebugString(L"Waiting for Debugger\n");
             Sleep(500);
         }
-        if (!CrashApi_QueryConfBool(NULL, L"WaitForDebuggerSilent", TRUE))
+        if (!LeafApi_QueryConfBool(NULL, L"WaitForDebuggerSilent", TRUE))
             __debugbreak();
     }
 }
@@ -274,7 +274,7 @@ _FX int Debug_Init(void)
     //if (_wcsicmp(Dll_ImageName, L"chrome.exe") == 0) {
     //if (_wcsicmp(Dll_ImageName, L"dllhost.exe") == 0) {
     //if ((! Dll_IsWow64) && _wcsicmp(Dll_ImageName, L"msiexec.exe") == 0) {
-    //if (_wcsicmp(Dll_ImageName, L"CrashRpcSs.exe") == 0) {
+    //if (_wcsicmp(Dll_ImageName, L"LeafRpcSs.exe") == 0) {
     //if (_wcsicmp(Dll_ImageName, L"acrord32.exe") == 0) {
     //if (_wcsicmp(Dll_ImageName, L"conhost.exe") == 0) {
     //if (_wcsicmp(Dll_ImageName, L"IExplore.exe") == 0) {
@@ -515,7 +515,7 @@ void DbgTrace(const char* format, ...)
 
     Sbie_snwprintf((WCHAR *)tmp2, sizeof(tmp2)/sizeof(WCHAR), L"%S", tmp1);
 
-    CrashApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, tmp2);
+    LeafApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, tmp2);
 
     va_end(va_args);
 }

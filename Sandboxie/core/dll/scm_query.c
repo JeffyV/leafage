@@ -171,7 +171,7 @@ _FX WCHAR *Scm_GetServiceConfigString(SERVICE_QUERY_RPL *rpl, UCHAR type)
     if (Dll_IsWow64) {
 
         //
-        // 32-bit caller but SERVICE_QUERY_RPL returned from 64-bit CrashSvc:
+        // 32-bit caller but SERVICE_QUERY_RPL returned from 64-bit LeafSvc:
         // rpl contains a QUERY_SERVICE_CONFIG_64 structure
         //
 
@@ -188,7 +188,7 @@ _FX WCHAR *Scm_GetServiceConfigString(SERVICE_QUERY_RPL *rpl, UCHAR type)
     {
 
         //
-        // if not Wow64 then caller bitness matches bitness of CrashSvc
+        // if not Wow64 then caller bitness matches bitness of LeafSvc
         // (both 32-bit or both 64-bit)
         //
 
@@ -261,7 +261,7 @@ _FX void *Scm_QueryBoxedServiceByName(
         if (Dll_IsWow64) {
 
             //
-            // if this is Wow64, then CrashSvc is 64-bit, which returns
+            // if this is Wow64, then LeafSvc is 64-bit, which returns
             // QUERY_SERVICE_CONFIG with 64-bit pointers rather than
             // 32-bit pointers, so we have to fake the same thing,
             // and set up extra space for the five pointers:
@@ -476,7 +476,7 @@ _FX void *Scm_QueryBoxedServiceByName(
         WCHAR *ptr, *ptr2;
 
         pid = *(ULONG *)u.info.Data;
-        status = CrashApi_QueryProcess(
+        status = LeafApi_QueryProcess(
             (HANDLE)(ULONG_PTR)pid, boxname, imagename, NULL, &session_id);
 
         if (NT_SUCCESS(status) &&
@@ -531,9 +531,9 @@ _FX void *Scm_QueryBoxedServiceByName(
                 } else {
 
                     const WCHAR **MySvc, *MySvcs[] = {
-                        _bits,          CrashBITS,
-                        Scm_CryptSvc,   CrashCrypto,
-                        _wuauserv,      CrashWUAU,
+                        _bits,          LeafBITS,
+                        Scm_CryptSvc,   LeafCrypto,
+                        _wuauserv,      LeafWUAU,
                         // _eventsystem,   SandboxieEventSys,
                         NULL };
 
@@ -626,7 +626,7 @@ after_service_status:
         WCHAR *next;
 
         //
-        // if this is Wow64, then CrashSvc is 64-bit, which returns
+        // if this is Wow64, then LeafSvc is 64-bit, which returns
         // QUERY_SERVICE_CONFIG with 64-bit pointers rather than
         // 32-bit pointers, so we have to get the right offsets
         // for the pointer fields
@@ -767,7 +767,7 @@ _FX void *Scm_QueryServiceByName(
     }
 
     //
-    // this is a real service, so query through CrashSvc
+    // this is a real service, so query through LeafSvc
     //
 
     u.req.name_len = wcslen(ServiceNm);
@@ -942,7 +942,7 @@ _FX BOOL Scm_QueryServiceConfigW(
     if (Dll_IsWow64) {
 
         //
-        // if this is a 32-bit process in a 64-bit machine, then CrashSvc
+        // if this is a 32-bit process in a 64-bit machine, then LeafSvc
         // returns a 64-bit QUERY_SERVICE_CONFIGW while our caller has
         // provided a 32-bit QUERY_SERVICE_CONFIGW
         //

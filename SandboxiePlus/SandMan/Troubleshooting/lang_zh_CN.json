@@ -79,9 +79,9 @@
 "SBIE2115: File is too large to copy into sandbox, opening in read only": "SBIE2115: 复制进沙箱中的文件太大, 正在以只读模式打开",
 "File is too large to copy into sandbox, opening in read only": "复制进沙箱中的文件太大, 正在以只读模式打开",
 
-"SBIE2181: Failed to load CrashDll.dll": "SBIE2181: 加载 CrashDll.dll 失败",
+"SBIE2181: Failed to load LeafDll.dll": "SBIE2181: 加载 LeafDll.dll 失败",
 "Fix the DACLs of Sandboxie's home folder": "修复 Sandboxie 主文件夹的 DACL 条目",
-"Failures to load CrashDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.": "Chrome 或其他使用应用容器的软件遇到无法加载 CrashDll.dll 时，通常是由 Sandboxie 主目录的无效 DACL 条目引起的。此解决措施将修复它们，这将提示需要为 kmdutil.exe 授予管理员权限。",
+"Failures to load LeafDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.": "Chrome 或其他使用应用容器的软件遇到无法加载 LeafDll.dll 时，通常是由 Sandboxie 主目录的无效 DACL 条目引起的。此解决措施将修复它们，这将提示需要为 kmdutil.exe 授予管理员权限。",
 "The DACLs have been adjusted, please try to run your application again and indicate if the issue has been resolved.": "“DACL 条目” 已调整，请尝试再次运行应用程序，并在稍后关注/指示问题是否已解决。",
 "DACLs fix did not resolve the issue": "“DACL 条目修复” 未解决问题",
 

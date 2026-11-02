@@ -224,7 +224,7 @@ _FX BOOLEAN Gui_InitMsg(HMODULE module)
     if (!Gui_Hook_DispatchMessage8(module))
 #endif
     {
-        CrashApi_Log(2205, L"DispatchMessage8");
+        LeafApi_Log(2205, L"DispatchMessage8");
         return FALSE;
     }
    
@@ -657,7 +657,7 @@ _FX LRESULT Gui_SendCopyData(
     if (which != 'sm w' && which != 'sm a' &&
         which != 'smtw' && which != 'smta') {
 
-        CrashApi_Log(2205, L"WM_COPYDATA (1)");
+        LeafApi_Log(2205, L"WM_COPYDATA (1)");
         return FALSE;
     }
 
@@ -669,7 +669,7 @@ _FX LRESULT Gui_SendCopyData(
     cds_len = cds->cbData;
     if (cds_len > 1024*1024) {
 
-        CrashApi_Log(2205, L"WM_COPYDATA (2)");
+        LeafApi_Log(2205, L"WM_COPYDATA (2)");
         SetLastError(ERROR_INVALID_PARAMETER);
         return FALSE;
     }
@@ -780,7 +780,7 @@ _FX BOOLEAN Gui_PostThreadMessage_Check(ULONG idThread, UINT uMsg)
     if (ProcessId == Dll_ProcessId)
         return TRUE;
 
-    status = CrashApi_QueryProcess((HANDLE)(ULONG_PTR)ProcessId,
+    status = LeafApi_QueryProcess((HANDLE)(ULONG_PTR)ProcessId,
                                   boxname, NULL, NULL, &session_id);
     if (! NT_SUCCESS(status))
         goto fail;
@@ -812,7 +812,7 @@ fail:
     }
 
     Sbie_snwprintf(temp, 48, L"$:TID=%08X:MSG=%08X", idThread, uMsg);
-    CrashApi_MonitorPut2(MONITOR_WINCLASS | MONITOR_DENY, temp, FALSE);
+    LeafApi_MonitorPut2(MONITOR_WINCLASS | MONITOR_DENY, temp, FALSE);
 
     return FALSE;
 }

@@ -162,7 +162,7 @@ QString CTraceEntry::GetTypeStr() const
 	if (m_Type.User)
 		Type.append(" (U)"); // user mode (sbiedll.dll)
 	//else if (m_Type.Agent)
-	//	Type.append(" (S)"); // system mode (crashsvc.exe)
+	//	Type.append(" (S)"); // system mode (leafsvc.exe)
 	else
 		Type.append(" (K)"); // kernel mode (sbiedrv.sys)
 

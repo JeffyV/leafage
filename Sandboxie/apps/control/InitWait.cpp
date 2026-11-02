@@ -114,7 +114,7 @@ CInitWait::CInitWait(CWinApp *myApp)
     SetTimer(ID_TIMER, 1000, NULL);
 
     //
-    // start CrashSvc
+    // start LeafSvc
     //
 
     SbieDll_StartSbieSvc(FALSE);
@@ -199,7 +199,7 @@ void CInitWait::GetVersions()
 
     if (m_drv_ver.GetAt(0) == L'?') {
 
-        CrashApi_GetVersionEx(drv_ver, &m_drv_abi);
+        LeafApi_GetVersionEx(drv_ver, &m_drv_abi);
         if (drv_ver[0] && _wcsicmp(drv_ver, L"unknown") != 0) {
             m_drv_ver = drv_ver;
             if (m_drv_abi != MY_ABI_VERSION)

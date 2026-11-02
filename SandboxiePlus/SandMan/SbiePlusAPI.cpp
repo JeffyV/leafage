@@ -267,7 +267,7 @@ void CSandBoxPlus::ExportBoxAsync(const CSbieProgressPtr& pProgress, const QStri
 
 	SB_STATUS Status = SB_OK;
 	if (!Archive.Update(&Files, true, &Params, &Attributes))
-		Status = SB_ERR((ECrashMsgCodes)SBX_7zCreateFailed);
+		Status = SB_ERR((ELeafMsgCodes)SBX_7zCreateFailed);
 	
 	//if(!Status.IsError() && !pProgress->IsCanceled())
 	//	QFile::rename(ExportPath + ".tmp", ExportPath);
@@ -282,7 +282,7 @@ void CSandBoxPlus::ExportBoxAsync(const CSbieProgressPtr& pProgress, const QStri
 SB_PROGRESS CSandBoxPlus::ExportBox(const QString& FileName, const QString& Password, int Level, bool Solid)
 {
 	if (!CArchive::IsInit())
-		return SB_ERR((ECrashMsgCodes)SBX_7zNotReady);
+		return SB_ERR((ELeafMsgCodes)SBX_7zNotReady);
 
 	if (theAPI->HasProcesses(m_Name))
 		return SB_ERR(SB_SnapIsRunning); // todo
@@ -311,7 +311,7 @@ void CSandBoxPlus::ImportBoxAsync(const CSbieProgressPtr& pProgress, const QStri
 		Archive.SetPassword(Password);
 
 	if (Archive.Open() != ERR_7Z_OK) {
-		pProgress->Finish(SB_ERR((ECrashMsgCodes)SBX_7zOpenFailed));
+		pProgress->Finish(SB_ERR((ELeafMsgCodes)SBX_7zOpenFailed));
 		return;
 	}
 
@@ -330,13 +330,13 @@ void CSandBoxPlus::ImportBoxAsync(const CSbieProgressPtr& pProgress, const QStri
 	}
 
 	if(!IsBoxArchive) {
-		pProgress->Finish(SB_ERR((ECrashMsgCodes)SBX_NotBoxArchive));
+		pProgress->Finish(SB_ERR((ELeafMsgCodes)SBX_NotBoxArchive));
 		return;
 	}
 
 	SB_STATUS Status = SB_OK;
 	if (!Archive.Extract(&Files))
-		Status = SB_ERR((ECrashMsgCodes)SBX_7zExtractFailed);
+		Status = SB_ERR((ELeafMsgCodes)SBX_7zExtractFailed);
 
 	if (!Status.IsError() && !pProgress->IsCanceled())
 	{
@@ -359,7 +359,7 @@ void CSandBoxPlus::ImportBoxAsync(const CSbieProgressPtr& pProgress, const QStri
 SB_PROGRESS CSandBoxPlus::ImportBox(const QString& FileName, const QString& Password)
 {
 	if (!CArchive::IsInit())
-		return SB_ERR((ECrashMsgCodes)SBX_7zNotReady);
+		return SB_ERR((ELeafMsgCodes)SBX_7zNotReady);
 
 	CSbieProgressPtr pProgress = CSbieProgressPtr(new CSbieProgress());
 	QtConcurrent::run(CSandBoxPlus::ImportBoxAsync, pProgress, FileName, m_FilePath, m_Name, Password);
@@ -376,7 +376,7 @@ SB_STATUS CSandBoxPlus_CopyFolder(const CSbieProgressPtr& pProgress, const QStri
 		return !pProgress->IsCanceled();
 	}, pProgress.data());
 	if (!NT_SUCCESS(status) && status != STATUS_OBJECT_NAME_NOT_FOUND && status != STATUS_OBJECT_PATH_NOT_FOUND)
-		return SB_ERR((ECrashMsgCodes)SBX_FailedCopyDir, QVariantList() << SourcePath << DestinationPath, status);
+		return SB_ERR((ELeafMsgCodes)SBX_FailedCopyDir, QVariantList() << SourcePath << DestinationPath, status);
 	return SB_OK;
 }
 

@@ -222,7 +222,7 @@ static P_WTSQueryUserToken      __sys_WTSQueryUserToken = 0;
 static P_WinStationFreeMemory   __sys_WinStationFreeMemory      = 0;
 static P_WTSFreeMemory          __sys_WTSFreeMemory             = 0;
 
-extern const WCHAR *Ipc_CrashRpcSs;
+extern const WCHAR *Ipc_LeafRpcSs;
 
 
 //---------------------------------------------------------------------------
@@ -270,7 +270,7 @@ _FX void *Terminal_Alloc(ULONG len)
 
     ULONG64 *p_tzuk = LocalAlloc(LMEM_FIXED, sizeof(ULONG64) + len);
     if (! p_tzuk) {
-        CrashApi_Log(2305, NULL);
+        LeafApi_Log(2305, NULL);
         ExitProcess(-1);
     }
     *p_tzuk = tzuk;
@@ -771,7 +771,7 @@ _FX BOOLEAN Terminal_Init_WinSta(HMODULE module)
 _FX BOOL Terminal_WTSQueryUserToken(ULONG SessionId, HANDLE *pToken)
 {
     if (Dll_SbieTrace) {
-        CrashApi_MonitorPut2(MONITOR_OTHER | MONITOR_TRACE, L"WTSQueryUserToken", FALSE);
+        LeafApi_MonitorPut2(MONITOR_OTHER | MONITOR_TRACE, L"WTSQueryUserToken", FALSE);
     }
 
     // WTSQueryUserToken needs SE_TCB_NAME privilege and some IPC paths
@@ -819,18 +819,18 @@ _FX BOOL Terminal_WTSQueryUserToken(ULONG SessionId, HANDLE *pToken)
     *pToken = NULL;
 
     ULONG pid_count = 0;
-    CrashApi_EnumProcessEx(NULL, FALSE, -1, NULL, &pid_count); // query count
+    LeafApi_EnumProcessEx(NULL, FALSE, -1, NULL, &pid_count); // query count
     pid_count += 128;
 
     pids = Dll_AllocTemp(sizeof(ULONG) * pid_count);
-    CrashApi_EnumProcessEx(NULL, FALSE, -1, pids, &pid_count); // query pids
+    LeafApi_EnumProcessEx(NULL, FALSE, -1, pids, &pid_count); // query pids
 
     for (i = 0; i < pid_count; ++i) {
 
         WCHAR image[128];
         HANDLE pids_i = (HANDLE) (ULONG_PTR) pids[i];
-        CrashApi_QueryProcess(pids_i, NULL, image, NULL, NULL);
-        if (_wcsicmp(image, Ipc_CrashRpcSs) == 0) {
+        LeafApi_QueryProcess(pids_i, NULL, image, NULL, NULL);
+        if (_wcsicmp(image, Ipc_LeafRpcSs) == 0) {
 
             HANDLE process = OpenProcess(
                                 PROCESS_QUERY_INFORMATION, FALSE, pids[i]);

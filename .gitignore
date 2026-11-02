@@ -391,8 +391,13 @@ SandboxiePlus/Build_*
 /qt-everywhere-*.7z
 /jom_*.zip
 
-# Local analysis scratch space
-.workbuddy-ai/tmp/
+# AI assistant working data: memory logs, scratch downloads, temporary analysis
+# outputs. Never part of the source tree, the build, or the shipped package.
+/.workbuddy-ai/
+
+# Screenshots dropped at the repo root while testing. Evidence that belongs in the
+# repo goes to docs/analysis/assets/ instead.
+/*.png
 
 # wtsapi32 proxy build output (SbieKey sources are vendored, binaries are not)
 /SbieKey/Bin/

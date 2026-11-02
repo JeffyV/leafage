@@ -160,7 +160,7 @@ _FX void Log_Popup_MsgEx(
 	Api_AddMessage(error_code, strings, lengths, session_id, (ULONG)pid);
 
     //
-    // log message to CrashSvc and trigger CrashSvc to wake up and collect it
+    // log message to LeafSvc and trigger LeafSvc to wake up and collect it
     //
 
     ULONG data = 0;

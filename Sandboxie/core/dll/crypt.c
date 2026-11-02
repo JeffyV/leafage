@@ -94,7 +94,7 @@ static P_CertGetCertificateChain    __sys_CertGetCertificateChain   = NULL;
 //---------------------------------------------------------------------------
 
 
-static BOOLEAN Crypt_CallCrashSvc = FALSE;
+static BOOLEAN Crypt_CallLeafSvc = FALSE;
 
 
 //---------------------------------------------------------------------------
@@ -131,7 +131,7 @@ _FX void Crypt_InitPromptData(
     }
 
     //
-    // if ComServer::CryptProtectDataSlave in the CrashSvc COM Proxy
+    // if ComServer::CryptProtectDataSlave in the LeafSvc COM Proxy
     // wants to display UI through CryptProtectData/CryptUnprotectData,
     // we want to allow the dialog box to go to the foreground
     //
@@ -161,7 +161,7 @@ _FX BOOL Crypt_CryptUnprotectData(
     // first try system procedure
     //
 
-    if (! Crypt_CallCrashSvc) {
+    if (! Crypt_CallLeafSvc) {
 
         BOOL ok = __sys_CryptUnprotectData(
             pDataIn, ppszDataDescr, pOptionalEntropy, pvReserved,
@@ -170,10 +170,10 @@ _FX BOOL Crypt_CryptUnprotectData(
             return ok;
     }
 
-    Crypt_CallCrashSvc = TRUE;
+    Crypt_CallLeafSvc = TRUE;
 
     //
-    // otherwise call CrashSvc decrypt service
+    // otherwise call LeafSvc decrypt service
     //
 
     if (pOptionalEntropy)
@@ -267,7 +267,7 @@ _FX BOOL Crypt_CryptProtectData(
     // first try system procedure
     //
 
-    if (! Crypt_CallCrashSvc) {
+    if (! Crypt_CallLeafSvc) {
 
         BOOL ok = __sys_CryptProtectData(
             pDataIn, szDataDescr, pOptionalEntropy, pvReserved,
@@ -276,10 +276,10 @@ _FX BOOL Crypt_CryptProtectData(
             return ok;
     }
 
-    Crypt_CallCrashSvc = TRUE;
+    Crypt_CallLeafSvc = TRUE;
 
     //
-    // otherwise call CrashSvc crypt service
+    // otherwise call LeafSvc crypt service
     //
 
     if (pOptionalEntropy)

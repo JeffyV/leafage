@@ -73,11 +73,11 @@ BOOLEAN CanDisableForce(void)
 
     if (! init) {
 
-        if (CrashApi_QueryConfBool(NULL, L"ForceDisableAdminOnly", FALSE)) {
+        if (LeafApi_QueryConfBool(NULL, L"ForceDisableAdminOnly", FALSE)) {
 
-            extern void *CallCrashSvcGetUser(void);
+            extern void *CallLeafSvcGetUser(void);
             SBIE_INI_GET_USER_RPL *rpl =
-                (SBIE_INI_GET_USER_RPL *)CallCrashSvcGetUser();
+                (SBIE_INI_GET_USER_RPL *)CallLeafSvcGetUser();
             if (rpl) {
                 if (rpl->admin)
                     retval = TRUE;
@@ -232,7 +232,7 @@ void TrackToolTip(HWND hwnd, int first_time)
         LocalFree(text);
         SendMessage(hlist, LB_GETTEXT, (int)index, (LPARAM)boxname);
 
-    } else if (0 != CrashApi_QueryConfAsIs(boxname, L"Description", 0,
+    } else if (0 != LeafApi_QueryConfAsIs(boxname, L"Description", 0,
                                           boxtext, 2048 * sizeof(WCHAR))) {
 
         boxtext[0] = L'\0';
@@ -549,7 +549,7 @@ INT_PTR BoxDialogProc(
             index = -1;
             set_sel = TRUE;
 
-            if (0 == CrashApi_QueryProcess(
+            if (0 == LeafApi_QueryProcess(
                         (HANDLE)(ULONG_PTR)GetCurrentProcessId(),
                         boxname, NULL, NULL, NULL)) {
 

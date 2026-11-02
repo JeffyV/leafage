@@ -136,7 +136,7 @@ typedef struct _SBIELOW_DATA {
 #define SBIELOW_SYMBOL_SECTION     "zzzz"
 
 //
-// additional strings that are used to inject CrashDll are passed in
+// additional strings that are used to inject LeafDll are passed in
 // the syscall data area.  the second ULONG in the syscall data area
 // specifies the offset to this extra data structure
 //
@@ -247,7 +247,7 @@ typedef struct _INJECT_DATA {
     ULONG64 api_device_handle;
 
     UNIVERSAL_STRING KernelDll;
-    UNIVERSAL_STRING CrashDll;
+    UNIVERSAL_STRING LeafDll;
 
 } INJECT_DATA;
 

@@ -118,19 +118,19 @@ _FX BOOLEAN Dll_InitPathList(void)
 
     pool = Pool_Create();
     if (! pool) {
-        CrashApi_Log(2305, NULL);
+        LeafApi_Log(2305, NULL);
         return FALSE;
     }
 
     pool2 = Pool_Create();
     if (! pool2) {
-        CrashApi_Log(2305, NULL);
+        LeafApi_Log(2305, NULL);
         return FALSE;
     }
 
     anchor = Pool_Alloc(pool, sizeof(PATH_LIST_ANCHOR));
     if (! anchor) {
-        CrashApi_Log(2305, NULL);
+        LeafApi_Log(2305, NULL);
         return FALSE;
     }
     Dll_PathListAnchor = anchor;
@@ -190,7 +190,7 @@ _FX BOOLEAN Dll_InitPathList2(POOL *pool,
         WCHAR str[2];
         str[0] = (WCHAR)((path_code & 0xFF00) >> 8);
         str[1] = L'\0';
-        CrashApi_Log(2317, str);
+        LeafApi_Log(2317, str);
 
 #ifdef USE_MATCH_PATH_EX
         if (normal)
@@ -226,12 +226,12 @@ _FX BOOLEAN Dll_InitPathList3(POOL *pool, ULONG path_code, LIST *list)
     PATTERN *pat;
     BOOLEAN ok;
 
-    status = CrashApi_QueryPathList(path_code, &len, NULL, NULL, TRUE);
+    status = LeafApi_QueryPathList(path_code, &len, NULL, NULL, TRUE);
     if (status != STATUS_SUCCESS)
         return FALSE;
 
     path = Dll_AllocTemp(len);
-    status = CrashApi_QueryPathList(path_code, NULL, path, NULL, TRUE);
+    status = LeafApi_QueryPathList(path_code, NULL, path, NULL, TRUE);
     if (status != STATUS_SUCCESS) {
         Dll_Free(path);
         return FALSE;
@@ -488,7 +488,7 @@ _FX ULONG SbieDll_MatchPath2(WCHAR path_code, const WCHAR *path, BOOLEAN bCheckO
 
         if (bMonitorLog)
         {
-            CrashApi_MonitorPut2(monflag, path, bCheckObjectExists);
+            LeafApi_MonitorPut2(monflag, path, bCheckObjectExists);
         }
     }
 
@@ -710,7 +710,7 @@ _FX void Dll_RefreshPathList(void)
 
     EnterCriticalSection(&Dll_FilePathListCritSec);
 
-    if (CrashApi_Call(API_REFRESH_FILE_PATH_LIST, 0) == STATUS_SUCCESS) {
+    if (LeafApi_Call(API_REFRESH_FILE_PATH_LIST, 0) == STATUS_SUCCESS) {
 
 #ifdef USE_MATCH_PATH_EX
         LIST normal_paths, open_paths, closed_paths, write_paths, read_paths;

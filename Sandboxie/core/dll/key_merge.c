@@ -512,7 +512,7 @@ _FX BOOLEAN Key_ShouldNotMerge(const WCHAR *TruePath, const WCHAR *CopyPath)
     // exists in the sandbox, in the normal case it does not and then we
     // can short-circuit the merge process.
     //
-    // we use CrashSvc to check if the key exists because in the case of
+    // we use LeafSvc to check if the key exists because in the case of
     // Adobe Reader X, the NtOpenKey function in OpenForMerge is hooked
     // and sent to the Adobe Reader broker process and will succeed even
     // if there is no sandboxed registry key.
@@ -763,7 +763,7 @@ _FX NTSTATUS Key_MergeCacheDummys(KEY_MERGE *merge, const WCHAR *TruePath)
                 end[name_len] = L'\0';
 
                 HANDLE KeyHandle;
-                status = CrashApi_OpenKey(&KeyHandle, FakePath);
+                status = LeafApi_OpenKey(&KeyHandle, FakePath);
 
                 Dll_Free(FakePath);
 

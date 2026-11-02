@@ -118,7 +118,7 @@ void CBoxFile::RebuildSkeletonTree()
     ULONG buf_len = 4096 * sizeof(WCHAR);
     WCHAR *buf = malloc_WCHAR(buf_len);
 
-    CrashApi_QueryBoxPath(m_name, buf, NULL, NULL, &buf_len, NULL, NULL);
+    LeafApi_QueryBoxPath(m_name, buf, NULL, NULL, &buf_len, NULL, NULL);
     if (buf[0]) {
 
         m_FilePath = buf;
@@ -181,7 +181,7 @@ void CBoxFile::CreateQuickRecoveryFolders()
     int index = 0;
     while (1) {
 
-        CrashApi_QueryConf(
+        LeafApi_QueryConf(
             m_name, CBox::_RecoverFolder, index,
             buf, buf_len - 16 * sizeof(WCHAR));
         if (! buf[0])
@@ -321,7 +321,7 @@ bool CBoxFile::GetAbsolutePathForRecoveryFolder(WCHAR *buf, ULONG buf_len)
     if (NT_SUCCESS(status)) {
 
         buf_len -= 4;
-        status = CrashApi_GetFileName(hFile, buf, &buf_len, NULL);
+        status = LeafApi_GetFileName(hFile, buf, &buf_len, NULL);
         if (status == 0 && SavePath.CompareNoCase(buf) != 0)
             converted = true;
 
@@ -360,7 +360,7 @@ CString CBoxFile::GetCopyPathForTruePath(const WCHAR *TruePath) const
 {
     ULONG TruePath_len = wcslen(TruePath);
 
-	BOOLEAN SeparateUserFolders = CrashApi_QueryConfBool(m_name, L"SeparateUserFolders", TRUE);
+	BOOLEAN SeparateUserFolders = LeafApi_QueryConfBool(m_name, L"SeparateUserFolders", TRUE);
 
     for (int index = SeparateUserFolders ? -4 : -1; index < 26; ++index) {
 

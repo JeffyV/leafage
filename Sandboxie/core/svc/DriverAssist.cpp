@@ -138,7 +138,7 @@ bool DriverAssist::InitializePortAndThreads()
 
     //
     // create LPC port which the driver will use to send us messages
-    // the port must have a name, or LpcRequestPort in CrashDrv will fail
+    // the port must have a name, or LpcRequestPort in LeafDrv will fail
     //
 
     wsprintf(PortName, L"%s-internal-%d",
@@ -461,7 +461,7 @@ void DriverAssist::LookupSid(void *_msg)
     PSID pSid;
     BOOL b = ConvertStringSidToSid(msg->sid_string, &pSid);
     if (! b) {
-        CrashApi_LogEx(msg->session_id, 2209, L"[11 / %d]", GetLastError());
+        LeafApi_LogEx(msg->session_id, 2209, L"[11 / %d]", GetLastError());
         return;
     }
 
@@ -489,7 +489,7 @@ void DriverAssist::LookupSid(void *_msg)
     }
 
     if ((! b) || (! username[0])) {
-        //CrashApi_LogEx(msg->session_id, 2209, L": %S [22 / %d]", msg->sid_string, GetLastError());
+        //LeafApi_LogEx(msg->session_id, 2209, L": %S [22 / %d]", msg->sid_string, GetLastError());
         wcscpy(username, L"*?*?*?*");
     }
 
@@ -497,9 +497,9 @@ void DriverAssist::LookupSid(void *_msg)
 
     username[sizeof(username) / sizeof(WCHAR) - 4] = L'\0';
 
-    LONG rc = CrashApi_SetUserName(msg->sid_string, username);
+    LONG rc = LeafApi_SetUserName(msg->sid_string, username);
     if (rc != 0)
-        CrashApi_LogEx(msg->session_id, 2209, L"[33 / %08X]", rc);
+        LeafApi_LogEx(msg->session_id, 2209, L"[33 / %08X]", rc);
 }
 
 
@@ -566,9 +566,9 @@ void DriverAssist::CancelProcess(void *_msg)
     }
 
     if (msg->reason == 0)
-        CrashApi_LogEx(msg->session_id, 2314, msg->process_name);
+        LeafApi_LogEx(msg->session_id, 2314, msg->process_name);
 	else if (msg->reason != -1) // in this case we have SBIE1308 and don't want any other messages
-		CrashApi_LogEx(msg->session_id, 2314, L"%S [%d / %d]", msg->process_name, msg->process_id, msg->reason);
+		LeafApi_LogEx(msg->session_id, 2314, L"%S [%d / %d]", msg->process_name, msg->process_id, msg->reason);
 }
 
 
@@ -677,7 +677,7 @@ void DriverAssist::HiveMounted(void *_msg)
 
     ULONG file_len = 0;
     ULONG reg_len = 0;
-    if (!NT_SUCCESS(CrashApi_QueryProcessPath((HANDLE)msg->process_id, NULL, NULL, NULL, &file_len, &reg_len, NULL))) {
+    if (!NT_SUCCESS(LeafApi_QueryProcessPath((HANDLE)msg->process_id, NULL, NULL, NULL, &file_len, &reg_len, NULL))) {
         errlvl = 0x12;
         goto finish;
     }
@@ -687,7 +687,7 @@ void DriverAssist::HiveMounted(void *_msg)
         errlvl = 0x13;
         goto finish;
     }
-    if (!NT_SUCCESS(CrashApi_QueryProcessPath((HANDLE)msg->process_id, file_root_path, reg_root_path, NULL, &file_len, &reg_len, NULL))) {
+    if (!NT_SUCCESS(LeafApi_QueryProcessPath((HANDLE)msg->process_id, file_root_path, reg_root_path, NULL, &file_len, &reg_len, NULL))) {
         errlvl = 0x14;
         goto finish;
     }
@@ -703,13 +703,13 @@ void DriverAssist::HiveMounted(void *_msg)
     // as this may cause issues with old installers
     //
 
-    if (CrashApi_QueryConfBool(msg->boxname, L"EnableVerboseChecks", FALSE)) {
+    if (LeafApi_QueryConfBool(msg->boxname, L"EnableVerboseChecks", FALSE)) {
 
         if (SbieDll_TranslateNtToDosPath(reg_root_path)) { // wcslen(reg_root_path) > 22 &&
 
             if (!VolHas8dot3Support(reg_root_path)) {
 
-                CrashApi_LogEx(msg->session_id, 2227, L"%S (%S)", msg->boxname, reg_root_path);
+                LeafApi_LogEx(msg->session_id, 2227, L"%S (%S)", msg->boxname, reg_root_path);
             }
         }
     }
@@ -758,7 +758,7 @@ void DriverAssist::UnmountHive(void *_msg)
 
         for (retries = 0; retries < 20; ++retries) {
 
-            rc = CrashApi_QueryProcess((HANDLE)(ULONG_PTR)msg->process_id,
+            rc = LeafApi_QueryProcess((HANDLE)(ULONG_PTR)msg->process_id,
                                       NULL, NULL, NULL, NULL);
             if (rc != 0)
                 break;
@@ -782,7 +782,7 @@ void DriverAssist::UnmountHive(void *_msg)
     for (retries = 0; retries < 20; ++retries) {
 
         ULONG count = 0;
-        rc = CrashApi_EnumProcessEx(
+        rc = LeafApi_EnumProcessEx(
                             msg->boxname, FALSE, msg->session_id, NULL, &count);
         if (rc == 0 && count == 0) {
 
@@ -808,7 +808,7 @@ void DriverAssist::UnmountHive(void *_msg)
         OBJECT_ATTRIBUTES root_objattrs;
         HANDLE root_key;
 
-        CrashApi_GetUnmountHive(root_path);
+        LeafApi_GetUnmountHive(root_path);
         if (! root_path[0])
             break;
 
@@ -842,7 +842,7 @@ void DriverAssist::UnmountHive(void *_msg)
         }
 
         if (rc != 0)
-            CrashApi_LogEx(msg->session_id, 2208, L"[%08X]", rc);
+            LeafApi_LogEx(msg->session_id, 2208, L"[%08X]", rc);
 
         break;
     }

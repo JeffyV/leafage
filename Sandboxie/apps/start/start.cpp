@@ -194,11 +194,11 @@ void MyCoInitialize(void)
 
 
 //---------------------------------------------------------------------------
-// CallCrashSvcGetUser
+// CallLeafSvcGetUser
 //---------------------------------------------------------------------------
 
 
-void *CallCrashSvcGetUser(void)
+void *CallLeafSvcGetUser(void)
 {
     SBIE_INI_GET_USER_REQ req;
     void *rpl = NULL;
@@ -206,7 +206,7 @@ void *CallCrashSvcGetUser(void)
 
     //
     // issue request to get current user section,
-    // try to start CrashSvc until we get a reply
+    // try to start LeafSvc until we get a reply
     //
 
     for (retries = 0; retries < 12; ++retries) {
@@ -240,7 +240,7 @@ BOOL Validate_Box_Name(void)
     // make sure Sandboxie components are all started
     //
 
-    if (! CallCrashSvcGetUser()) {
+    if (! CallLeafSvcGetUser()) {
 
         WCHAR *errmsg =
             SbieDll_FormatMessage1(MSG_2331, SbieDll_GetStartError());
@@ -265,9 +265,9 @@ BOOL Validate_Box_Name(void)
             _wcsicmp(BoxName, L"current") == 0) {
 
             if (auto_select_default_box) {
-                if(!NT_SUCCESS(CrashApi_QueryConfAsIs(L"GlobalSettings", L"DefaultBox", 0, BoxName, sizeof(BoxName))) || *BoxName == L'\0')
+                if(!NT_SUCCESS(LeafApi_QueryConfAsIs(L"GlobalSettings", L"DefaultBox", 0, BoxName, sizeof(BoxName))) || *BoxName == L'\0')
                     wcscpy(BoxName, L"DefaultBox");
-                if (CrashApi_IsBoxEnabled(BoxName) != STATUS_SUCCESS)
+                if (LeafApi_IsBoxEnabled(BoxName) != STATUS_SUCCESS)
                     auto_select_default_box = FALSE;
             }
             if (! auto_select_default_box)
@@ -282,7 +282,7 @@ BOOL Validate_Box_Name(void)
             }
         }
 
-        if (CrashApi_IsBoxEnabled(BoxName) != STATUS_SUCCESS) {
+        if (LeafApi_IsBoxEnabled(BoxName) != STATUS_SUCCESS) {
 
             if (run_silent)
                 ExitProcess(ERROR_UNKNOWN_PROPERTY);
@@ -435,7 +435,7 @@ BOOL Parse_Command_Line(void)
             UCHAR buffer[128];
         };
         MSG_HEADER *rpl = NULL;
-        if (CallCrashSvcGetUser()) {
+        if (CallLeafSvcGetUser()) {
             req.length = sizeof(req);
             req.msgid  = MSGID_SBIE_INI_RUN_SBIE_CTRL;
 
@@ -476,7 +476,7 @@ BOOL Parse_Command_Line(void)
             tmp = cmd;
 
             if (*tmp == L'-' &&
-                    (! CrashApi_QueryProcessInfo(
+                    (! LeafApi_QueryProcessInfo(
                         (HANDLE)(ULONG_PTR)GetCurrentProcessId(), 0))) {
 
                 //
@@ -486,7 +486,7 @@ BOOL Parse_Command_Line(void)
                 LONG model_pid = wcstol(cmd, &cmd, 10);
 
                 if (*cmd != L' ' || model_pid >= 0 ||
-                            (! CrashApi_QueryProcessInfo(
+                            (! LeafApi_QueryProcessInfo(
                                     (HANDLE)(ULONG_PTR)-model_pid, 0)))
                     cmd = tmp;
 
@@ -525,7 +525,7 @@ BOOL Parse_Command_Line(void)
 
         } else if (_wcsnicmp(cmd, L"env:=Refresh", 12) == 0) {
 
-            if (CrashApi_QueryProcessInfo(
+            if (LeafApi_QueryProcessInfo(
                         (HANDLE)(ULONG_PTR)GetCurrentProcessId(), 0)) {
                 extern void Env_Refresh(const WCHAR *BoxName);
                 Env_Refresh(BoxName);
@@ -593,7 +593,7 @@ BOOL Parse_Command_Line(void)
 
         } else if (_wcsnicmp(cmd, L"reload", 6) == 0) {
 
-            CrashApi_ReloadConf(-1, 0);
+            LeafApi_ReloadConf(-1, 0);
             ExitProcess(0);
 
         //
@@ -844,7 +844,7 @@ BOOL Parse_Command_Line(void)
         WCHAR *colon = cmd + wcslen(start_menu);
         display_start_menu = *colon == L':' ? 2 : 1; // 1 run from start menu, 2 create shortcut
 
-        if (! CrashApi_QueryProcessInfo(
+        if (! LeafApi_QueryProcessInfo(
                         (HANDLE)(ULONG_PTR)GetCurrentProcessId(), 0)) {
             // this is the instance of Start.exe outside the sandbox
             // so just resend the start_menu command line to the
@@ -877,7 +877,7 @@ BOOL Parse_Command_Line(void)
 
     } else if (wcsncmp(cmd, open_with, wcslen(open_with)) == 0) {
 
-        /*if (! CrashApi_QueryProcessInfo(
+        /*if (! LeafApi_QueryProcessInfo(
                         (HANDLE)(ULONG_PTR)GetCurrentProcessId(), 0)) {
             // this is the instance of Start.exe outside the sandbox
             // so just resend the start_menu command line to the
@@ -906,7 +906,7 @@ BOOL Parse_Command_Line(void)
 
     } else if (wcsncmp(cmd, auto_run, wcslen(auto_run)) == 0) {
 
-        if (! CrashApi_QueryProcessInfo(
+        if (! LeafApi_QueryProcessInfo(
                         (HANDLE)(ULONG_PTR)GetCurrentProcessId(), 0)) {
             // this is the instance of Start.exe outside the sandbox
             // so just resend the start_menu command line to the
@@ -923,7 +923,7 @@ BOOL Parse_Command_Line(void)
 
     } else if (wcsncmp(cmd, mount_hive, wcslen(mount_hive)) == 0) {
 
-        if (! CrashApi_QueryProcessInfo(
+        if (! LeafApi_QueryProcessInfo(
                         (HANDLE)(ULONG_PTR)GetCurrentProcessId(), 0)) {
             ChildCmdLine = cmd;
 
@@ -991,7 +991,7 @@ BOOL Parse_Command_Line(void)
         cmd += 13;
         if (_wcsnicmp(cmd, L"_off", 4) == 0)
             NewState = FALSE;
-        CrashApi_DisableForceProcess(&NewState, NULL);
+        LeafApi_DisableForceProcess(&NewState, NULL);
         ExitProcess(0);
     }
 
@@ -1019,7 +1019,7 @@ BOOL Parse_Command_Line(void)
 
         int ret;
 //#ifndef WITH_DEBUG
-        if (CrashApi_QueryConfBool(NULL, L"PromptOnSecureDesktop", TRUE) && GetPromptOnSecureDesktop())
+        if (LeafApi_QueryConfBool(NULL, L"PromptOnSecureDesktop", TRUE) && GetPromptOnSecureDesktop())
             ret = ShowSecureDialog(SecureDialogFunc, cmd, szPath);
         else
 //#endif
@@ -1067,7 +1067,7 @@ const ULONG tzuk = 'xobs';
 typedef struct _SECURE_UAC_PACKET {
 
     //
-    // keep in sync with CrashSvc.exe / ServiceServer2
+    // keep in sync with LeafSvc.exe / ServiceServer2
     //
 
     ULONG   tzuk;
@@ -1359,7 +1359,7 @@ LRESULT UacPromptWndProc(
         pParams = (SDialogParams*)pcs->lpCreateParams;
         SetWindowLongPtrW(hwnd, GWLP_USERDATA, (LONG_PTR)pParams);
 
-        CrashApi_QueryProcess(pParams->idProcess, pParams->BoxName, pParams->ExeName, NULL, NULL);
+        LeafApi_QueryProcess(pParams->idProcess, pParams->BoxName, pParams->ExeName, NULL, NULL);
 
         if (pParams->pkt_len) {
 
@@ -1713,11 +1713,11 @@ void List_Process_Ids(void)
     ULONG* pids;
 
     ULONG pid_count = 0;
-    CrashApi_EnumProcessEx(BoxName, FALSE, -1, NULL, &pid_count); // query count
+    LeafApi_EnumProcessEx(BoxName, FALSE, -1, NULL, &pid_count); // query count
     pid_count += 128;
 
     pids = (ULONG*)MyHeapAlloc(sizeof(ULONG) * pid_count);
-    ULONG rc = CrashApi_EnumProcessEx(BoxName, FALSE, -1, pids, &pid_count); // query pids
+    ULONG rc = LeafApi_EnumProcessEx(BoxName, FALSE, -1, pids, &pid_count); // query pids
 
     HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
     if (rc != 0 || (! out))
@@ -1746,7 +1746,7 @@ int Terminate_All_Processes(BOOL all_boxes)
 
         int index = -1;
         while (1) {
-            index = CrashApi_EnumBoxes(index, BoxName);
+            index = LeafApi_EnumBoxes(index, BoxName);
             if (index == -1)
                 break;
             SbieDll_KillAll(-1, BoxName);
@@ -1773,7 +1773,7 @@ int Unmount_All_Boxes(BOOL all_boxes)
 
         int index = -1;
         while (1) {
-            index = CrashApi_EnumBoxes(index, BoxName);
+            index = LeafApi_EnumBoxes(index, BoxName);
             if (index == -1)
                 break;
             SbieDll_Unmount(BoxName);
@@ -1854,7 +1854,7 @@ int Program_Start(void)
     // service programs expect to be started by CreateProcess, and may not
     // expect modifications to the command line by ShellExecuteEx.
     // if we are running a service (as started by ServiceServer::RunHandler
-    // in CrashSvc), then use CreateProcess instead of ShellExecuteEx
+    // in LeafSvc), then use CreateProcess instead of ShellExecuteEx
     //
 
     if (GetEnvironmentVariable(
@@ -1927,7 +1927,7 @@ int Program_Start(void)
                 // do not use the runas verb if dropped rights is in effect
                 //
 
-                ULONG64 ProcessFlags = CrashApi_QueryProcessInfo(0, 0);
+                ULONG64 ProcessFlags = LeafApi_QueryProcessInfo(0, 0);
                 if (! (ProcessFlags & SBIE_FLAG_DROP_RIGHTS)) {
 
                     shExecInfo.lpVerb = L"runas";
@@ -2073,16 +2073,16 @@ int Program_Start(void)
     } while (0);
 
     //
-    // if successful, then wait for CrashRpcSs initialization to complete
+    // if successful, then wait for LeafRpcSs initialization to complete
     // because we don't want to release the ServiceInitComplete event before
-    // we know for sure that CrashRpcSs has opened it
+    // we know for sure that LeafRpcSs has opened it
     //
 
     if (ok) {
 
         if (force_children_on_this_program) {
 
-            CrashApi_Call(API_FORCE_CHILDREN, 2, pi.dwProcessId, BoxName);
+            LeafApi_Call(API_FORCE_CHILDREN, 2, pi.dwProcessId, BoxName);
 
         } else if (!disable_force_on_this_program) {
 
@@ -2429,7 +2429,7 @@ ULONG RestartInSandbox(void)
     //
     // build command line.  note that we pass the current directory as an
     // environment variable which will be queried by Program_Start.  this
-    // is because CrashSvc ProcessServer (used by SbieDll_RunSandboxed)
+    // is because LeafSvc ProcessServer (used by SbieDll_RunSandboxed)
     // does not necessarily share our dos device map, and will not be able
     // to change to a drive letter that isn't in its dos device map
     //
@@ -2455,13 +2455,13 @@ ULONG RestartInSandbox(void)
     }
     wcscpy(ptr, ChildCmdLine);
 
-    CrashApi_GetHomePath(NULL, 0, dir, 1020);
+    LeafApi_GetHomePath(NULL, 0, dir, 1020);
 
     //
     //
     //
 
-	if (CrashApi_QueryConfBool(BoxName, L"AlertBeforeStart", FALSE)) {
+	if (LeafApi_QueryConfBool(BoxName, L"AlertBeforeStart", FALSE)) {
 
         WCHAR parent_image[1020] = L"";
 		GetParentPIDAndName(GetCurrentProcessId(), parent_image);
@@ -2540,7 +2540,7 @@ int __stdcall WinMainCRTStartup(
     Sandboxie_Start_Title = SbieDll_FormatMessage0(MSG_3101);
     SbieDll_GetLanguage(&layout_rtl);
 
-    if(!NT_SUCCESS(CrashApi_QueryConfAsIs(L"GlobalSettings", L"DefaultBox", 0, BoxName, sizeof(BoxName))) || *BoxName == L'\0')
+    if(!NT_SUCCESS(LeafApi_QueryConfAsIs(L"GlobalSettings", L"DefaultBox", 0, BoxName, sizeof(BoxName))) || *BoxName == L'\0')
         wcscpy(BoxName, L"DefaultBox");
 
     Token_Elevation_Type = SbieDll_GetTokenElevationType();
@@ -2598,7 +2598,7 @@ int __stdcall WinMainCRTStartup(
     if (! Parse_Command_Line())
         return die(EXIT_FAILURE);
 
-    if (! CrashApi_QueryProcessInfo(
+    if (! LeafApi_QueryProcessInfo(
                     (HANDLE)(ULONG_PTR)GetCurrentProcessId(), 0)) {
         //
         // we are not yet sandboxed, restart ourselves sandboxed
@@ -2615,7 +2615,7 @@ int __stdcall WinMainCRTStartup(
             if (disable_force_on_this_program) {
 
                 ULONG NewState = DISABLE_JUST_THIS_PROCESS;
-                CrashApi_DisableForceProcess(&NewState, NULL);
+                LeafApi_DisableForceProcess(&NewState, NULL);
             }
             if (disable_force_on_this_program || force_children_on_this_program)
                 return die(Program_Start());

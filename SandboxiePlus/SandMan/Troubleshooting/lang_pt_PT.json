@@ -79,9 +79,9 @@
 "SBIE2115: File is too large to copy into sandbox, opening in read only": "SBIE2115: O ficheiro é demasiado grande para ser copiado para o sandbox, a abrir só leitura",
 "File is too large to copy into sandbox, opening in read only": "O ficheiro é demasiado grande para ser copiado para o sandbox, a abrir só leitura",
 
-"SBIE2181: Failed to load CrashDll.dll": "SBIE2181: Falha ao ler CrashDll.dll",
+"SBIE2181: Failed to load LeafDll.dll": "SBIE2181: Falha ao ler LeafDll.dll",
 "Fix the DACLs of Sandboxie's home folder": "Corrigir os DACLs do directório de arranque do Sandboxie",
-"Failures to load CrashDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.": "Falhas ao carregar CrashDll.dll quando encontrado pelo Chrome ou outro software que emprega contêineres de aplicaçãos, geralmente são causadas por entradas DACL inválidas para o directório inicial do Sandboxie. Esta medida de mitigação irá corrigi-los, por isto solicitará privilégios de administrador que precisam ser concedidos para kmdutil.exe.",
+"Failures to load LeafDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.": "Falhas ao carregar LeafDll.dll quando encontrado pelo Chrome ou outro software que emprega contêineres de aplicaçãos, geralmente são causadas por entradas DACL inválidas para o directório inicial do Sandboxie. Esta medida de mitigação irá corrigi-los, por isto solicitará privilégios de administrador que precisam ser concedidos para kmdutil.exe.",
 "The DACLs have been adjusted, please try to run your application again and indicate if the issue has been resolved.": "As DACLs foram ajustadas, tente rodar sua aplicação novamente e indique se o problema foi resolvido.",
 "DACLs fix did not resolve the issue": "A correção de DACLs não resolveu o problema",
 

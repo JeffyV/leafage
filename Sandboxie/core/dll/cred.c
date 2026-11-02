@@ -172,10 +172,10 @@ _FX BOOLEAN Cred_Init(HMODULE module)
     if (PATH_IS_OPEN(mp_flags))
         return TRUE;
 
-    if (CrashApi_QueryConfBool(NULL, L"OpenCredentials", FALSE))
+    if (LeafApi_QueryConfBool(NULL, L"OpenCredentials", FALSE))
         return TRUE;
 
-    //Cred_Trace = CrashApi_QueryConfBool(NULL, L"CredTrace", FALSE);
+    //Cred_Trace = LeafApi_QueryConfBool(NULL, L"CredTrace", FALSE);
 
 //    __sys_CredMarshalCredential = (P_CredMarshalCredential)
 //        GetProcAddress(module, "CredMarshalCredential");
@@ -235,7 +235,7 @@ _FX BOOLEAN Cred_PreparePStore(void)
         }
     }
 
-    CrashApi_Log(2213, NULL);
+    LeafApi_Log(2213, NULL);
     SetLastError(ERROR_NO_SUCH_LOGON_SESSION);
     return FALSE;
 }
@@ -731,7 +731,7 @@ _FX BOOL Cred_CredWriteW(void *pCredential, ULONG Flags)
     /*if (Cred_Trace) {
         WCHAR msg[1024];
         Sbie_snwprintf(msg, 1024, L"CredWriteW: %s (%d)", cred->TargetName, cred->Type);
-        CrashApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, msg);
+        LeafApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, msg);
     }*/
 
     name = Cred_GetName(NULL, cred->TargetName, cred->Type);
@@ -802,7 +802,7 @@ _FX BOOL Cred_CredReadW(
     /*if (Cred_Trace) {
         WCHAR msg[1024];
         Sbie_snwprintf(msg, 1024, L"CredReadW: %s (%d) = %d", TargetName, Type, FAILED(hr) ? ok : (ok ? 2 : -1));
-        CrashApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, msg);
+        LeafApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, msg);
     }*/
 
     return ok;
@@ -1375,7 +1375,7 @@ _FX BOOL Cred_CredWriteDomainCredentialsA(
 /*_FX BOOL Cred_CredGetTargetInfoW(
     void *pTargetName, ULONG Flags, void **pTargetInfo)
 {
-    CrashApi_Log(2205, L"CredGetTargetInfoW");
+    LeafApi_Log(2205, L"CredGetTargetInfoW");
     return __sys_CredGetTargetInfoW(pTargetName, Flags, pTargetInfo);
 }*/
 
@@ -1388,7 +1388,7 @@ _FX BOOL Cred_CredWriteDomainCredentialsA(
 /*_FX BOOL Cred_CredGetTargetInfoA(
     void *pTargetName, ULONG Flags, void **pTargetInfo)
 {
-    CrashApi_Log(2205, L"CredGetTargetInfoA");
+    LeafApi_Log(2205, L"CredGetTargetInfoA");
     return __sys_CredGetTargetInfoA(pTargetName, Flags, pTargetInfo);
 }*/
 
@@ -1442,7 +1442,7 @@ _FX BOOL Cred_CredReadDomainCredentialsA(
     void *pTargetInfo, ULONG Flags, ULONG *pCount, void ***ppCredentials)
 {
     // todo
-    CrashApi_Log(2205, L"CredReadDomainCredentialsA");
+    LeafApi_Log(2205, L"CredReadDomainCredentialsA");
     return __sys_CredReadDomainCredentialsA(
                                 pTargetInfo, Flags, pCount, ppCredentials);
 }
@@ -1457,6 +1457,6 @@ _FX BOOL Cred_CredEnumerateA(
     void *pFilter, ULONG Flags, ULONG *pCount, void ***ppCredentials)
 {
     // todo
-    //CrashApi_Log(2205, L"CredEnumerateA");
+    //LeafApi_Log(2205, L"CredEnumerateA");
     return __sys_CredEnumerateA(pFilter, Flags, pCount, ppCredentials);
 }

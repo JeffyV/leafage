@@ -175,7 +175,7 @@ MSG_HEADER *MountManager::Handler(void *_this, MSG_HEADER *msg)
 
     HANDLE idProcess = (HANDLE)(ULONG_PTR)PipeServer::GetCallerProcessId();
 
-    if (0 == CrashApi_QueryProcess(idProcess, NULL, NULL, NULL, NULL))
+    if (0 == LeafApi_QueryProcess(idProcess, NULL, NULL, NULL, NULL))
         return SHORT_REPLY(STATUS_ACCESS_DENIED);
 
     if (msg->msgid == MSGID_IMBOX_CREATE) {
@@ -273,7 +273,7 @@ MSG_HEADER *MountManager::MountHandler(MSG_HEADER *msg)
 
         ULONG admin_only = req->admin_only ? 1 : 0;
 
-        if (NT_SUCCESS(CrashApi_Call(API_PROTECT_ROOT, 3, req->reg_root, TargetNtPath.c_str(), admin_only)))
+        if (NT_SUCCESS(LeafApi_Call(API_PROTECT_ROOT, 3, req->reg_root, TargetNtPath.c_str(), admin_only)))
             pMount->Protected = true;
     }
 
@@ -340,7 +340,7 @@ MSG_HEADER *MountManager::UnmountHandler(MSG_HEADER *msg)
         RemoveJunction(pRoot->Path, session_id);
 
         if (pRoot->Mount->Protected)
-            CrashApi_Call(API_UNPROTECT_ROOT, 1, req->reg_root);
+            LeafApi_Call(API_UNPROTECT_ROOT, 1, req->reg_root);
 
         ok = UnmountImDiskLocked(pRoot->Mount, session_id);
     }
@@ -564,7 +564,7 @@ int MountManager::CreateJunction(const std::wstring& TargetNtPath, const std::ws
 
     if (errlvl == 0 && !JunctionTarget.empty()) {
         if (_wcsicmp(JunctionTarget.c_str(), TargetNtPath.c_str()) != 0) {
-            CrashApi_LogEx(session_id, 2231, L"%S != %S", JunctionTarget.c_str(), TargetNtPath.c_str());
+            LeafApi_LogEx(session_id, 2231, L"%S != %S", JunctionTarget.c_str(), TargetNtPath.c_str());
 
             memset(buf, 0, REPARSE_MOUNTPOINT_HEADER_SIZE);
 	        ReparseBuffer.ReparseTag = IO_REPARSE_TAG_MOUNT_POINT;
@@ -693,7 +693,7 @@ retry:
         switch (GetLastError())
         {
         case ERROR_FILE_NOT_FOUND:
-            CrashApi_LogEx(session_id, 2232, L"");
+            LeafApi_LogEx(session_id, 2232, L"");
             return NULL;
 
         case ERROR_MORE_DATA:
@@ -701,7 +701,7 @@ retry:
             goto retry;
 
         default:
-            CrashApi_LogEx(session_id, 2233, L"%d", GetLastError());
+            LeafApi_LogEx(session_id, 2233, L"%d", GetLastError());
             return NULL;
         }
     }
@@ -841,7 +841,7 @@ std::shared_ptr<BOX_MOUNT> MountManager::MountImDisk(const std::wstring& ImageFi
     else
         Drive[0] = ImDiskFindFreeDriveLetter();
     if (Drive[0] == 0) {
-        CrashApi_LogEx(session_id, 2234, L"");
+        LeafApi_LogEx(session_id, 2234, L"");
         return NULL;
     }
 
@@ -883,7 +883,7 @@ std::shared_ptr<BOX_MOUNT> MountManager::MountImDisk(const std::wstring& ImageFi
     VOID* pMem = NULL;
 
     WCHAR app[768];
-    if (!NT_SUCCESS(CrashApi_GetHomePath(NULL, 0, app, 768)))
+    if (!NT_SUCCESS(LeafApi_GetHomePath(NULL, 0, app, 768)))
         return NULL;
     wcscat(app, L"\\ImBox.exe");
 
@@ -933,18 +933,18 @@ std::shared_ptr<BOX_MOUNT> MountManager::MountImDisk(const std::wstring& ImageFi
             DWORD ret;
             GetExitCodeProcess(pi.hProcess, &ret);
             if (ret == STILL_ACTIVE) {
-                CrashApi_LogEx(session_id, 2240, L"%S", Drive);
+                LeafApi_LogEx(session_id, 2240, L"%S", Drive);
                 //TerminateProcess(pi.hProcess, -1);
             }
             else {
                 switch (ret) {
-                case ERR_FILE_NOT_OPENED:   CrashApi_LogEx(session_id, 2241, L"%S", ImageFile.c_str()); break;
-                case ERR_UNKNOWN_CIPHER:    CrashApi_LogEx(session_id, 2242, L""); break;
-                case ERR_WRONG_PASSWORD:    CrashApi_LogEx(session_id, 2243, L""); break;
-                case ERR_KEY_REQUIRED:      CrashApi_LogEx(session_id, 2244, L""); break;
-                case ERR_IMDISK_FAILED:     CrashApi_LogEx(session_id, 2236, L"ImDisk"); break;
-                case ERR_IMDISK_TIMEOUT:    CrashApi_LogEx(session_id, 2240, L"%S", Drive); break;
-                default:                    CrashApi_LogEx(session_id, 2246, L"%d", ret); break;
+                case ERR_FILE_NOT_OPENED:   LeafApi_LogEx(session_id, 2241, L"%S", ImageFile.c_str()); break;
+                case ERR_UNKNOWN_CIPHER:    LeafApi_LogEx(session_id, 2242, L""); break;
+                case ERR_WRONG_PASSWORD:    LeafApi_LogEx(session_id, 2243, L""); break;
+                case ERR_KEY_REQUIRED:      LeafApi_LogEx(session_id, 2244, L""); break;
+                case ERR_IMDISK_FAILED:     LeafApi_LogEx(session_id, 2236, L"ImDisk"); break;
+                case ERR_IMDISK_TIMEOUT:    LeafApi_LogEx(session_id, 2240, L"%S", Drive); break;
+                default:                    LeafApi_LogEx(session_id, 2246, L"%d", ret); break;
                 }
             }
         }
@@ -987,7 +987,7 @@ std::shared_ptr<BOX_MOUNT> MountManager::MountImDisk(const std::wstring& ImageFi
 
                 if (!drvLetter) {
                     if (!DefineDosDevice(DDD_REMOVE_DEFINITION | DDD_EXACT_MATCH_ON_REMOVE | DDD_RAW_TARGET_PATH, Drive, pMount->NtPath.c_str())) {
-                        CrashApi_LogEx(session_id, 2235, L"%S", Drive);
+                        LeafApi_LogEx(session_id, 2235, L"%S", Drive);
                     }
                 }
             }
@@ -1000,7 +1000,7 @@ std::shared_ptr<BOX_MOUNT> MountManager::MountImDisk(const std::wstring& ImageFi
         CloseHandle(pi.hThread);
     }
     else
-        CrashApi_LogEx(session_id, 2236, L"ImBox");
+        LeafApi_LogEx(session_id, 2236, L"ImBox");
 
     //if (pSection) {
     //    memzero(pSection, 0x1000);
@@ -1081,14 +1081,14 @@ std::wstring MountManager::GetImageFileName(const WCHAR* file_root)
 
 bool MountManager::AcquireBoxRoot(const WCHAR* boxname, const WCHAR* reg_root, const WCHAR* file_root, ULONG session_id)
 {
-    BOOLEAN UseRamDisk = CrashApi_QueryConfBool(boxname, L"UseRamDisk", FALSE);
-    BOOLEAN UseFileImage = CrashApi_QueryConfBool(boxname, L"UseFileImage", FALSE);
+    BOOLEAN UseRamDisk = LeafApi_QueryConfBool(boxname, L"UseRamDisk", FALSE);
+    BOOLEAN UseFileImage = LeafApi_QueryConfBool(boxname, L"UseFileImage", FALSE);
 
     //
     // We use the [KeyRootPath] to uniquely identify a sandbox, the driver requires
     // both [KeyRootPath] as well as the hive file location [FileRootPath]\RegHive to match,
     // hence either is a good unique identifier, in case of a conflict the second sandbox start attempt fails.
-    // As CrashApi_GetUnmountHive provides only [KeyRootPath] and no file path it is expedient to use it.
+    // As LeafApi_GetUnmountHive provides only [KeyRootPath] and no file path it is expedient to use it.
     //
 
     ULONG errlvl = 0;
@@ -1127,19 +1127,19 @@ bool MountManager::AcquireBoxRoot(const WCHAR* boxname, const WCHAR* reg_root, c
     SCertInfo CertInfo = { 0 };
 
     if(!pRoot->Mount || pRoot->Mount->NtPath.empty()) {
-//        CrashApi_LogEx(session_id, 2201, L"AcquireBoxRoot %S", boxname);
+//        LeafApi_LogEx(session_id, 2201, L"AcquireBoxRoot %S", boxname);
         
         if (UseRamDisk) {
 
             if(!m_RamDisk || m_RamDisk->NtPath.empty())
                 m_RamDisk = FindImDisk(L"", session_id);
             if (!m_RamDisk) {
-                ULONG sizeKb = CrashApi_QueryConfNumber(NULL, L"RamDiskSizeKb", 0);
+                ULONG sizeKb = LeafApi_QueryConfNumber(NULL, L"RamDiskSizeKb", 0);
 				if (sizeKb < 100*1024) // we want at lesat 100MB
-					CrashApi_LogEx(session_id, 2238, L"");
+					LeafApi_LogEx(session_id, 2238, L"");
                 else {
                     WCHAR drvLetter[32] = { 0 };
-                    CrashApi_QueryConf(NULL, L"RamDiskLetter", 0, drvLetter, ARRAYSIZE(drvLetter));
+                    LeafApi_QueryConf(NULL, L"RamDiskLetter", 0, drvLetter, ARRAYSIZE(drvLetter));
                     m_RamDisk = MountImDisk(L"", NULL, sizeKb, session_id, *drvLetter ? drvLetter : NULL);
                 }
             }
@@ -1150,14 +1150,14 @@ bool MountManager::AcquireBoxRoot(const WCHAR* boxname, const WCHAR* reg_root, c
             std::wstring ImageFile = GetImageFileName(file_root);
 
             //WCHAR Password[128 + 1];
-            //CrashApi_QueryConfAsIs(boxname, L"BoxPassword", 0, Password, sizeof(Password)); // todo
+            //LeafApi_QueryConfAsIs(boxname, L"BoxPassword", 0, Password, sizeof(Password)); // todo
             pRoot->Mount = FindImDisk(ImageFile, session_id);
             if (!pRoot->Mount) {
-                //ULONG sizeKb = CrashApi_QueryConfNumber(NULL, L"BoxImageSizeKb", 4194304);
+                //ULONG sizeKb = LeafApi_QueryConfNumber(NULL, L"BoxImageSizeKb", 4194304);
                 pRoot->Mount = MountImDisk(ImageFile, NULL, 0, session_id);
             }
 
-            //pRoot->AutoUnmount = CrashApi_QueryConfBool(boxname, L"AutoUnmount", FALSE);
+            //pRoot->AutoUnmount = LeafApi_QueryConfBool(boxname, L"AutoUnmount", FALSE);
         }
             
         if (!pRoot->Mount || pRoot->Mount->NtPath.empty())
@@ -1200,9 +1200,9 @@ bool MountManager::AcquireBoxRoot(const WCHAR* boxname, const WCHAR* reg_root, c
 
         ULONG err = GetLastError();
         if (err == ERROR_DIR_NOT_EMPTY)
-            CrashApi_LogEx(session_id, 2239, L"%S", boxname);
+            LeafApi_LogEx(session_id, 2239, L"%S", boxname);
         else
-            CrashApi_LogEx(session_id, 2230, L"%S [%02X / %d]", boxname, errlvl, err);
+            LeafApi_LogEx(session_id, 2230, L"%S [%02X / %d]", boxname, errlvl, err);
 
         //
         // Clean up on error
@@ -1227,7 +1227,7 @@ void MountManager::LockBoxRoot(const WCHAR* reg_root, ULONG session_id)
 
     auto I = m_RootMap.find(reg_root);
     if (I != m_RootMap.end()) {
-//        CrashApi_LogEx(session_id, 2201, L"LockBoxRoot %S", reg_root);
+//        LeafApi_LogEx(session_id, 2201, L"LockBoxRoot %S", reg_root);
         I->second->InUse = true;
     }
     
@@ -1246,7 +1246,7 @@ void MountManager::ReleaseBoxRoot(const WCHAR* reg_root, bool force, ULONG sessi
 
     auto I = m_RootMap.find(reg_root);
     if (I != m_RootMap.end()) {
-//        CrashApi_LogEx(session_id, 2201, L"ReleaseBoxRoot %S", reg_root);
+//        LeafApi_LogEx(session_id, 2201, L"ReleaseBoxRoot %S", reg_root);
         I->second->InUse = false;
 		if (!I->second->Mount)
 			m_RootMap.erase(I);
@@ -1261,7 +1261,7 @@ void MountManager::ReleaseBoxRoot(const WCHAR* reg_root, bool force, ULONG sessi
             else {
 
                 if (I->second->Mount->Protected)
-                    CrashApi_Call(API_UNPROTECT_ROOT, 1, I->first.c_str());
+                    LeafApi_Call(API_UNPROTECT_ROOT, 1, I->first.c_str());
 
                 UnmountImDiskLocked(I->second->Mount, session_id);
             }
@@ -1315,7 +1315,7 @@ void MountManager::ReleaseBoxRoot(const WCHAR* reg_root, bool force, ULONG sessi
 //        bool ok = UnMountImDisk(Device, hProcess);
 //
 //        if(!ok)
-//            CrashApi_LogEx(session_id, 2237, L"%S", Device.c_str());
+//            LeafApi_LogEx(session_id, 2237, L"%S", Device.c_str());
 //
 //        EnterCriticalSection(&This->m_CritSec);
 //
@@ -1323,7 +1323,7 @@ void MountManager::ReleaseBoxRoot(const WCHAR* reg_root, bool force, ULONG sessi
 //            for (auto I = This->m_RootMap.begin(); I != This->m_RootMap.end(); ++I) {
 //                if (I->second->Mount == pToUnMount) {
 //                    if(I->second->Mount->Protected)
-//                        CrashApi_Call(API_UNPROTECT_ROOT, 1, I->first.c_str());
+//                        LeafApi_Call(API_UNPROTECT_ROOT, 1, I->first.c_str());
 //                    This->m_RootMap.erase(I);
 //                    break;
 //                }
@@ -1415,7 +1415,7 @@ bool MountManager::UnmountImDiskLocked(const std::shared_ptr<BOX_MOUNT>& pToUnMo
     bool ok = UnmountImDisk(Device, hProcess);
 
     if(!ok)
-        CrashApi_LogEx(session_id, 2237, L"%S", Device.c_str());
+        LeafApi_LogEx(session_id, 2237, L"%S", Device.c_str());
 
     EnterCriticalSection(&m_CritSec);
 

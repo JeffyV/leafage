@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-  wtsapi32.dll proxy (side-loading shim) for the Crash* build.
+  wtsapi32.dll proxy (side-loading shim) for the Leaf* build.
 
   Sources come from the standalone SbieKey project (JeffyV/1sbiekey); they are
   vendored here so the green package is produced by a single CI run and no

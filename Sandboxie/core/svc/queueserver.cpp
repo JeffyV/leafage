@@ -746,7 +746,7 @@ WCHAR *QueueServer::MakeQueueName(
     req_name[QUEUE_NAME_MAXLEN - 1] = L'\0';
     req_name_len = (wcslen(req_name) + 1) * sizeof(WCHAR);
 
-    if (CrashApi_QueryProcess(idProcess, NULL, NULL, NULL, NULL) == 0)
+    if (LeafApi_QueryProcess(idProcess, NULL, NULL, NULL, NULL) == 0)
         boxed_caller = TRUE;
     else
         boxed_caller = FALSE;
@@ -786,7 +786,7 @@ WCHAR *QueueServer::MakeQueueName(
         // calling process, return zero status on success
         //
 
-        status = CrashApi_QueryProcessPath(
+        status = LeafApi_QueryProcessPath(
                     idProcess, NULL, NULL, NULL, NULL, NULL, &ipc_len);
         if (status != 0) {
             *out_status = STATUS_OBJECT_NAME_INVALID;
@@ -799,7 +799,7 @@ WCHAR *QueueServer::MakeQueueName(
             return NULL;
         }
 
-        status = CrashApi_QueryProcessPath(
+        status = LeafApi_QueryProcessPath(
                     idProcess, NULL, NULL, name, NULL, NULL, &ipc_len);
         if (status != 0) {
             HeapFree(m_heap, 0, name);
@@ -1008,7 +1008,7 @@ MSG_HEADER *QueueServer::StartupHandler(MSG_HEADER *msg, HANDLE idProcess)
     //
 
     ULONG session_id;
-    if (!NT_SUCCESS(CrashApi_QueryProcess(idProcess, NULL, NULL, NULL, &session_id))) {
+    if (!NT_SUCCESS(LeafApi_QueryProcess(idProcess, NULL, NULL, NULL, &session_id))) {
         status = STATUS_ACCESS_DENIED;
         goto finish;
     }

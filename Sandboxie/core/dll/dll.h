@@ -225,7 +225,7 @@ typedef struct _THREAD_DATA {
     BOOL            gui_should_suppress_msgbox;
 
     //
-    // sbieapi:  CrashSvc port handle
+    // sbieapi:  LeafSvc port handle
     //
 
     HANDLE          PortHandle;

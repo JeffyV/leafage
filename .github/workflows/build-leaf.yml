@@ -1,0 +1,200 @@
+# Manual-only build for the master_leaf branch (Leaf* rebrand).
+#
+# Same pipeline as build.yml, with three differences:
+#   1. workflow_dispatch only -- nothing runs on push.
+#   2. Default ref is master_leaf (overridable in the "Run workflow" dialog).
+#   3. No release publishing; the green package is only an artifact.
+#   4. Extra guard step: fails if any Crash* brand token survived the rename.
+#
+# NOTE: GitHub only shows the "Run workflow" button when this file exists on the
+# DEFAULT branch (master). Until it is merged there, trigger it with:
+#   gh workflow run build-leaf.yml --ref master_leaf
+#
+# ASCII ONLY here and in every .cmd/.bat/.yml: GitHub reads workflows as UTF-8,
+# and cmd.exe uses the OEM code page, so non-ASCII text breaks both.
+
+name: Build x64 (leaf, manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch or tag to build'
+        required: true
+        default: 'master_leaf'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Show ref
+        shell: pwsh
+        run: |
+          Write-Host "building ${{ inputs.ref }} at $(git rev-parse --short HEAD)"
+
+      # msbuild is not on PATH on the runner, this action adds it.
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      # Fails fast, before the 90 minute build, if the rebrand left Crash* behind.
+      # Only brand tokens are matched: "crash dump" / "crashed" / CrashHandler are
+      # legitimate English and Windows terms and must NOT trip this guard.
+      # .github is skipped on purpose: the pattern below lives in this file.
+      - name: Guard - no Crash* brand leftovers
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $pattern = 'Crash(Api_|Dll|Svc|Drv|Msg|HostDll|ShellExt|BITS|WUAU|Crypto|RpcSs|DcomLaunch)|crashsvc|crashdrv'
+          $files = Get-ChildItem -Recurse -File -Path . |
+            Where-Object { $_.FullName -notmatch '\\\.git\\|\\\.github\\|\\docs\\|\\\.workbuddy-ai\\|\\\.idea\\' -and
+                           $_.Extension -notin '.png', '.ico', '.dll', '.exe', '.sys', '.dat', '.7z', '.zip' }
+          $hits = @($files | Select-String -Pattern $pattern -List)
+          if ($hits.Count) {
+            $hits | ForEach-Object { Write-Host "  $($_.Path):$($_.LineNumber)" }
+            throw "Crash* brand token still present in $($hits.Count) file(s)"
+          }
+          Write-Host "no Crash* brand tokens left"
+
+      - name: Build Sandboxie core - x86 dll and svc
+        run: msbuild /t:build Sandboxie\SandboxDll.sln /p:Configuration="SbieRelease" /p:Platform=Win32 -maxcpucount:8
+
+      - name: Build Sandboxie core - x64 all
+        run: msbuild /t:build Sandboxie\Sandbox.sln /p:Configuration="SbieRelease" /p:Platform=x64 -maxcpucount:8
+
+      - name: Build Sandboxie core - x64 driver
+        run: msbuild /t:build Sandboxie\SandboxDrv.sln /p:Configuration="SbieRelease" /p:Platform=x64 -maxcpucount:8
+
+      - name: Install Qt6 x64
+        shell: cmd
+        run: SandboxiePlus\install_qt.cmd x64
+
+      - name: Install jom
+        shell: cmd
+        run: SandboxiePlus\install_jom.cmd
+
+      - name: Build SandMan and libraries - x64
+        shell: cmd
+        run: SandboxiePlus\qmake_plus.cmd x64 build_qt6
+
+      - name: Build SbieShell - x64
+        run: msbuild /t:restore,build -p:RestorePackagesConfig=true SandboxiePlus\SbieShell\SbieShell.sln /p:Configuration="Release" /p:Platform=x64 -maxcpucount:8
+
+      - name: Build Sandboxie Tools - x64
+        run: msbuild /t:build SandboxieTools\SandboxieTools.sln /p:Configuration="Release" /p:Platform=x64 -maxcpucount:8
+
+      - name: Prepare Qt translations
+        shell: cmd
+        run: Installer\fix_qt5_languages.cmd x64 build_qt6
+
+      - name: Fetch OpenSSL
+        shell: cmd
+        run: Installer\get_openssl.cmd
+
+      - name: Fetch 7-Zip
+        shell: cmd
+        run: Installer\get_7zip.cmd
+
+      # The release folder we mirror ships addons\SbieHide\SbieHide_{x64,x86}.dll
+      # (Sandboxie.ini injects it). Pull them from the addon's own release.
+      # A missing addon is not fatal: copy_build copies whatever exists in pack\.
+      - name: Fetch SbieHide addon
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $dst = 'Installer\pack\addons\SbieHide'
+          New-Item -ItemType Directory -Force -Path $dst | Out-Null
+          $rel = Invoke-RestMethod 'https://api.github.com/repos/sandboxie-plus/SbieHide/releases/latest' -Headers @{ 'User-Agent' = 'leafage-build' }
+          $zip = $rel.assets | Where-Object { $_.name -like '*.zip' } | Select-Object -First 1
+          if (-not $zip) { throw 'no zip asset in the latest SbieHide release' }
+          $tmp = Join-Path $env:RUNNER_TEMP 'sbiehide.zip'
+          $out = Join-Path $env:RUNNER_TEMP 'sbiehide'
+          Invoke-WebRequest $zip.browser_download_url -OutFile $tmp
+          Expand-Archive $tmp -DestinationPath $out -Force
+          foreach ($n in 'SbieHide_x64.dll', 'SbieHide_x86.dll') {
+              $f = Get-ChildItem -Recurse -File -Filter $n $out | Select-Object -First 1
+              if ($f) { Copy-Item $f.FullName (Join-Path $dst $n) -Force }
+          }
+          Get-ChildItem $dst -ErrorAction SilentlyContinue | Select-Object Name, Length
+
+      # wtsapi32.dll side-loading proxy (vendored from SbieKey). LeafSvc
+      # statically imports wtsapi32, so shipping this DLL is what lets the
+      # test-signed LeafDrv.sys load on a machine with DSE enabled.
+      - name: Build WTS proxy - x64
+        run: msbuild /t:build SbieKey\wtsapi32.vcxproj /p:Configuration=Release /p:Platform=x64 -maxcpucount:8
+
+      - name: Stage WTS proxy into pack
+        shell: pwsh
+        run: |
+          $src = 'SbieKey\Bin\x64\Release\wtsapi32.dll'
+          if (-not (Test-Path $src)) { throw "missing $src" }
+          Copy-Item $src 'Installer\pack\wtsapi32.dll' -Force
+          Get-Item 'Installer\pack\wtsapi32.dll' | Select-Object Name, Length
+
+      - name: Merge build output
+        shell: cmd
+        run: Installer\copy_build.cmd x64 build_qt6
+
+      # Green package: drop debug symbols, then put the config next to the
+      # binaries so the driver finds Sandboxie.ini in its home directory.
+      - name: Prepare green package
+        shell: cmd
+        run: |
+          del /s /q Installer\SbiePlus_x64\*.pdb
+          copy /y Installer\Sandboxie.ini Installer\SbiePlus_x64\
+          move Installer\SbiePlus_x64 Installer\Sandboxie-Plus
+
+      # Fail loudly if the package is not runnable out of the box.
+      - name: Verify green package
+        shell: pwsh
+        run: |
+          $root = 'Installer\Sandboxie-Plus'
+          $critical = @(
+            'SandMan.exe', 'QSbieAPI.dll', 'SbieCtrl.exe', 'Start.exe', 'KmdUtil.exe',
+            'LeafSvc.exe', 'LeafDll.dll', 'LeafDrv.sys', 'LeafMsg.dll', 'LeafHostDll.dll',
+            'LeafShellExt.dll', 'LeafBITS.exe', 'LeafCrypto.exe', 'LeafDcomLaunch.exe',
+            'LeafRpcSs.exe', 'LeafWUAU.exe', 'SbieIni.exe', 'ImBox.exe', 'UpdUtil.exe',
+            '32\LeafSvc.exe', '32\LeafDll.dll',
+            'wtsapi32.dll', 'Certificate.dat', 'License.dat',
+            'Sandboxie.ini', 'SbieSettings.ini', 'Templates.ini',
+            'Manifest0.txt', 'Manifest1.txt', 'Manifest2.txt',
+            'translations.7z', 'troubleshooting.7z', 'SbieShellPkg.msix'
+          )
+          $optional = @('addons\SbieHide\SbieHide_x64.dll', 'addons\SbieHide\SbieHide_x86.dll')
+          $missing = @($critical | Where-Object { -not (Test-Path (Join-Path $root $_)) })
+          $absent  = @($optional | Where-Object { -not (Test-Path (Join-Path $root $_)) })
+          Get-ChildItem $root | Sort-Object Name | Select-Object Name, Length
+          if ($absent.Count) { Write-Warning ("optional missing: " + ($absent -join ', ')) }
+          if ($missing.Count) { throw ("green package incomplete, missing: " + ($missing -join ', ')) }
+          Write-Host "green package complete ($((Get-ChildItem -Recurse -File $root).Count) files)"
+
+      # Rejects a "successful" build that still emits Crash* binaries.
+      - name: Verify binary names are Leaf*
+        shell: pwsh
+        run: |
+          $root = 'Installer\Sandboxie-Plus'
+          $stale = @(Get-ChildItem -Recurse -File $root |
+                     Where-Object { $_.Name -match '^Crash' })
+          if ($stale.Count) {
+            $stale | ForEach-Object { Write-Host "  $($_.FullName)" }
+            throw "stale Crash* binaries in package"
+          }
+          Get-ChildItem $root -File -Filter 'Leaf*' | Select-Object Name, Length
+          Write-Host "all shipped binaries are Leaf*"
+
+      - name: Upload green package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Leaf-green-x64
+          path: Installer/Sandboxie-Plus
+          retention-days: 30

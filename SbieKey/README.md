@@ -7,11 +7,11 @@
 ## 它做什么
 
 ```
-CrashSvc.exe（LocalSystem 启动）静态导入 wtsapi32.dll
+LeafSvc.exe（LocalSystem 启动）静态导入 wtsapi32.dll
   └─ 程序目录下的这个 DLL 先被加载（DLL 侧加载）
        ├─ DllMain → InitProxy()：把 69 个 WTS 导出转发到 %SystemRoot%\System32\wtsapi32.dll
        ├─ MinHook 挂 ntdll!NtLoadDriver
-       └─ 命中 kTargetDriverServices 里的驱动服务时（当前 = SbieDrv / LukDrv / CrashDrv）：
+       └─ 命中 kTargetDriverServices 里的驱动服务时（当前 = SbieDrv / LukDrv / LeafDrv）：
              ① PatchDriver(ImagePath)：清 PE Security 目录、
                 把 ksecdd!BCryptVerifySignature 的调用点改成 `31 C0 C3`（xor eax,eax; ret）、
                 CheckSumMappedFile 重算校验和（**不可逆**，改前会留 `*.sbiekey.bak`）
@@ -21,8 +21,8 @@ CrashSvc.exe（LocalSystem 启动）静态导入 wtsapi32.dll
              ④ DSEAction(RestoreDSE)：恢复 g_CiOptions
 ```
 
-`CrashDrv` 这一项是本项目加的（原版只认 `SbieDrv` / `LukDrv`）：不加的话驱动仍能加载
-（"关 DSE"那一步是无条件的），但盘上的 `CrashDrv.sys` 会留着 4032 字节的 WDKTestCert
+`LeafDrv` 这一项是本项目加的（原版只认 `SbieDrv` / `LukDrv`）：不加的话驱动仍能加载
+（"关 DSE"那一步是无条件的），但盘上的 `LeafDrv.sys` 会留着 4032 字节的 WDKTestCert
 测试签名目录，静态一看就知道是自签。
 
 ## 来源与构成

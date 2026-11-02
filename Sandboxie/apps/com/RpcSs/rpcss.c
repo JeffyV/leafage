@@ -394,12 +394,12 @@ _FX int __stdcall WinMain(
     BOOL ok;
     BOOL hook_success = TRUE;
 
-    if (! (CrashApi_QueryProcessInfo(0, 0) & SBIE_FLAG_VALID_PROCESS))
+    if (! (LeafApi_QueryProcessInfo(0, 0) & SBIE_FLAG_VALID_PROCESS))
         return EXIT_FAILURE;
 
     if (! CheckSingleInstance()) {
         // return special error code to indicate elective termination
-        // because this is a duplicate copy of CrashRpcSs.exe
+        // because this is a duplicate copy of LeafRpcSs.exe
         // see also core/dll/ipc_start.c
         return STATUS_LICENSE_QUOTA_EXCEEDED;
     }

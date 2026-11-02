@@ -71,10 +71,10 @@ BOOL my_CreateProcessW(
         LPPROCESS_INFORMATION lpProcessInformation);
 
     //
-    // make sure CrashWUAU only launches one copy of WUAUCLT.EXE
-    // at a time.  the sequence is CrashWUAU launching WUAUCLT.
+    // make sure LeafWUAU only launches one copy of WUAUCLT.EXE
+    // at a time.  the sequence is LeafWUAU launching WUAUCLT.
     // then WUAUCLT calls CoRegisterClassObject for some unregistered
-    // CLSID and signals CrashWUAU.  then CrashWUAU tries
+    // CLSID and signals LeafWUAU.  then LeafWUAU tries
     // CoCreateInstance on that CLSID.  It fails REGDB_E_CLASSNOTREG,
     // and then retries from the top, spawning another instance of
     // WUAUCLT.  this hack prevents more than one instance of WUAUCLT.

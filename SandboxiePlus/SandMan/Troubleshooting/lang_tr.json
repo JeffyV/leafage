@@ -79,9 +79,9 @@
 "SBIE2115: File is too large to copy into sandbox, opening in read only": "SBIE2115: Dosya korumalı alana kopyalanamayacak kadar büyük, salt okunur olarak açıldı",
 "File is too large to copy into sandbox, opening in read only": "Dosyanın korumalı alana kopyalanamayacak kadar büyük olduğundan dolayı erişime salt okunur olarak izin verildiğini bildirir",
 
-"SBIE2181: Failed to load CrashDll.dll": "SBIE2181: CrashDll.dll yüklenemedi",
+"SBIE2181: Failed to load LeafDll.dll": "SBIE2181: LeafDll.dll yüklenemedi",
 "Fix the DACLs of Sandboxie's home folder": "Sandboxie'nin ana klasörünün DACL girişlerini düzeltir",
-"Failures to load CrashDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.": "Chrome veya uygulama konteyneri kullanan başka bir yazılımla karşılaşıldığında CrashDll.dll dosyasının yüklenememesi, genellikle Sandboxie ana dizini için geçersiz DACL girişlerinden kaynaklanır. Bu hafifletici önlem bunları düzeltecektir, bu nedenle gereken yönetici ayrıcalıkları kmdutil.exe için istenecektir.",
+"Failures to load LeafDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.": "Chrome veya uygulama konteyneri kullanan başka bir yazılımla karşılaşıldığında LeafDll.dll dosyasının yüklenememesi, genellikle Sandboxie ana dizini için geçersiz DACL girişlerinden kaynaklanır. Bu hafifletici önlem bunları düzeltecektir, bu nedenle gereken yönetici ayrıcalıkları kmdutil.exe için istenecektir.",
 "The DACLs have been adjusted, please try to run your application again and indicate if the issue has been resolved.": "DACL'ler ayarlandı. Lütfen uygulamanızı tekrar çalıştırmayı deneyin ve sorunun çözülüp çözülmediğini belirtin.",
 "DACLs fix did not resolve the issue": "DACL düzeltmesi sorunu çözmedi",
 

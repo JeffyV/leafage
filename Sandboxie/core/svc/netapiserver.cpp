@@ -235,7 +235,7 @@ void NetApiServer::LaunchSlave(ULONG len, const WCHAR *drive)
     // outside the sandbox, Windows Explorer invokes DefineDosDevice after a
     // call to NetUseAdd, to broadcast the WM_DEVICECHANGE message to all
     // windows on the same desktop.  but since DefineDosDevice is blocked in
-    // the sandbox, we run the NetApiServer CrashSvc slave to call it outside
+    // the sandbox, we run the NetApiServer LeafSvc slave to call it outside
     // the sandbox on the same desktop as our calling process
     //
 

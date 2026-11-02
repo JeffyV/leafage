@@ -91,7 +91,7 @@ HRESULT CAutoPlay::AllowAutoPlay(
 {
 
     ULONG state;
-    CrashApi_DisableForceProcess(NULL, &state);
+    LeafApi_DisableForceProcess(NULL, &state);
     if (state != 0)
         return S_OK;
 
@@ -142,7 +142,7 @@ void CAutoPlay::LogAutoPlay(const WCHAR *boxname, WCHAR drive)
     ++tmp2;
     *tmp2 = L'\0';
 
-    CrashApi_Log(2199, tmp);
+    LeafApi_Log(2199, tmp);
 
     delete tmp;
 }

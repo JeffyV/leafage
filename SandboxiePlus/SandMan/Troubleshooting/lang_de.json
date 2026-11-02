@@ -79,9 +79,9 @@
 "SBIE2115: File is too large to copy into sandbox, opening in read only": "SBIE2115: Die Datei ist zu groß, um sie in die Sandbox zu kopieren, öffne Datei nur schreibgeschützt",
 "File is too large to copy into sandbox, opening in read only": "Die Datei ist zu groß, um sie in die Sandbox zu kopieren, öffne Datei nur schreibgeschützt",
 
-"SBIE2181: Failed to load CrashDll.dll": "SBIE2181: CrashDll.dll konnte nicht geladen werden",
+"SBIE2181: Failed to load LeafDll.dll": "SBIE2181: LeafDll.dll konnte nicht geladen werden",
 "Fix the DACLs of Sandboxie's home folder": "Reparieren der DACLs des Sandboxie-Ordners",
-"Failures to load CrashDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.": "Wenn Chrome oder eine andere Software, die App-Container verwendet, die Datei CrashDll.dll nicht laden kann, wird dies häufig durch ungültige DACL-Einträge für das Sandboxie-Verzeichnis verursacht. Diese Problementschärfungsmaßnahme wird die DACL-Einträge reparieren. Aus diesem Grund wird sie Adminrechte anfordern, die für kmdutil.exe gewährt werden müssen.",
+"Failures to load LeafDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.": "Wenn Chrome oder eine andere Software, die App-Container verwendet, die Datei LeafDll.dll nicht laden kann, wird dies häufig durch ungültige DACL-Einträge für das Sandboxie-Verzeichnis verursacht. Diese Problementschärfungsmaßnahme wird die DACL-Einträge reparieren. Aus diesem Grund wird sie Adminrechte anfordern, die für kmdutil.exe gewährt werden müssen.",
 "The DACLs have been adjusted, please try to run your application again and indicate if the issue has been resolved.": "Die DACLs wurden angepasst. Bitte versuchen Sie, Ihre Anwendung erneut auszuführen und geben Sie an, ob das Problem behoben wurde.",
 "DACLs fix did not resolve the issue": "Reparatur der DACLs hat das Problem nicht behoben",
 

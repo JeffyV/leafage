@@ -176,7 +176,7 @@ int wmain(int argc, wchar_t* argv[])
         return UnregisterSparsePackage(sparsePackageName);
     }*/
 
-    HMODULE ext = LoadLibraryW(L"CrashShellExt.dll");
+    HMODULE ext = LoadLibraryW(L"LeafShellExt.dll");
 
     typedef int (*FUNC)();
     if (wcsicmp(argv[1], L"-install") == 0)

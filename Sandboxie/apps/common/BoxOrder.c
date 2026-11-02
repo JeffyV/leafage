@@ -162,7 +162,7 @@ _FX WCHAR *BoxOrder_ReadSetting(const WCHAR *section_name)
             WCHAR *result_ptr = result;
             while (1) {
 
-                status = CrashApi_QueryConfAsIs(
+                status = LeafApi_QueryConfAsIs(
                     section_name, BoxOrder_SettingName,
                     setting_idx | CONF_GET_NO_GLOBAL | CONF_GET_NO_TEMPLS,
                     result_ptr, (result_len - 8) * sizeof(WCHAR));
@@ -266,7 +266,7 @@ _FX int BoxOrder_ReadGroup(BOX_ORDER_ENTRY *parent, WCHAR *text)
                 sep = sep2;
                 new_entry = BoxOrder_ReadGroup2(text, &sep);
 
-            } else if (CrashApi_IsBoxEnabled(text) == 0)
+            } else if (LeafApi_IsBoxEnabled(text) == 0)
                 new_entry = BoxOrder_Alloc(text);
 
             else
@@ -324,11 +324,11 @@ _FX void BoxOrder_ReadMissing(BOX_ORDER_ENTRY *parent)
     box_count = 0;
     box_index = -1;
     while (1) {
-        box_index = CrashApi_EnumBoxesEx(
+        box_index = LeafApi_EnumBoxesEx(
                         box_index, work_name, TRUE);
         if (box_index == -1)
             break;
-        if (CrashApi_IsBoxEnabled(work_name) == 0)
+        if (LeafApi_IsBoxEnabled(work_name) == 0)
             ++box_count;
     }
     if (! box_count)
@@ -341,11 +341,11 @@ _FX void BoxOrder_ReadMissing(BOX_ORDER_ENTRY *parent)
     box_index = -1;
     while (name_index < box_count) {
         name = &all_names[name_index * BOXNAME_COUNT];
-        box_index = CrashApi_EnumBoxesEx(
+        box_index = LeafApi_EnumBoxesEx(
                         box_index, name, TRUE);
         if (box_index == -1)
             break;
-        if (CrashApi_IsBoxEnabled(name) == 0)
+        if (LeafApi_IsBoxEnabled(name) == 0)
             ++name_index;
     }
 

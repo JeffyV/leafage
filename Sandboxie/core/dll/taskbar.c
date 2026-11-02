@@ -187,7 +187,7 @@ _FX BOOLEAN Taskbar_Init(HMODULE module)
     // initialize BoxPrefix variables
     //
 
-    //if (CrashApi_GetVersion(Version) == 0) {
+    //if (LeafApi_GetVersion(Version) == 0) {
     //    while (1) {
     //        WCHAR *ptr = wcschr(Version, L'.');
     //        if (! ptr)
@@ -198,7 +198,7 @@ _FX BOOLEAN Taskbar_Init(HMODULE module)
     //    *Version = L'\0';
 
 #ifdef CUSTOM_APPUSERMODELID
-    CrashApi_QueryConf(
+    LeafApi_QueryConf(
                 NULL, L"TaskbarUnique", 0, Version, 14 * sizeof(WCHAR));
 #endif CUSTOM_APPUSERMODELID
 
@@ -318,7 +318,7 @@ _FX BOOLEAN Taskbar_ShouldOverrideAppUserModelId(void)
         if (0 == NtQueryInformationProcess(
                     NtCurrentProcess(), ProcessBasicInformation,
                     &info, sizeof(PROCESS_BASIC_INFORMATION), &len)) {
-            ULONG64 ParentProcessFlags = CrashApi_QueryProcessInfo(
+            ULONG64 ParentProcessFlags = LeafApi_QueryProcessInfo(
                         (HANDLE)info.InheritedFromUniqueProcessId, 0);
             if (ParentProcessFlags & SBIE_FLAG_FORCED_PROCESS)
                 return FALSE;
@@ -740,7 +740,7 @@ _FX WCHAR *Taskbar_GetStartExeCommand(const WCHAR *args)
 
 #ifdef CUSTOM_APPUSERMODELID
 
-    CrashApi_QueryConf(
+    LeafApi_QueryConf(
         NULL, L"TaskbarProgram", 0, command + 1, MAX_PATH * sizeof(WCHAR));
     SbieDll_TranslateNtToDosPath(command + 1);
     wcscat(command, L"\" ");
@@ -780,7 +780,7 @@ _FX WCHAR *Taskbar_GetNameWithBoxPrefix(const WCHAR *name)
     WCHAR *out = Dll_AllocTemp(len * sizeof(WCHAR));
     out[0] = '[';
 
-    CrashApi_QueryConf(
+    LeafApi_QueryConf(
         NULL, L"TaskbarName", 0, out + 1, MAX_PATH * sizeof(WCHAR));
     wcscat(out, L"] ");
     wcscat(out, name);
@@ -867,7 +867,7 @@ _FX HRESULT Taskbar_Unknown_QueryInterface(
     IPropertyStore *This, REFIID riid, void **ppv)
 {
     if (memcmp(riid, &IID_IPropertyStore, sizeof(GUID)) != 0) {
-        CrashApi_Log(2205, L"SHGetPropertyStoreForWindow");
+        LeafApi_Log(2205, L"SHGetPropertyStoreForWindow");
         return E_NOINTERFACE;
     }
     This->lpVtbl->AddRef(This);
@@ -924,7 +924,7 @@ HRESULT Taskbar_SHGetPropertyStoreForWindow(
     if (FAILED(hr) || (! Taskbar_ShouldOverrideAppUserModelId()))
         return hr;
     if (memcmp(riid, &IID_IPropertyStore, sizeof(GUID)) != 0) {
-        CrashApi_Log(2205, L"SHGetPropertyStoreForWindow");
+        LeafApi_Log(2205, L"SHGetPropertyStoreForWindow");
         return hr;
     }
 

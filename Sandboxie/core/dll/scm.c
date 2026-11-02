@@ -375,9 +375,9 @@ static const WCHAR *Scm_ServicesKeyPath =
 static const WCHAR *Scm_MsiServer     = L"MSIServer";
        const WCHAR *Scm_CryptSvc      = L"cryptsvc";
 
-static const WCHAR *CrashBITS     = L"CrashBITS.exe";
-static const WCHAR *CrashWUAU     = L"CrashWUAU.exe";
-static const WCHAR *CrashCrypto   = L"CrashCrypto.exe";
+static const WCHAR *LeafBITS     = L"LeafBITS.exe";
+static const WCHAR *LeafWUAU     = L"LeafWUAU.exe";
+static const WCHAR *LeafCrypto   = L"LeafCrypto.exe";
 
 static const WCHAR *_bits             = L"bits";
 static const WCHAR *_wuauserv         = L"wuauserv";
@@ -399,7 +399,7 @@ static const WCHAR *_TrustedInstaller = L"TrustedInstaller";
     __sys_##base##suffix =                                              \
     (P_##base)Ldr_GetProcAddrNew(m, L#base L#suffix,#base #suffix);     \
     if (! __sys_##base##suffix) {                                       \
-        CrashApi_Log(2303, L"%s (ADV)", ProcName);                       \
+        LeafApi_Log(2303, L"%s (ADV)", ProcName);                       \
         return FALSE;                                                   \
     }                                                                   \
     }
@@ -1114,7 +1114,7 @@ _FX WCHAR *Scm_GetBoxedServices(void)
 
     //
     // otherwise get the MULTI_SZ list of sandboxed services from
-    // the SandboxedServices value of the CrashSvc key
+    // the SandboxedServices value of the LeafSvc key
     //
 
     hkey = Scm_OpenKeyForService(SBIESVC, FALSE);

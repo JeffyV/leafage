@@ -557,10 +557,10 @@ _FX NTSTATUS Key_MyParseProc_2(OBJ_PARSE_PROC_ARGS_2)
 
         //
         // when Software Restriction Policies is in effect, ADVAPI32 opens
-        // \REGISTRY\MACHINE for MAXIMUM_ALLOWED access even before CrashDll
+        // \REGISTRY\MACHINE for MAXIMUM_ALLOWED access even before LeafDll
         // was loaded, so permit those accesses
         //
-        // note that since version 3.45, CrashDll takes over the job of
+        // note that since version 3.45, LeafDll takes over the job of
         // loading static import DLLs, however ADVAPI32 is loaded directly
         // by NTDLL even before manipulating static imports.
         //
@@ -1063,7 +1063,7 @@ _FX void Key_UnmountHive(PROCESS *proc)
         // we were the last users of this hive, so it should be
         // unmounted.  however, most of the time, unloading here would
         // return STATUS_CANNOT_DELETE because the process still has
-        // has open handles.  so instead, we tell CrashSvc to invoke
+        // has open handles.  so instead, we tell LeafSvc to invoke
         // API_UNMOUNT_HIVES when the process has ended.
         //
 
@@ -1103,7 +1103,7 @@ _FX NTSTATUS Key_Api_GetUnmountHive(PROCESS *proc, ULONG64 *parms)
     BOOLEAN locked;
 
     //
-    // we expect to be called only by CrashSvc, so certainly not any
+    // we expect to be called only by LeafSvc, so certainly not any
     // sandboxed process
     //
 

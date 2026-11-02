@@ -47,7 +47,7 @@
 //
 // note the window class name is _DDE_ProxyClass1 and there is another
 // proxy window called _DDE_ProxyClass2 created by DdeProxyThreadSlave
-// in the CrashSvc GUI Proxy in file core/svc/GuiServer.cpp
+// in the LeafSvc GUI Proxy in file core/svc/GuiServer.cpp
 //
 //---------------------------------------------------------------------------
 
@@ -64,7 +64,7 @@ _FX ULONG Dde_Thread(void *arg)
     WNDCLASS wc;
     MSG msg;
 
-    if (CrashApi_QueryProcessInfo(0, 0) & SBIE_FLAG_OPEN_ALL_WIN_CLASS)
+    if (LeafApi_QueryProcessInfo(0, 0) & SBIE_FLAG_OPEN_ALL_WIN_CLASS)
         return 0;
 
     memzero(&wc, sizeof(wc));

@@ -50,7 +50,7 @@ bool ServiceServer::CanCallerDoElevation(
     WCHAR boxname[BOXNAME_COUNT];
     WCHAR exename[99];
 
-    if (0 != CrashApi_QueryProcess(idProcess, boxname, exename, NULL, pSessionId))
+    if (0 != LeafApi_QueryProcess(idProcess, boxname, exename, NULL, pSessionId))
         return false;
 
     bool DropRights = CheckDropRights(boxname, exename);
@@ -70,7 +70,7 @@ bool ServiceServer::CanCallerDoElevation(
         }
         else 
         {
-            ULONG64 ProcessFlags = CrashApi_QueryProcessInfo(idProcess, 0);
+            ULONG64 ProcessFlags = LeafApi_QueryProcessInfo(idProcess, 0);
 
             //
             // If admin permission emulation is active and this service will 
@@ -82,7 +82,7 @@ bool ServiceServer::CanCallerDoElevation(
 
             // 
             // if this service is configured to be started on box initialization
-            // by CrashRpcSs.exe allow it to be started
+            // by LeafRpcSs.exe allow it to be started
             //
 
             if (DropRights && SbieDll_CheckStringInList(ServiceName, boxname, L"StartService"))
@@ -101,11 +101,11 @@ bool ServiceServer::CanCallerDoElevation(
     if (DropRights) {
 
         if (ServiceName)
-            CrashApi_LogEx(*pSessionId, 2214, ServiceName);
+            LeafApi_LogEx(*pSessionId, 2214, ServiceName);
         else
-            CrashApi_LogEx(*pSessionId, 2217, NULL);
+            LeafApi_LogEx(*pSessionId, 2217, NULL);
 
-        CrashApi_LogEx(*pSessionId, 2219, L"%S [%S]", exename, boxname);
+        LeafApi_LogEx(*pSessionId, 2219, L"%S [%S]", exename, boxname);
 
         return false;
     }
@@ -122,16 +122,16 @@ bool ServiceServer::CanAccessSCM(HANDLE idProcess)
 {
 	WCHAR boxname[BOXNAME_COUNT] = { 0 };
 	WCHAR exename[99] = { 0 };
-	CrashApi_QueryProcess(idProcess, boxname, exename, NULL, NULL); // if this fail we take the global config if present
-	if (CrashApi_QueryConfBool(boxname, L"UnrestrictedSCM", FALSE))
+	LeafApi_QueryProcess(idProcess, boxname, exename, NULL, NULL); // if this fail we take the global config if present
+	if (LeafApi_QueryConfBool(boxname, L"UnrestrictedSCM", FALSE))
 		return true;
-    ULONG64 ProcessFlags = CrashApi_QueryProcessInfo(idProcess, 0);
+    ULONG64 ProcessFlags = LeafApi_QueryProcessInfo(idProcess, 0);
     BOOLEAN CompartmentMode = (ProcessFlags & SBIE_FLAG_APP_COMPARTMENT) != 0;
 
 	//
 	// DcomLaunch runs as user but needs to be able to access the SCM 
 	//
-	if (_wcsicmp(exename, L"CrashDcomLaunch.exe") == 0)
+	if (_wcsicmp(exename, L"LeafDcomLaunch.exe") == 0)
 		return true;
 
 
@@ -148,7 +148,7 @@ bool ServiceServer::CanAccessSCM(HANDLE idProcess)
 
 	HANDLE hToken = NULL;
     // OriginalToken BEGIN
-    if (CompartmentMode || CrashApi_QueryConfBool(boxname, L"OriginalToken", FALSE)) {
+    if (CompartmentMode || LeafApi_QueryConfBool(boxname, L"OriginalToken", FALSE)) {
         HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, (DWORD)(UINT_PTR)idProcess);
         if (hProcess != NULL) {
             OpenProcessToken(hProcess, TOKEN_IMPERSONATE | TOKEN_QUERY | TOKEN_DUPLICATE | STANDARD_RIGHTS_READ, &hToken);
@@ -157,7 +157,7 @@ bool ServiceServer::CanAccessSCM(HANDLE idProcess)
     }
     else
     // OriginalToken END
-	    hToken = (HANDLE)CrashApi_QueryProcessInfo(idProcess, 'ptok');
+	    hToken = (HANDLE)LeafApi_QueryProcessInfo(idProcess, 'ptok');
 
 	if (hToken) {
 		HANDLE hImpersonatedToken = NULL;
@@ -195,11 +195,11 @@ void ServiceServer::ReportError2218(HANDLE idProcess, ULONG errlvl)
     WCHAR imagename[99];
     ULONG session_id;
 
-    if (0 == CrashApi_QueryProcess(
+    if (0 == LeafApi_QueryProcess(
                         idProcess, boxname, imagename, NULL, &session_id)) {
 
-        CrashApi_LogEx(session_id, 2218, L"[%02X / %08X]", errlvl, LastError);
-        CrashApi_LogEx(session_id, 2219, L"%S [%S]", imagename, boxname);
+        LeafApi_LogEx(session_id, 2218, L"[%02X / %08X]", errlvl, LastError);
+        LeafApi_LogEx(session_id, 2219, L"%S [%S]", imagename, boxname);
     }
 }
 
@@ -306,11 +306,11 @@ MSG_HEADER *ServiceServer::RunHandler(MSG_HEADER *msg, HANDLE idProcess)
 int ServiceServer::RunServiceAsSystem(const WCHAR* svcname, const WCHAR* boxname)
 {
     // exception for MSIServer, see also core/drv/thread_token.c
-    if (svcname && _wcsicmp(svcname, L"MSIServer") == 0 && CrashApi_QueryConfBool(boxname, L"MsiInstallerExemptions", FALSE))
+    if (svcname && _wcsicmp(svcname, L"MSIServer") == 0 && LeafApi_QueryConfBool(boxname, L"MsiInstallerExemptions", FALSE))
         return 2;
 
     // legacy behaviour option
-    if (CrashApi_QueryConfBool(boxname, L"RunServicesAsSystem", FALSE)) 
+    if (LeafApi_QueryConfBool(boxname, L"RunServicesAsSystem", FALSE)) 
         return 1;
     
     if (!svcname)
@@ -344,8 +344,8 @@ ULONG ServiceServer::RunHandler2(
     BOOL  asSys;
 
     WCHAR boxname[BOXNAME_COUNT] = { 0 };
-    CrashApi_QueryProcess(idProcess, boxname, NULL, NULL, NULL);
-    ULONG64 ProcessFlags = CrashApi_QueryProcessInfo(idProcess, 0);
+    LeafApi_QueryProcess(idProcess, boxname, NULL, NULL, NULL);
+    ULONG64 ProcessFlags = LeafApi_QueryProcessInfo(idProcess, 0);
     BOOLEAN CompartmentMode = (ProcessFlags & SBIE_FLAG_APP_COMPARTMENT) != 0;
 
     if (ok) {
@@ -372,7 +372,7 @@ ULONG ServiceServer::RunHandler2(
             ok = WTSQueryUserToken(idSession, &hOldToken);
         }
         /*// OriginalToken BEGIN
-        else if (CompartmentMode || CrashApi_QueryConfBool(boxname, L"OriginalToken", FALSE)) {
+        else if (CompartmentMode || LeafApi_QueryConfBool(boxname, L"OriginalToken", FALSE)) {
             HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, (ULONG)(ULONG_PTR)idProcess);
             if (!hProcess)
                 ok = FALSE;
@@ -386,7 +386,7 @@ ULONG ServiceServer::RunHandler2(
         // OriginalToken END
         else {
             // use the callers original token
-            hOldToken = (HANDLE)CrashApi_QueryProcessInfo(idProcess, 'ptok');
+            hOldToken = (HANDLE)LeafApi_QueryProcessInfo(idProcess, 'ptok');
         }*/
     }
 
@@ -410,18 +410,18 @@ ULONG ServiceServer::RunHandler2(
             ok = FALSE;
         else
         {
-            if (CrashApi_QueryConfBool(boxname, L"ExposeBoxedSystem", FALSE))
+            if (LeafApi_QueryConfBool(boxname, L"ExposeBoxedSystem", FALSE))
                 ok = ProcessServer::RunSandboxedSetDacl(hProcess, hNewToken, GENERIC_ALL, TRUE, idProcess);
-            else if (CrashApi_QueryConfBool(boxname, L"AdjustBoxedSystem", TRUE))
+            else if (LeafApi_QueryConfBool(boxname, L"AdjustBoxedSystem", TRUE))
                 // OriginalToken BEGIN
-                if (!CompartmentMode && !CrashApi_QueryConfBool(boxname, L"OriginalToken", FALSE))
+                if (!CompartmentMode && !LeafApi_QueryConfBool(boxname, L"OriginalToken", FALSE))
                 // OriginalToken END
                 ok = ProcessServer::RunSandboxedSetDacl(hProcess, hNewToken, GENERIC_READ, FALSE);
 
             CloseHandle(hProcess);
         }
     
-        if (ok && CrashApi_QueryConfBool(boxname, L"StripSystemPrivileges", TRUE)) {
+        if (ok && LeafApi_QueryConfBool(boxname, L"StripSystemPrivileges", TRUE)) {
             errlvl = 0x27;
             ok = ProcessServer::RunSandboxedStripPrivileges(hNewToken);
         }
@@ -530,11 +530,11 @@ ULONG ServiceServer::UacHandler2(
     BOOL  quick = FALSE; // don't use UAC prompt
     BOOL  fake = FALSE;
     
-    if (CrashApi_QueryConfBool(NULL, L"UseSandboxieUAC", TRUE)) {
+    if (LeafApi_QueryConfBool(NULL, L"UseSandboxieUAC", TRUE)) {
 
         ULONG SessionId;
         //WCHAR BoxName[BOXNAME_COUNT];
-        //if (NT_SUCCESS(CrashApi_QueryProcess(idProcess, BoxName, NULL, NULL, &SessionId))) {
+        //if (NT_SUCCESS(LeafApi_QueryProcess(idProcess, BoxName, NULL, NULL, &SessionId))) {
         if (ProcessIdToSessionId((DWORD)(UINT_PTR)idProcess, &SessionId)) {
 
             HANDLE hToken;
@@ -571,7 +571,7 @@ ULONG ServiceServer::UacHandler2(
                                     if (GetExitCodeProcess(pi.hProcess, &Code)) {
 
                                         if (Code == IDYES) {
-                                            if(CrashApi_QueryConfBool(NULL, L"PromptOnSecureDesktop", TRUE))
+                                            if(LeafApi_QueryConfBool(NULL, L"PromptOnSecureDesktop", TRUE))
                                                 quick = TRUE;
                                         } else if (Code == IDNO)
                                             fake = TRUE;
@@ -709,7 +709,7 @@ ULONG ServiceServer::UacHandler2(
     if (ok) {
 
         //
-        // uac step 2.  run CrashSvc.exe as a normal program (not service)
+        // uac step 2.  run LeafSvc.exe as a normal program (not service)
         // in the logon session of the caller.  pass UacProxy command line
         //
 
@@ -844,7 +844,7 @@ void ServiceServer::RunUacSlave2(ULONG_PTR *ThreadArgs)
     HANDLE idProcess = (HANDLE)ThreadArgs[0];
 
     WCHAR BoxName[BOXNAME_COUNT];
-    if (0 != CrashApi_QueryProcess(idProcess, BoxName, NULL, NULL, NULL))
+    if (0 != LeafApi_QueryProcess(idProcess, BoxName, NULL, NULL, NULL))
         return;
 
     WCHAR *AppName = NULL;
@@ -1155,7 +1155,7 @@ ULONG ServiceServer::RunUacSlave2Thread1(void *lpParameters)
 
     //
     // re-build command line as
-    //      Start.exe /model... CrashSvc.exe ...UacProxy...
+    //      Start.exe /model... LeafSvc.exe ...UacProxy...
     // remove the @-prefixed device map in the new command line
     //
 
@@ -1247,7 +1247,7 @@ ULONG ServiceServer::RunUacSlave2Thread2(void *lpParameters)
 typedef struct _SECURE_UAC_PACKET {
 
     //
-    // keep in sync with CrashDll / secure.c
+    // keep in sync with LeafDll / secure.c
     //
 
     ULONG   tzuk;
@@ -1291,7 +1291,7 @@ void ServiceServer::RunUacSlave3(
 
     if (ok) {
         errlvl = 0x81;
-        if (0 != CrashApi_QueryProcess(idProcess, NULL, NULL, NULL, NULL)) {
+        if (0 != LeafApi_QueryProcess(idProcess, NULL, NULL, NULL, NULL)) {
             ok = FALSE;
             SetLastError(ERROR_ACCESS_DENIED);
         }
@@ -1300,13 +1300,13 @@ void ServiceServer::RunUacSlave3(
     if (ok) {
 
         WCHAR BoxName[BOXNAME_COUNT];
-        CrashApi_QueryProcess((HANDLE)(ULONG_PTR)GetCurrentProcessId(),
+        LeafApi_QueryProcess((HANDLE)(ULONG_PTR)GetCurrentProcessId(),
                              BoxName, NULL, NULL, NULL);
         if (BoxName[0]){
 
             errlvl = 0x89;
             hProcess = NULL;
-            CrashApi_OpenProcess(&hProcess, idProcess);
+            LeafApi_OpenProcess(&hProcess, idProcess);
             if (! hProcess)
                 SetLastError(ERROR_ACCESS_DENIED);
 
@@ -1328,7 +1328,7 @@ void ServiceServer::RunUacSlave3(
                 WCHAR *AppName = (WCHAR *)HeapAlloc(
                             GetProcessHeap(), 0, 99 * sizeof(WCHAR));
                 if (AppName) {
-                    CrashApi_QueryProcess(
+                    LeafApi_QueryProcess(
                                     idProcess, NULL, AppName, NULL, NULL);
                     if (*AppName) {
                         *OutAppName = AppName;
@@ -1523,7 +1523,7 @@ bool ServiceServer::RunUacSlave4(
     //
     // elevation type 1:  create process and return process handle
     //
-    // note that CrashDll hooks RtlQueryElevationFlags in order to prevent
+    // note that LeafDll hooks RtlQueryElevationFlags in order to prevent
     // a potential loop when dealing with EXEs that get auto elevation.
     // note also a similar behavior in Sxs_CheckManifestForCreateProcess.
     //
@@ -1564,7 +1564,7 @@ bool ServiceServer::CallUacDialogHook(
     const WCHAR *cmdline, bool isAdmin)
 {
     WCHAR dllpath[384+64];
-    if (0 != CrashApi_GetHomePath(NULL, 0, dllpath, 384))
+    if (0 != LeafApi_GetHomePath(NULL, 0, dllpath, 384))
         return false;
     wcscat(dllpath, L"\\" EXTENSION_DLLNAME);
     HMODULE extdll = LoadLibrary(dllpath);

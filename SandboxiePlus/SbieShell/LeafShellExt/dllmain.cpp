@@ -64,7 +64,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
             g_path = std::wstring(path);
 
             HKEY hKey;
-            LONG lRes = RegOpenKeyExW(HKEY_CURRENT_USER, L"SOFTWARE\\Xanasoft\\Sandboxie-Plus\\CrashShellExt\\Lang", 0, KEY_READ, &hKey);
+            LONG lRes = RegOpenKeyExW(HKEY_CURRENT_USER, L"SOFTWARE\\Xanasoft\\Sandboxie-Plus\\LeafShellExt\\Lang", 0, KEY_READ, &hKey);
             bool bExistsAndSuccess(lRes == ERROR_SUCCESS);
             bool bDoesNotExistsSpecifically(lRes == ERROR_FILE_NOT_FOUND);
             GetStringRegKey(hKey, L"Explore Sandboxed", g_ExploreSandboxed);

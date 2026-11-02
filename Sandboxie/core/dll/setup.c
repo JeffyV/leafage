@@ -287,7 +287,7 @@ _FX ULONG Setup_CM_Add_Driver_PackageW(
     ULONG_PTR Unknown7, ULONG_PTR Unknown8, ULONG_PTR Unknown9,
     ULONG_PTR Unknown10)
 {
-    CrashApi_Log(2205, L"CM Add Driver Package");
+    LeafApi_Log(2205, L"CM Add Driver Package");
     return 0;
 }
 
@@ -303,7 +303,7 @@ _FX ULONG Setup_CM_Add_Driver_Package_ExW(
     ULONG_PTR Unknown7, ULONG_PTR Unknown8, ULONG_PTR Unknown9,
     ULONG_PTR Unknown10, ULONG_PTR Unknown11)
 {
-    CrashApi_Log(2205, L"CM Add Driver Package Ex");
+    LeafApi_Log(2205, L"CM Add Driver Package Ex");
     return 0;
 }
 

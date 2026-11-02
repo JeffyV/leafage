@@ -88,7 +88,7 @@ _FX BOOLEAN CustomizeSandbox(void)
         Custom_CreateRegLinks();
         DisableDCOM();
         DisableRecycleBin();
-        if (CrashApi_QueryConfBool(NULL, L"BlockWinRM", TRUE))
+        if (LeafApi_QueryConfBool(NULL, L"BlockWinRM", TRUE))
             DisableWinRS();
         DisableWerFaultUI();
         EnableMsiDebugging();
@@ -178,7 +178,7 @@ _FX UCHAR GetSetCustomLevel(UCHAR SetLevel)
         if (! NT_SUCCESS(status)) {
             value_info.Data[0] = 0;
             Sbie_snwprintf(path, 256, L"%d [%08X]", -2, status);
-            CrashApi_Log(2206, path);
+            LeafApi_Log(2206, path);
         }
 
         //
@@ -211,7 +211,7 @@ _FX UCHAR GetSetCustomLevel(UCHAR SetLevel)
         if (! NT_SUCCESS(status)) {
 
             Sbie_snwprintf(path, 256, L"%d [%08X]", -3, status);
-            CrashApi_Log(2206, path);
+            LeafApi_Log(2206, path);
         }
     }
 
@@ -268,7 +268,7 @@ _FX BOOLEAN Custom_CreateRegLinks(void)
 
     if (! NT_SUCCESS(status)) {
         Sbie_snwprintf(err, 64, L"[11 / %08X]", status);
-        CrashApi_Log(2326, err);
+        LeafApi_Log(2326, err);
         return FALSE;
     }
 
@@ -292,7 +292,7 @@ _FX BOOLEAN Custom_CreateRegLinks(void)
     } else if (status != STATUS_OBJECT_NAME_COLLISION) {
 
 		Sbie_snwprintf(err, 64, L"[22 / %08X]", status);
-        CrashApi_Log(2326, err);
+        LeafApi_Log(2326, err);
         NtClose(hkey1);
         return FALSE;
     }
@@ -310,7 +310,7 @@ _FX BOOLEAN Custom_CreateRegLinks(void)
 
     if (! NT_SUCCESS(status)) {
 		Sbie_snwprintf(err, 64, L"[33 / %08X]", status);
-        CrashApi_Log(2326, err);
+        LeafApi_Log(2326, err);
     }
 
     return TRUE;
@@ -349,7 +349,7 @@ _FX BOOLEAN DisableDCOM(void)
             status != STATUS_OBJECT_NAME_NOT_FOUND) {
 
 			Sbie_snwprintf(err, 64, L"[21 / %08X]", status);
-            CrashApi_Log(2309, err);
+            LeafApi_Log(2309, err);
         }
 
     } else {
@@ -359,7 +359,7 @@ _FX BOOLEAN DisableDCOM(void)
         status = NtSetValueKey(handle, &objname, 0, REG_SZ, &no, sizeof(no));
         if (! NT_SUCCESS(status)) {
 			Sbie_snwprintf(err, 64, L"[22 / %08X]", status);
-            CrashApi_Log(2309, err);
+            LeafApi_Log(2309, err);
         }
 
         NtClose(handle);
@@ -711,7 +711,7 @@ _FX BOOLEAN DisableRecycleBin(void)
     }
 
     if (error) {
-        CrashApi_Log(2311, L"[%02X / %08X]", error, status);
+        LeafApi_Log(2311, L"[%02X / %08X]", error, status);
         return FALSE;
     }
 
@@ -816,7 +816,7 @@ _FX BOOLEAN Custom_EnableBrowseNewProcess(void)
     }
 
     if (error) {
-        CrashApi_Log(2312, L"[%02X / %08X]", error, status);
+        LeafApi_Log(2312, L"[%02X / %08X]", error, status);
         return FALSE;
     }
 
@@ -1089,7 +1089,7 @@ _FX void AutoExec(void)
 
     while (1) {
 
-        status = CrashApi_QueryConfAsIs(
+        status = LeafApi_QueryConfAsIs(
                             NULL, L"AutoExec", index, buf1, buf_len - 16);
         if (status != 0)
             break;
@@ -1120,7 +1120,7 @@ _FX void AutoExec(void)
 
             } else {
                 Sbie_snwprintf(error_str, 16, L"%d [%08X]", index, status);
-                CrashApi_Log(2206, error_str);
+                LeafApi_Log(2206, error_str);
             }
         }
 
@@ -1189,7 +1189,7 @@ _FX BOOLEAN SbieDll_ExpandAndRunProgram(const WCHAR *Command)
 			WCHAR Var[66];
 			wmemcpy(Var, ptr, length);
 			Var[length] = L'\0';
-			if (NT_SUCCESS(CrashApi_QueryConf(NULL, Var, CONF_JUST_EXPAND, ptr2, len - ((ptr2 - cmdline2) * sizeof(WCHAR))))) {
+			if (NT_SUCCESS(LeafApi_QueryConf(NULL, Var, CONF_JUST_EXPAND, ptr2, len - ((ptr2 - cmdline2) * sizeof(WCHAR))))) {
 				if (_wcsnicmp(ptr2, L"\\Device\\", 8) == 0)
 					SbieDll_TranslateNtToDosPath(ptr2);
 				ptr2 += wcslen(ptr2);
@@ -1258,9 +1258,9 @@ _FX void Custom_ComServer(void)
     // with untrusted privileges so the real COM will not let it sign up
     // as a COM server.  (COM returns error "out of memory" when we try
     // to use CoRegisterClassObject.)  to work around this, the comserver
-    // module was moved into CrashSvc, and here we just issue a special
-    // SbieDll_RunSandboxed request which runs an instance of CrashSvc
-    // outside the sandbox.  CrashSvc (in file core/svc/comserver9.c) then
+    // module was moved into LeafSvc, and here we just issue a special
+    // SbieDll_RunSandboxed request which runs an instance of LeafSvc
+    // outside the sandbox.  LeafSvc (in file core/svc/comserver9.c) then
     // talks to real COM to get the target url or file, then it starts the
     // requested server program in the sandbox.
     //
@@ -1308,7 +1308,7 @@ _FX void Custom_ComServer(void)
 
     //
     // we are a COM server process that was started by DcomLaunch outside
-    // the sandbox but forced to run in the sandbox.  we need to run CrashSvc
+    // the sandbox but forced to run in the sandbox.  we need to run LeafSvc
     // outside the sandbox so it can talk to COM to get the invoked url,
     // and then restart the server program in the sandbox
     //
@@ -1324,8 +1324,8 @@ _FX void Custom_ComServer(void)
 
     if (Proc_ImpersonateSelf(TRUE)) {
 
-        // *COMSRV* as cmd line tells CrashSvc ProcessServer to run
-        // CrashSvc SANDBOXIE_ComProxy_ComServer:BoxName
+        // *COMSRV* as cmd line tells LeafSvc ProcessServer to run
+        // LeafSvc SANDBOXIE_ComProxy_ComServer:BoxName
         // see also core/svc/ProcessServer.cpp
         // and      core/svc/comserver9.c
         BOOL ok = SbieDll_RunSandboxed(L"", L"*COMSRV*", L"", 0,
@@ -1417,7 +1417,7 @@ static CRITICAL_SECTION Custom_NicMac_CritSec;
 
 _FX BOOLEAN Nsi_Init(HMODULE module)
 {
-    if (CrashApi_QueryConfBool(NULL, L"HideNetworkAdapterMAC", FALSE)) {
+    if (LeafApi_QueryConfBool(NULL, L"HideNetworkAdapterMAC", FALSE)) {
 
         InitializeCriticalSection(&Custom_NicMac_CritSec);
 		map_init(&Custom_NicMac, Dll_Pool);
@@ -1933,7 +1933,7 @@ wchar_t* GuidToString(const GUID guid)
 
 _FX BOOLEAN  Custom_ProductID(void) 
 {
-	if (CrashApi_QueryConfBool(NULL, L"RandomRegUID", FALSE)) {
+	if (LeafApi_QueryConfBool(NULL, L"RandomRegUID", FALSE)) {
 		NTSTATUS status;
 		UNICODE_STRING uni;
 		OBJECT_ATTRIBUTES objattrs;

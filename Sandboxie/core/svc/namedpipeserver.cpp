@@ -111,7 +111,7 @@ MSG_HEADER *NamedPipeServer::Handler(void *_this, MSG_HEADER *msg)
         return NULL;
     }
 
-    if (0 != CrashApi_QueryProcess(idProcess, NULL, NULL, NULL, NULL))
+    if (0 != LeafApi_QueryProcess(idProcess, NULL, NULL, NULL, NULL))
         return SHORT_REPLY(STATUS_ACCESS_DENIED);
 
     if (PipeServer::ImpersonateCaller(&msg) != 0)

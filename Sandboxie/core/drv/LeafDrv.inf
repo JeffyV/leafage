@@ -21,17 +21,17 @@ Class       = "SecurityEnhancer"                        ;This is determined by t
 ClassGuid   = {d02bc3da-0c8e-4945-9bd5-f1883c226c8c}    ;This value is determined by the Class
 Provider    = "Sandboxie Holdings, LLC"
 DriverVer   = 01/01/2018,5.23.5
-CatalogFile = CrashDrv.cat
+CatalogFile = LeafDrv.cat
 
 [DestinationDirs]
 DefaultDestDir          = 12
 MiniFilter.DriverFiles  = 12            ;%windir%\system32\drivers
 
 [MiniFilter.DriverFiles]
-CrashDrv.sys
+LeafDrv.sys
 
 [SourceDisksFiles]
-CrashDrv.sys = 1,,
+LeafDrv.sys = 1,,
 
 [SourceDisksNames]
 1 = %DiskId1%,,,
@@ -56,5 +56,5 @@ LoadOrderGroup = "File System"
 SG                      = "Sandboxie"
 ServiceDescription      = "Sandboxie Mini-Filter Driver"
 ServiceName             = "Sandboxie Service"
-DriverName              = "CrashDrv"
+DriverName              = "LeafDrv"
 DiskId1                 = "Sandboxie Driver Installation Disk"

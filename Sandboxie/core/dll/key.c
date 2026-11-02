@@ -411,7 +411,7 @@ _FX BOOLEAN Key_Init(void)
 
     SbieDll_MatchPath(L'k', (const WCHAR *)-1);
 
-    Key_UseObjectNames = CrashApi_QueryConfBool(NULL, L"UseObjectNameForKeys", FALSE);
+    Key_UseObjectNames = LeafApi_QueryConfBool(NULL, L"UseObjectNameForKeys", FALSE);
 
     List_Init(&Key_Handles);
     List_Init(&Key_MergeCacheList);
@@ -729,7 +729,7 @@ check_sandbox_prefix:
     }
 
     //
-    // on Windows Vista, CrashRpcSs.exe must not be allowed to see
+    // on Windows Vista, LeafRpcSs.exe must not be allowed to see
     // the key for the Windows Firewall service, otherwise it tries to
     // manage it, and fails
     //
@@ -896,7 +896,7 @@ _FX NTSTATUS Key_FixNameWow64(
 
         // ToDo: ???
         // NoSysCallHooks BEGIN
-        //if(Dll_CompartmentMode || CrashApi_QueryConfBool(NULL, L"NoSysCallHooks", FALSE))
+        //if(Dll_CompartmentMode || LeafApi_QueryConfBool(NULL, L"NoSysCallHooks", FALSE))
         //    return STATUS_SUCCESS;
         // NoSysCallHooks END
 
@@ -1019,7 +1019,7 @@ _FX NTSTATUS Key_FixNameWow64_2(WCHAR **OutTruePath, WCHAR **OutCopyPath)
     //
     // for a 64-bit program trying to open a 32-bit registry key, the
     // call to NtOpenKey does not do registry redirection, as there is
-    // no Wow64 thunking layer, so call CrashSvc to open the key using
+    // no Wow64 thunking layer, so call LeafSvc to open the key using
     // RegOpenKeyEx
     //
 
@@ -1192,7 +1192,7 @@ _FX NTSTATUS Key_NtOpenKeyEx(
     OpenOptions &= ~REG_OPTION_BACKUP_RESTORE;
     /*if (OpenOptions) {
         // probably REG_OPTION_OPEN_LINK
-        CrashApi_Log(2205, L"NtOpenKeyEx (%08X)", OpenOptions);
+        LeafApi_Log(2205, L"NtOpenKeyEx (%08X)", OpenOptions);
     }*/
 
     status = Key_NtCreateKeyImpl(
@@ -1221,7 +1221,7 @@ _FX NTSTATUS Key_NtOpenKeyTransactedEx(
     OpenOptions &= ~REG_OPTION_BACKUP_RESTORE;
     /*if (OpenOptions) {
         // probably REG_OPTION_OPEN_LINK
-        CrashApi_Log(2205, L"NtOpenKeyEx (%08X)", OpenOptions);
+        LeafApi_Log(2205, L"NtOpenKeyEx (%08X)", OpenOptions);
     }*/
 
     status = Key_NtCreateKeyImpl(
@@ -1587,7 +1587,7 @@ _FX NTSTATUS Key_NtCreateKeyImpl(
 
     if (status == STATUS_ACCESS_DENIED && Secure_IsRestrictedToken(TRUE)) {
 
-        NTSTATUS status2 = CrashApi_SetLowLabelKey(CopyPath);
+        NTSTATUS status2 = LeafApi_SetLowLabelKey(CopyPath);
         if (NT_SUCCESS(status2)) {
 
             if (CreateOptions == tzuk) {
@@ -1743,12 +1743,12 @@ _FX NTSTATUS Key_NtCreateKeyImpl(
         //
         // if the path matches a write-only path, the key must be the
         // highest level key in the write-only hierarchy.  we use
-        // CrashApi_OpenKey which should open the key even if blocked
+        // LeafApi_OpenKey which should open the key even if blocked
         //
 
         int depth = Key_CheckDepthForIsWritePath(TruePath);
         if (depth == 0) {
-            status = CrashApi_OpenKey(KeyHandle, TruePath);
+            status = LeafApi_OpenKey(KeyHandle, TruePath);
             if (NT_SUCCESS(status))
                 goto SkipReadOnlyCheck;
         } else
@@ -1832,7 +1832,7 @@ SkipReadOnlyCheck:
 
     RtlInitUnicodeString(&objname, TruePath);
 
-    status = CrashApi_OpenKey(KeyHandle, TruePath);
+    status = LeafApi_OpenKey(KeyHandle, TruePath);
 
     *BackslashPtr = L'\\';
 
@@ -1914,7 +1914,7 @@ SkipReadOnlyCheck:
         if (status == STATUS_ACCESS_DENIED && CreateOptions != tzuk) {
 
             //
-            // CrashDrv might block NtCreateKey
+            // LeafDrv might block NtCreateKey
             // so try one more time using NtOpenKey
             //
 
@@ -2112,7 +2112,7 @@ _FX NTSTATUS Key_CreatePath(
             if (backslash) {
 
                 *backslash = L'\0';
-                status = CrashApi_SetLowLabelKey(path);
+                status = LeafApi_SetLowLabelKey(path);
                 *backslash = L'\\';
 
                 if (NT_SUCCESS(status)) {
@@ -2995,7 +2995,7 @@ _FX NTSTATUS Key_NtQueryKeyImpl(
         KeyInformationClass != KeyCachedInformation)
     {
         status = STATUS_INVALID_PARAMETER;
-        CrashApi_Log(2205, L"NtQueryKeyImpl KeyInfo: %d", KeyInformationClass);
+        LeafApi_Log(2205, L"NtQueryKeyImpl KeyInfo: %d", KeyInformationClass);
         __leave;
     }
 
@@ -3173,7 +3173,7 @@ _FX NTSTATUS Key_NtEnumerateKey(
         KeyInformationClass != KeyNodeInformation &&
         KeyInformationClass != KeyFullInformation)
     {
-        CrashApi_Log(2205, L"NtEnumerateKey KeyInfo: %d", KeyInformationClass);
+        LeafApi_Log(2205, L"NtEnumerateKey KeyInfo: %d", KeyInformationClass);
         status = STATUS_INVALID_PARAMETER;
         __leave;
     }
@@ -3879,8 +3879,8 @@ _FX NTSTATUS Key_NtQueryValueKeyFakeForCreateProcess(
     //
     // the AuthenticodeEnabled registry value for SRP is queried during
     // CreateProcess processing.  if enabled it causes a recursive
-    // CreateProcess call to CrashCrypto, which will hang if
-    // loading CrashRpcSs, a dependency of CrashCrypto
+    // CreateProcess call to LeafCrypto, which will hang if
+    // loading LeafRpcSs, a dependency of LeafCrypto
     //
 
     } else if (ValueNameLen == 19 &&
@@ -4297,7 +4297,7 @@ _FX NTSTATUS Key_NtNotifyChangeMultipleKeys(
 
         if (Asynchronous && (! Event) && (! ApcRoutine)) {
 
-            CrashApi_Log(2205, L"NtNotifyChangeMultipleKeys");
+            LeafApi_Log(2205, L"NtNotifyChangeMultipleKeys");
         }
 
         //
@@ -4513,7 +4513,7 @@ _FX NTSTATUS Key_NtRenameKey(
     THREAD_DATA *TlsData = Dll_GetTlsData(NULL);
 
     if (!Key_Delete_v2) {
-        CrashApi_Log(2205, L"NtRenameKey");
+        LeafApi_Log(2205, L"NtRenameKey");
         return __sys_NtRenameKey(KeyHandle, ReplacementName);
     }
 
@@ -4632,7 +4632,7 @@ _FX NTSTATUS Key_NtRenameKey(
     InitializeObjectAttributes(
         &objattrs, &objname, OBJ_CASE_INSENSITIVE, NULL, NULL);
 
-    status = CrashApi_OpenKey(&handle, TruePath2);
+    status = LeafApi_OpenKey(&handle, TruePath2);
 
     if (NT_SUCCESS(status)) {
 
@@ -4677,7 +4677,7 @@ _FX NTSTATUS Key_NtSaveKey(
     HANDLE KeyHandle, HANDLE FileHandle)
 {
     // todo: copy all reg keys from host to box for the used KeyHandle such that all will be saved
-    CrashApi_Log(2205, L"NtSaveKey");
+    LeafApi_Log(2205, L"NtSaveKey");
     return __sys_NtSaveKey(KeyHandle, FileHandle);
 }
 
@@ -4691,7 +4691,7 @@ _FX NTSTATUS Key_NtSaveKeyEx(
     HANDLE KeyHandle, HANDLE FileHandle, ULONG Flags)
 {
     // todo: copy all reg keys from host to box for the used KeyHandle such that all will be saved
-    CrashApi_Log(2205, L"NtSaveKeyEx");
+    LeafApi_Log(2205, L"NtSaveKeyEx");
     return __sys_NtSaveKeyEx(KeyHandle, FileHandle, Flags);
 }
 
@@ -4813,7 +4813,7 @@ _FX NTSTATUS Key_NtLoadKeyImpl(
     Dll_PopTlsNameBuffer(TlsData);
 
     //
-    // invoke CrashSvc and finish
+    // invoke LeafSvc and finish
     //
 
     if (NT_SUCCESS(status)) {
@@ -4933,7 +4933,7 @@ _FX NTSTATUS Key_NtLoadKey3(
     status = __sys_NtLoadKey3(TargetObjectAttributes, SourceObjectAttributes, Flags,
         LoadArguments, LoadArgumentCount, DesiredAccess, KeyHandle, Unknown);
     if (status == STATUS_PRIVILEGE_NOT_HELD && !Dll_CompartmentMode)
-        CrashApi_Log(2205, L"NtLoadKey3");
+        LeafApi_Log(2205, L"NtLoadKey3");
         //status = Key_NtLoadKeyImpl(TargetObjectAttributes, WorkPath);
 
     if(WorkPath) Dll_Free(WorkPath);
@@ -4971,7 +4971,7 @@ _FX NTSTATUS Key_NtLoadKeyEx(
     status = __sys_NtLoadKeyEx(TargetObjectAttributes, SourceObjectAttributes, Flags,
         TrustClassKey, Reserved, ObjectContext, CallbackReserved, IoStatusBlock);
     if (status == STATUS_PRIVILEGE_NOT_HELD && !Dll_CompartmentMode)
-        CrashApi_Log(2205, L"NtLoadKey3");
+        LeafApi_Log(2205, L"NtLoadKey3");
         //status = Key_NtLoadKeyImpl(TargetObjectAttributes, WorkPath);
 
     if(WorkPath) Dll_Free(WorkPath);

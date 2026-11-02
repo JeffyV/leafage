@@ -109,7 +109,7 @@ static LONG __stdcall Dump_CrashHandlerExceptionFilter(EXCEPTION_POINTERS* pEx)
 	if (pEx->ExceptionRecord->ExceptionCode == DBG_PRINTEXCEPTION_C || pEx->ExceptionRecord->ExceptionCode == DBG_PRINTEXCEPTION_WIDE_C)
 		return EXCEPTION_CONTINUE_SEARCH;
 
-    CrashApi_Log(2224, L"%S (0x%08X) [%S]", Dll_ImageName, pEx->ExceptionRecord->ExceptionCode, Dll_BoxName);
+    LeafApi_Log(2224, L"%S (0x%08X) [%S]", Dll_ImageName, pEx->ExceptionRecord->ExceptionCode, Dll_BoxName);
 
     BOOLEAN bSuccess = FALSE;
     HANDLE hFile;
@@ -152,7 +152,7 @@ static LONG __stdcall Dump_CrashHandlerExceptionFilter(EXCEPTION_POINTERS* pEx)
         Sbie_snwprintf(szMiniDumpMessage, 256, L"%s crashed!\r\nCrashdump creation failed.", Dll_ImageName);
     else
         Sbie_snwprintf(szMiniDumpMessage, 256, L"%s crashed!\r\nCrashdump saved to \"%s\".", Dll_ImageName, szMiniDumpFileName);
-    CrashApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, szMiniDumpMessage);
+    LeafApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, szMiniDumpMessage);
 
     // or return one of the following:
     // - EXCEPTION_CONTINUE_SEARCH      // this will trigger the "normal" OS error-dialog
@@ -229,7 +229,7 @@ _FX int Dump_Init(void)
 
     // get the default preset
     WCHAR str[32];
-    if (NT_SUCCESS(CrashApi_QueryConfAsIs(NULL, L"MiniDumpFlags", 0, str, sizeof(str) - sizeof(WCHAR)))) {
+    if (NT_SUCCESS(LeafApi_QueryConfAsIs(NULL, L"MiniDumpFlags", 0, str, sizeof(str) - sizeof(WCHAR)))) {
         if (_wcsnicmp(str, L"0x", 2) == 0)
             Dump_Flags = wcstol(str + 2, NULL, 16);
         else if (_wcsnicmp(str, L"extended", 3) == 0) // check only first 3 letters
@@ -248,6 +248,6 @@ _FX int Dump_Init(void)
     // Register Vectored Exception Handler
     //AddVectoredExceptionHandler(0, Dump_CrashHandlerExceptionFilter);
 
-    //CrashApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, L"Minidump enabled", FALSE);
+    //LeafApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, L"Minidump enabled", FALSE);
     return 1;
 }

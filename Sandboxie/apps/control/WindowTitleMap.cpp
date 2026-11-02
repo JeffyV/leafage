@@ -125,7 +125,7 @@ void CWindowTitleMap::Clear()
 void CWindowTitleMap::Refresh()
 {
     ++m_counter;
-    CrashApi_EnumProcess(NULL, m_pids);
+    LeafApi_EnumProcess(NULL, m_pids);
     EnumWindows(CWindowTitleMap::EnumProc, (LPARAM)this);
     RefreshIcons();
 }

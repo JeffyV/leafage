@@ -144,7 +144,7 @@ static HANDLE Sxs_QueueEventHandle  = NULL;
 _FX void Sxs_Error(ULONG level, ULONG status)
 {
     extern const WCHAR *ServiceTitle;
-    CrashApi_Log(2203, L"%S - (%S) [%02X/%08X]",
+    LeafApi_Log(2203, L"%S - (%S) [%02X/%08X]",
                 Sxs_QueueName, ServiceTitle, level, status);
 }
 
@@ -167,7 +167,7 @@ _FX BOOLEAN Sxs_Init(void)
     // initialize stuff needed to call SxsGenerateActivationContext
     //
 
-    if (CrashApi_QueryConfBool(NULL, L"DisableBoxedWinSxS", FALSE))
+    if (LeafApi_QueryConfBool(NULL, L"DisableBoxedWinSxS", FALSE))
         return FALSE;
 
     memzero(&osvi, sizeof(OSVERSIONINFO));
@@ -456,7 +456,7 @@ _FX void Sxs_Generate(UCHAR *buf, HANDLE *hSection)
     //
 
     /*{ WCHAR txt[512];
-        wsprintf(txt, L"CrashRpcSs Generate Activation Context\n"); OutputDebugString(txt);
+        wsprintf(txt, L"LeafRpcSs Generate Activation Context\n"); OutputDebugString(txt);
         wsprintf(txt, L"Directory  = %s\n", lpDirectory); OutputDebugString(txt);
         wsprintf(txt, L"SourcePath = %s\n", lpSourcePath); OutputDebugString(txt);
         wsprintf(txt, L"Languages  = %s\n", LangNames); OutputDebugString(txt);

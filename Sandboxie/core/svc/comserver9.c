@@ -194,7 +194,7 @@ _FX void ComServer_Main9(const WCHAR *OriginalCmdLine)
         goto abort;
     ++ComServer_BoxName;
 
-    hr = CrashApi_IsBoxEnabled(ComServer_BoxName);
+    hr = LeafApi_IsBoxEnabled(ComServer_BoxName);
     if (hr != 0)
         goto abort;
 
@@ -274,7 +274,7 @@ _FX void ComServer_Main9(const WCHAR *OriginalCmdLine)
 abort:
 
     if (FAILED(hr)) {
-        CrashApi_Log(2314, L"%S [HR=%08X/%d]", pgm, hr, hr_lvl);
+        LeafApi_Log(2314, L"%S [HR=%08X/%d]", pgm, hr, hr_lvl);
         ExitProcess(0);
     }
 

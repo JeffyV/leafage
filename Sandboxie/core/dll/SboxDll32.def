@@ -8,55 +8,55 @@ EXPORTS
 Dll_Ordinal1 @1 NONAME
 
 ;;;
-;;; SbieApiCrashApi_LogEx
+;;; SbieApiLeafApi_LogEx
 ;;;
 
 
-CrashApi_CheckInternetAccess=_CrashApi_CheckInternetAccess@12
+LeafApi_CheckInternetAccess=_LeafApi_CheckInternetAccess@12
 
-CrashApi_DisableForceProcess=_CrashApi_DisableForceProcess@8
+LeafApi_DisableForceProcess=_LeafApi_DisableForceProcess@8
 
-CrashApi_EnumBoxes=_CrashApi_EnumBoxes@8
-CrashApi_EnumProcessEx=_CrashApi_EnumProcessEx@20
+LeafApi_EnumBoxes=_LeafApi_EnumBoxes@8
+LeafApi_EnumProcessEx=_LeafApi_EnumProcessEx@20
 
-CrashApi_GetFileName=_CrashApi_GetFileName@16
-CrashApi_GetHomePath=_CrashApi_GetHomePath@16
-CrashApi_GetUnmountHive=_CrashApi_GetUnmountHive@4
-CrashApi_GetVersion=_CrashApi_GetVersion@4
-CrashApi_GetVersionEx=_CrashApi_GetVersionEx@8
-;;; CrashApi_GetWork=_CrashApi_GetWork@12
-CrashApi_GetMessage=_CrashApi_GetMessage@24
+LeafApi_GetFileName=_LeafApi_GetFileName@16
+LeafApi_GetHomePath=_LeafApi_GetHomePath@16
+LeafApi_GetUnmountHive=_LeafApi_GetUnmountHive@4
+LeafApi_GetVersion=_LeafApi_GetVersion@4
+LeafApi_GetVersionEx=_LeafApi_GetVersionEx@8
+;;; LeafApi_GetWork=_LeafApi_GetWork@12
+LeafApi_GetMessage=_LeafApi_GetMessage@24
 
-CrashApi_HookTramp=_CrashApi_HookTramp@8
+LeafApi_HookTramp=_LeafApi_HookTramp@8
 
-CrashApi_IsBoxEnabled=_CrashApi_IsBoxEnabled@4
+LeafApi_IsBoxEnabled=_LeafApi_IsBoxEnabled@4
 
-CrashApi_MonitorControl=_CrashApi_MonitorControl@8
-;;; CrashApi_MonitorGet=_CrashApi_MonitorGet@8
-CrashApi_MonitorGetEx=_CrashApi_MonitorGetEx@16
-CrashApi_MonitorPut=_CrashApi_MonitorPut@8
-CrashApi_MonitorPut2=_CrashApi_MonitorPut2@12
+LeafApi_MonitorControl=_LeafApi_MonitorControl@8
+;;; LeafApi_MonitorGet=_LeafApi_MonitorGet@8
+LeafApi_MonitorGetEx=_LeafApi_MonitorGetEx@16
+LeafApi_MonitorPut=_LeafApi_MonitorPut@8
+LeafApi_MonitorPut2=_LeafApi_MonitorPut2@12
 
-CrashApi_OpenProcess=_CrashApi_OpenProcess@8
+LeafApi_OpenProcess=_LeafApi_OpenProcess@8
 
-CrashApi_QueryBoxPath=_CrashApi_QueryBoxPath@28
-CrashApi_QueryConf=_CrashApi_QueryConf@20
-CrashApi_QueryConfBool=_CrashApi_QueryConfBool@12
-CrashApi_QueryPathList=_CrashApi_QueryPathList@20
-CrashApi_QueryProcess=_CrashApi_QueryProcess@20
-CrashApi_QueryProcessEx=_CrashApi_QueryProcessEx@24
-CrashApi_QueryProcessInfo=_CrashApi_QueryProcessInfo@8
-CrashApi_QueryProcessPath=_CrashApi_QueryProcessPath@28
+LeafApi_QueryBoxPath=_LeafApi_QueryBoxPath@28
+LeafApi_QueryConf=_LeafApi_QueryConf@20
+LeafApi_QueryConfBool=_LeafApi_QueryConfBool@12
+LeafApi_QueryPathList=_LeafApi_QueryPathList@20
+LeafApi_QueryProcess=_LeafApi_QueryProcess@20
+LeafApi_QueryProcessEx=_LeafApi_QueryProcessEx@24
+LeafApi_QueryProcessInfo=_LeafApi_QueryProcessInfo@8
+LeafApi_QueryProcessPath=_LeafApi_QueryProcessPath@28
 
-CrashApi_QueryDrvInfo=_CrashApi_QueryDrvInfo@12
+LeafApi_QueryDrvInfo=_LeafApi_QueryDrvInfo@12
 
-CrashApi_ReloadConf=_CrashApi_ReloadConf@8
+LeafApi_ReloadConf=_LeafApi_ReloadConf@8
 
-CrashApi_SessionLeader=_CrashApi_SessionLeader@8
-CrashApi_SetUserName=_CrashApi_SetUserName@8
+LeafApi_SessionLeader=_LeafApi_SessionLeader@8
+LeafApi_SetUserName=_LeafApi_SetUserName@8
 
 ;;;
-;;; CrashDll
+;;; LeafDll
 ;;;
 
 SbieDll_CallServer=_SbieDll_CallServer@4
@@ -101,7 +101,7 @@ SbieDll_QueueGetRpl=_SbieDll_QueueGetRpl@16
 SbieDll_QueuePutReq=_SbieDll_QueuePutReq@20
 SbieDll_QueuePutRpl=_SbieDll_QueuePutRpl@16
 
-CrashApi_UpdateConf=_CrashApi_UpdateConf@16
+LeafApi_UpdateConf=_LeafApi_UpdateConf@16
 SbieDll_UpdateConf=_SbieDll_UpdateConf@20
 
 SbieDll_AssocQueryCommand=_SbieDll_AssocQueryCommand@4

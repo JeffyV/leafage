@@ -54,7 +54,7 @@ static NTSTATUS InstallInstrumentationCallback();
 // Variables
 //---------------------------------------------------------------------------
 
-extern SBIELOW_DATA* CrashApi_data;
+extern SBIELOW_DATA* LeafApi_data;
 
 
 typedef void (*P_RtlSetLastWin32Error)(ULONG err);
@@ -76,13 +76,13 @@ BOOLEAN Dll_FileTrace = FALSE;
 
 _FX int Trace_Init(void)
 {
-    Dll_SbieTrace = CrashApi_QueryConfBool(NULL, L"SbieTrace", FALSE);
+    Dll_SbieTrace = LeafApi_QueryConfBool(NULL, L"SbieTrace", FALSE);
 
     Dll_ApiTrace = Config_GetSettingsForImageName_bool(L"ApiTrace", FALSE);
 
     Dll_FileTrace = Config_GetSettingsForImageName_bool(L"FileTrace", FALSE);
 
-    if (CrashApi_QueryConfBool(NULL, L"ErrorTrace", FALSE)) {
+    if (LeafApi_QueryConfBool(NULL, L"ErrorTrace", FALSE)) {
 
         //
         // intercept NTDLL entry points
@@ -94,7 +94,7 @@ _FX int Trace_Init(void)
         SBIEDLL_HOOK(Trace_, RtlSetLastWin32Error);
     }
 
-    if (CrashApi_QueryConfBool(NULL, L"DebugTrace", FALSE)) {
+    if (LeafApi_QueryConfBool(NULL, L"DebugTrace", FALSE)) {
 
         //
         // intercept KERNEL32 entry points
@@ -110,7 +110,7 @@ _FX int Trace_Init(void)
         SBIEDLL_HOOK(Trace_, OutputDebugStringA);
 
 
-        OutputDebugString(L"CrashDll injected...\n");
+        OutputDebugString(L"LeafDll injected...\n");
     }
 
     //
@@ -118,9 +118,9 @@ _FX int Trace_Init(void)
     //
 
     WCHAR wsTraceOptions[4];
-    if (CrashApi_QueryConf(NULL, L"CallTraceEx", 0, wsTraceOptions, sizeof(wsTraceOptions)) == STATUS_SUCCESS && wsTraceOptions[0] != L'\0') {
+    if (LeafApi_QueryConf(NULL, L"CallTraceEx", 0, wsTraceOptions, sizeof(wsTraceOptions)) == STATUS_SUCCESS && wsTraceOptions[0] != L'\0') {
         if (!NT_SUCCESS(InstallInstrumentationCallback()))
-            CrashApi_Log(2205, L"ProcessInstrumentationCallback");
+            LeafApi_Log(2205, L"ProcessInstrumentationCallback");
     }
 
     return TRUE;
@@ -149,7 +149,7 @@ ALIGNED void Trace_RtlSetLastWin32Error(ULONG err)
     if (err) {
 		WCHAR strW[64];
         Sbie_snwprintf(strW, 64, L"SetError: %d\n", err);
-		CrashApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, strW);
+		LeafApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, strW);
     }
     __sys_RtlSetLastWin32Error(err);
 }
@@ -162,7 +162,7 @@ ALIGNED void Trace_RtlSetLastWin32Error(ULONG err)
 
 ALIGNED void Trace_OutputDebugStringW(const WCHAR *strW)
 {
-	CrashApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, strW);
+	LeafApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, strW);
 
     __sys_OutputDebugStringW(strW);
 }
@@ -177,7 +177,7 @@ ALIGNED void Trace_OutputDebugStringA(const UCHAR *strA)
 {
 	WCHAR strW[256 + 1];
 	Sbie_snwprintf(strW, 256 + 1, L"%S", strA); // convert to WCHAR
-	CrashApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, strW);
+	LeafApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, strW);
 
     __sys_OutputDebugStringA(strA);
 }
@@ -389,8 +389,8 @@ VOID InstrumentationTrace(ULONG_PTR ReturnAddress, NTSTATUS ReturnStatus)
 
 #ifdef _WIN64
     // Note: this would also be needed in native 32 bit
-    extern SBIELOW_DATA* CrashApi_data;
-    if (NtFunction == (ULONG_PTR)CrashApi_data->NtDeviceIoControlFile_code)
+    extern SBIELOW_DATA* LeafApi_data;
+    if (NtFunction == (ULONG_PTR)LeafApi_data->NtDeviceIoControlFile_code)
         return; // this is used by our sys call interface, the driver will log this syscall
 #endif
     
@@ -435,7 +435,7 @@ VOID InstrumentationTrace(ULONG_PTR ReturnAddress, NTSTATUS ReturnStatus)
                 NtFunction == MatchFunction ? "" : "(?)",
                 '\0',
                 ReturnStatus);
-            CrashApi_MonitorPut2Ex(MONITOR_SYSCALL | MONITOR_TRACE, len, trace_str, FALSE, FALSE);
+            LeafApi_MonitorPut2Ex(MONITOR_SYSCALL | MONITOR_TRACE, len, trace_str, FALSE, FALSE);
 
             //DbgPrint("[TRACKING] %s Called\n", FunctionName ? FunctionName : "Unknown Function");
             break;
@@ -519,7 +519,7 @@ void __fastcall ApiInstrumentation(const char* pName, void** pStack)
     WCHAR trace_str[256];
     //ULONG len = Sbie_snwprintf(trace_str, 128, L"%S <-- %s%S", pName, CallingModule, pCaller ? pCaller : "");
     ULONG len = Sbie_snwprintf(trace_str, 128, L"%S", pName);
-    CrashApi_MonitorPut2Ex(MONITOR_APICALL | MONITOR_TRACE, len, trace_str, FALSE, FALSE);
+    LeafApi_MonitorPut2Ex(MONITOR_APICALL | MONITOR_TRACE, len, trace_str, FALSE, FALSE);
 
     *sbie_deph -= 1;
 }
@@ -547,12 +547,12 @@ void BufferToHexW(const void* lpBuffer, size_t nSize, wchar_t* outBuf, size_t ou
 }
 
 //---------------------------------------------------------------------------
-// Trace_CrashDrvFunc2Str
+// Trace_LeafDrvFunc2Str
 //---------------------------------------------------------------------------
 
 #include "core/drv/api_defs.h"
 
-const wchar_t* Trace_CrashDrvFunc2Str(ULONG func)
+const wchar_t* Trace_LeafDrvFunc2Str(ULONG func)
 {
     switch (func)
     {
@@ -610,12 +610,12 @@ const wchar_t* Trace_CrashDrvFunc2Str(ULONG func)
 
 
 //---------------------------------------------------------------------------
-// Trace_CrashSvcFunc2Str
+// Trace_LeafSvcFunc2Str
 //---------------------------------------------------------------------------
 
 #include "core/svc/msgids.h"
 
-const wchar_t* Trace_CrashSvcFunc2Str(ULONG func)
+const wchar_t* Trace_LeafSvcFunc2Str(ULONG func)
 {
     switch (func)
     {
@@ -717,7 +717,7 @@ const wchar_t* Trace_CrashSvcFunc2Str(ULONG func)
 
 
 //---------------------------------------------------------------------------
-// Trace_CrashSvcFunc2Str
+// Trace_LeafSvcFunc2Str
 //---------------------------------------------------------------------------
 
 #include "core/svc/GuiWire.h"

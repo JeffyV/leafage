@@ -1,0 +1,2139 @@
+{
+ "date": "2026-11-02T11:26:27",
+ "mode": "apply",
+ "files": 266,
+ "replacements": 2503,
+ "per_rule": {
+  "CrashDcomLaunch": 29,
+  "CrashCrypto": 32,
+  "CrashRpcSs": 55,
+  "CrashBITS": 24,
+  "CrashWUAU": 28,
+  "CrashHostDll": 34,
+  "CrashDrv": 150,
+  "CrashSvc": 292,
+  "CrashMsg": 62,
+  "CrashDll": 329,
+  "CrashShellExt": 18,
+  "CrashApi_": 1433,
+  "CrashManager": 2,
+  "crashdrv": 1,
+  "Crash sandbox": 2,
+  "L\"Crash\"": 2,
+  "crashsvc": 9,
+  "Crash* build": 1
+ },
+ "detail": [
+  {
+   "file": "MergeDbg.cmd",
+   "hits": 12,
+   "detail": {
+    "CrashDcomLaunch": 1,
+    "CrashCrypto": 1,
+    "CrashRpcSs": 1,
+    "CrashBITS": 1,
+    "CrashWUAU": 1,
+    "CrashHostDll": 1,
+    "CrashDrv": 1,
+    "CrashSvc": 2,
+    "CrashMsg": 1,
+    "CrashDll": 2
+   }
+  },
+  {
+   "file": ".github/workflows/build.yml",
+   "hits": 15,
+   "detail": {
+    "CrashDcomLaunch": 1,
+    "CrashCrypto": 1,
+    "CrashRpcSs": 1,
+    "CrashBITS": 1,
+    "CrashWUAU": 1,
+    "CrashHostDll": 1,
+    "CrashShellExt": 1,
+    "CrashDrv": 2,
+    "CrashSvc": 3,
+    "CrashMsg": 1,
+    "CrashDll": 2
+   }
+  },
+  {
+   "file": "Installer/copy_build.cmd",
+   "hits": 31,
+   "detail": {
+    "CrashDcomLaunch": 2,
+    "CrashCrypto": 2,
+    "CrashRpcSs": 2,
+    "CrashBITS": 2,
+    "CrashWUAU": 2,
+    "CrashHostDll": 2,
+    "CrashShellExt": 2,
+    "CrashDrv": 2,
+    "CrashSvc": 6,
+    "CrashMsg": 1,
+    "CrashDll": 8
+   }
+  },
+  {
+   "file": "Installer/Sandboxie-Plus.iss",
+   "hits": 34,
+   "detail": {
+    "CrashDrv": 17,
+    "CrashSvc": 11,
+    "CrashMsg": 2,
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "Installer/pack/README.md",
+   "hits": 6,
+   "detail": {
+    "CrashDrv": 4,
+    "CrashApi_": 1,
+    "CrashManager": 1
+   }
+  },
+  {
+   "file": "Installer/pack/tools/fix_and_install.cmd",
+   "hits": 20,
+   "detail": {
+    "CrashDrv": 10,
+    "CrashSvc": 5,
+    "CrashMsg": 2,
+    "crashdrv": 1,
+    "Crash sandbox": 2
+   }
+  },
+  {
+   "file": "Sandboxie/ReadMe.md",
+   "hits": 4,
+   "detail": {
+    "CrashHostDll": 4
+   }
+  },
+  {
+   "file": "Sandboxie/Sandbox.sln",
+   "hits": 3,
+   "detail": {
+    "CrashHostDll": 3
+   }
+  },
+  {
+   "file": "Sandboxie/SandboxDll.sln",
+   "hits": 3,
+   "detail": {
+    "CrashHostDll": 3
+   }
+  },
+  {
+   "file": "Sandboxie/apps/com/common.h",
+   "hits": 12,
+   "detail": {
+    "CrashCrypto": 1,
+    "CrashRpcSs": 3,
+    "CrashDll": 3,
+    "CrashApi_": 5
+   }
+  },
+  {
+   "file": "Sandboxie/apps/com/BITS/resource.rc",
+   "hits": 2,
+   "detail": {
+    "CrashBITS": 2
+   }
+  },
+  {
+   "file": "Sandboxie/apps/com/BITS/SandboxBITS.vcxproj",
+   "hits": 12,
+   "detail": {
+    "CrashBITS": 6,
+    "CrashDll": 6
+   }
+  },
+  {
+   "file": "Sandboxie/apps/com/Crypto/crypto.c",
+   "hits": 2,
+   "detail": {
+    "CrashCrypto": 1,
+    "CrashRpcSs": 1
+   }
+  },
+  {
+   "file": "Sandboxie/apps/com/Crypto/resource.rc",
+   "hits": 2,
+   "detail": {
+    "CrashCrypto": 2
+   }
+  },
+  {
+   "file": "Sandboxie/apps/com/Crypto/SandboxCrypto.vcxproj",
+   "hits": 12,
+   "detail": {
+    "CrashCrypto": 6,
+    "CrashDll": 6
+   }
+  },
+  {
+   "file": "Sandboxie/apps/com/DcomLaunch/resource.rc",
+   "hits": 2,
+   "detail": {
+    "CrashDcomLaunch": 2
+   }
+  },
+  {
+   "file": "Sandboxie/apps/com/DcomLaunch/SboxDcomLaunch.vcxproj",
+   "hits": 12,
+   "detail": {
+    "CrashDcomLaunch": 6,
+    "CrashDll": 6
+   }
+  },
+  {
+   "file": "Sandboxie/apps/com/RpcSs/dde.c",
+   "hits": 2,
+   "detail": {
+    "CrashSvc": 1,
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/apps/com/RpcSs/linger.c",
+   "hits": 36,
+   "detail": {
+    "CrashDcomLaunch": 3,
+    "CrashCrypto": 5,
+    "CrashRpcSs": 3,
+    "CrashBITS": 3,
+    "CrashWUAU": 3,
+    "CrashSvc": 1,
+    "CrashApi_": 18
+   }
+  },
+  {
+   "file": "Sandboxie/apps/com/RpcSs/resource.rc",
+   "hits": 2,
+   "detail": {
+    "CrashRpcSs": 2
+   }
+  },
+  {
+   "file": "Sandboxie/apps/com/RpcSs/rpcss.c",
+   "hits": 2,
+   "detail": {
+    "CrashRpcSs": 1,
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/apps/com/RpcSs/SandboxRpcSs.vcxproj",
+   "hits": 12,
+   "detail": {
+    "CrashRpcSs": 6,
+    "CrashDll": 6
+   }
+  },
+  {
+   "file": "Sandboxie/apps/com/RpcSs/sxs.c",
+   "hits": 3,
+   "detail": {
+    "CrashRpcSs": 1,
+    "CrashApi_": 2
+   }
+  },
+  {
+   "file": "Sandboxie/apps/com/WUAU/resource.rc",
+   "hits": 2,
+   "detail": {
+    "CrashWUAU": 2
+   }
+  },
+  {
+   "file": "Sandboxie/apps/com/WUAU/SandboxWUAU.vcxproj",
+   "hits": 12,
+   "detail": {
+    "CrashWUAU": 6,
+    "CrashDll": 6
+   }
+  },
+  {
+   "file": "Sandboxie/apps/com/WUAU/wuau.c",
+   "hits": 4,
+   "detail": {
+    "CrashWUAU": 4
+   }
+  },
+  {
+   "file": "Sandboxie/apps/common/BoxOrder.c",
+   "hits": 6,
+   "detail": {
+    "CrashApi_": 6
+   }
+  },
+  {
+   "file": "Sandboxie/apps/control/AboutDialog.cpp",
+   "hits": 3,
+   "detail": {
+    "CrashApi_": 3
+   }
+  },
+  {
+   "file": "Sandboxie/apps/control/AutoPlay.cpp",
+   "hits": 2,
+   "detail": {
+    "CrashApi_": 2
+   }
+  },
+  {
+   "file": "Sandboxie/apps/control/Boxes.cpp",
+   "hits": 5,
+   "detail": {
+    "CrashApi_": 5
+   }
+  },
+  {
+   "file": "Sandboxie/apps/control/BoxFile.cpp",
+   "hits": 4,
+   "detail": {
+    "CrashApi_": 4
+   }
+  },
+  {
+   "file": "Sandboxie/apps/control/BoxPage.cpp",
+   "hits": 1,
+   "detail": {
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/apps/control/BoxProc.cpp",
+   "hits": 3,
+   "detail": {
+    "CrashApi_": 3
+   }
+  },
+  {
+   "file": "Sandboxie/apps/control/Control.vcxproj",
+   "hits": 6,
+   "detail": {
+    "CrashDll": 6
+   }
+  },
+  {
+   "file": "Sandboxie/apps/control/CreateDialog.cpp",
+   "hits": 1,
+   "detail": {
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/apps/control/InitWait.cpp",
+   "hits": 2,
+   "detail": {
+    "CrashSvc": 1,
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/apps/control/MessageDialog.cpp",
+   "hits": 3,
+   "detail": {
+    "CrashDrv": 1,
+    "CrashApi_": 2
+   }
+  },
+  {
+   "file": "Sandboxie/apps/control/MonitorDialog.cpp",
+   "hits": 5,
+   "detail": {
+    "CrashApi_": 5
+   }
+  },
+  {
+   "file": "Sandboxie/apps/control/MyApp.cpp",
+   "hits": 2,
+   "detail": {
+    "CrashApi_": 2
+   }
+  },
+  {
+   "file": "Sandboxie/apps/control/MyFrame.cpp",
+   "hits": 6,
+   "detail": {
+    "CrashApi_": 6
+   }
+  },
+  {
+   "file": "Sandboxie/apps/control/SbieIni.cpp",
+   "hits": 22,
+   "detail": {
+    "CrashSvc": 10,
+    "CrashApi_": 12
+   }
+  },
+  {
+   "file": "Sandboxie/apps/control/SbieIni.h",
+   "hits": 1,
+   "detail": {
+    "CrashSvc": 1
+   }
+  },
+  {
+   "file": "Sandboxie/apps/control/Updater.cpp",
+   "hits": 3,
+   "detail": {
+    "CrashApi_": 3
+   }
+  },
+  {
+   "file": "Sandboxie/apps/control/WindowTitleMap.cpp",
+   "hits": 1,
+   "detail": {
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/apps/ini/query.c",
+   "hits": 4,
+   "detail": {
+    "CrashApi_": 4
+   }
+  },
+  {
+   "file": "Sandboxie/apps/ini/SbieIni.vcxproj",
+   "hits": 6,
+   "detail": {
+    "CrashDll": 6
+   }
+  },
+  {
+   "file": "Sandboxie/apps/ini/update.c",
+   "hits": 1,
+   "detail": {
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/apps/start/aboutdlg.cpp",
+   "hits": 10,
+   "detail": {
+    "CrashApi_": 10
+   }
+  },
+  {
+   "file": "Sandboxie/apps/start/boxdlg.cpp",
+   "hits": 5,
+   "detail": {
+    "CrashSvc": 2,
+    "CrashApi_": 3
+   }
+  },
+  {
+   "file": "Sandboxie/apps/start/delete.cpp",
+   "hits": 8,
+   "detail": {
+    "CrashApi_": 8
+   }
+  },
+  {
+   "file": "Sandboxie/apps/start/env.cpp",
+   "hits": 3,
+   "detail": {
+    "CrashApi_": 3
+   }
+  },
+  {
+   "file": "Sandboxie/apps/start/menu.cpp",
+   "hits": 2,
+   "detail": {
+    "CrashApi_": 2
+   }
+  },
+  {
+   "file": "Sandboxie/apps/start/rundlg.cpp",
+   "hits": 5,
+   "detail": {
+    "CrashApi_": 5
+   }
+  },
+  {
+   "file": "Sandboxie/apps/start/start.cpp",
+   "hits": 35,
+   "detail": {
+    "CrashRpcSs": 2,
+    "CrashSvc": 8,
+    "CrashApi_": 25
+   }
+  },
+  {
+   "file": "Sandboxie/apps/start/Start.vcxproj",
+   "hits": 6,
+   "detail": {
+    "CrashDll": 6
+   }
+  },
+  {
+   "file": "Sandboxie/common/my_ntdll.c",
+   "hits": 1,
+   "detail": {
+    "CrashDll": 1
+   }
+  },
+  {
+   "file": "Sandboxie/common/my_version.h",
+   "hits": 6,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashMsg": 1,
+    "CrashDll": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/advapi.c",
+   "hits": 5,
+   "detail": {
+    "CrashBITS": 1,
+    "CrashWUAU": 1,
+    "CrashApi_": 3
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/callsvc.c",
+   "hits": 14,
+   "detail": {
+    "CrashSvc": 4,
+    "CrashDll": 1,
+    "CrashApi_": 9
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/com.c",
+   "hits": 39,
+   "detail": {
+    "CrashSvc": 13,
+    "CrashApi_": 26
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/config.c",
+   "hits": 10,
+   "detail": {
+    "CrashApi_": 10
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/cred.c",
+   "hits": 9,
+   "detail": {
+    "CrashApi_": 9
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/crypt.c",
+   "hits": 8,
+   "detail": {
+    "CrashSvc": 8
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/custom.c",
+   "hits": 21,
+   "detail": {
+    "CrashSvc": 6,
+    "CrashApi_": 15
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/debug.c",
+   "hits": 5,
+   "detail": {
+    "CrashRpcSs": 1,
+    "CrashApi_": 4
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/dll.h",
+   "hits": 1,
+   "detail": {
+    "CrashSvc": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/dllhook.c",
+   "hits": 35,
+   "detail": {
+    "CrashApi_": 35
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/dllmain.c",
+   "hits": 43,
+   "detail": {
+    "CrashDcomLaunch": 1,
+    "CrashCrypto": 1,
+    "CrashRpcSs": 2,
+    "CrashBITS": 1,
+    "CrashWUAU": 1,
+    "CrashSvc": 1,
+    "CrashDll": 2,
+    "CrashApi_": 34
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/dllmem.c",
+   "hits": 6,
+   "detail": {
+    "CrashApi_": 6
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/dllpath.c",
+   "hits": 8,
+   "detail": {
+    "CrashApi_": 8
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/dns_filter.c",
+   "hits": 10,
+   "detail": {
+    "CrashApi_": 10
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/dump.c",
+   "hits": 4,
+   "detail": {
+    "CrashApi_": 4
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/file.c",
+   "hits": 25,
+   "detail": {
+    "CrashCrypto": 1,
+    "CrashDrv": 3,
+    "CrashSvc": 1,
+    "CrashApi_": 20
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/file_copy.c",
+   "hits": 11,
+   "detail": {
+    "CrashCrypto": 1,
+    "CrashWUAU": 1,
+    "CrashApi_": 9
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/file_dir.c",
+   "hits": 5,
+   "detail": {
+    "CrashSvc": 1,
+    "CrashApi_": 4
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/file_init.c",
+   "hits": 29,
+   "detail": {
+    "CrashSvc": 2,
+    "CrashDll": 1,
+    "CrashApi_": 26
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/file_link.c",
+   "hits": 1,
+   "detail": {
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/file_misc.c",
+   "hits": 1,
+   "detail": {
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/file_pipe.c",
+   "hits": 16,
+   "detail": {
+    "CrashDrv": 1,
+    "CrashSvc": 4,
+    "CrashDll": 1,
+    "CrashApi_": 10
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/file_recovery.c",
+   "hits": 6,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 1,
+    "CrashApi_": 3
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/gdi.c",
+   "hits": 4,
+   "detail": {
+    "CrashApi_": 4
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/gui.c",
+   "hits": 32,
+   "detail": {
+    "CrashDrv": 1,
+    "CrashSvc": 13,
+    "CrashApi_": 18
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/guiclass.c",
+   "hits": 3,
+   "detail": {
+    "CrashApi_": 3
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/guicon.c",
+   "hits": 5,
+   "detail": {
+    "CrashDcomLaunch": 1,
+    "CrashSvc": 2,
+    "CrashApi_": 2
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/guidde.c",
+   "hits": 9,
+   "detail": {
+    "CrashSvc": 7,
+    "CrashApi_": 2
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/guidlg.h",
+   "hits": 1,
+   "detail": {
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/guienum.c",
+   "hits": 11,
+   "detail": {
+    "CrashSvc": 1,
+    "CrashApi_": 10
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/guimisc.c",
+   "hits": 30,
+   "detail": {
+    "CrashSvc": 10,
+    "CrashApi_": 20
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/guimsg.c",
+   "hits": 5,
+   "detail": {
+    "CrashApi_": 5
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/guiprop.c",
+   "hits": 4,
+   "detail": {
+    "CrashApi_": 4
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/guititle.c",
+   "hits": 1,
+   "detail": {
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/handle.c",
+   "hits": 1,
+   "detail": {
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/hook_inst.c",
+   "hits": 1,
+   "detail": {
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/ipc.c",
+   "hits": 47,
+   "detail": {
+    "CrashDcomLaunch": 2,
+    "CrashRpcSs": 5,
+    "CrashSvc": 2,
+    "CrashApi_": 38
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/ipc_start.c",
+   "hits": 21,
+   "detail": {
+    "CrashDcomLaunch": 4,
+    "CrashRpcSs": 7,
+    "CrashSvc": 2,
+    "CrashApi_": 7,
+    "L\"Crash\"": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/iphlp.c",
+   "hits": 1,
+   "detail": {
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/ipstore_impl.cpp",
+   "hits": 2,
+   "detail": {
+    "CrashApi_": 2
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/kernel.c",
+   "hits": 15,
+   "detail": {
+    "CrashApi_": 15
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/key.c",
+   "hits": 25,
+   "detail": {
+    "CrashCrypto": 2,
+    "CrashRpcSs": 2,
+    "CrashDrv": 1,
+    "CrashSvc": 2,
+    "CrashApi_": 18
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/key_merge.c",
+   "hits": 2,
+   "detail": {
+    "CrashSvc": 1,
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/ldr.c",
+   "hits": 14,
+   "detail": {
+    "CrashDll": 1,
+    "CrashApi_": 13
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/ldr_init.c",
+   "hits": 6,
+   "detail": {
+    "CrashApi_": 6
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/lowlevel.rc",
+   "hits": 6,
+   "detail": {
+    "CrashSvc": 6
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/lowlevel_inject.c",
+   "hits": 16,
+   "detail": {
+    "CrashDrv": 1,
+    "CrashSvc": 2,
+    "CrashDll": 9,
+    "CrashApi_": 4
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/net.c",
+   "hits": 15,
+   "detail": {
+    "CrashApi_": 15
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/netapi.c",
+   "hits": 5,
+   "detail": {
+    "CrashSvc": 4,
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/obj.c",
+   "hits": 2,
+   "detail": {
+    "CrashApi_": 2
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/ole.cpp",
+   "hits": 1,
+   "detail": {
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/proc.c",
+   "hits": 37,
+   "detail": {
+    "CrashDcomLaunch": 1,
+    "CrashSvc": 5,
+    "CrashDll": 1,
+    "CrashApi_": 30
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/proxy.c",
+   "hits": 13,
+   "detail": {
+    "CrashApi_": 13
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/resource.rc",
+   "hits": 2,
+   "detail": {
+    "CrashDll": 2
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/rpcrt.c",
+   "hits": 14,
+   "detail": {
+    "CrashDll": 1,
+    "CrashApi_": 13
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/sbieapi.c",
+   "hits": 201,
+   "detail": {
+    "CrashDrv": 3,
+    "CrashApi_": 198
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/sbieapi.h",
+   "hits": 62,
+   "detail": {
+    "CrashApi_": 62
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/SboxDll.vcxproj",
+   "hits": 8,
+   "detail": {
+    "CrashDll": 8
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/SboxDll32.def",
+   "hits": 66,
+   "detail": {
+    "CrashDll": 1,
+    "CrashApi_": 65
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/scm.c",
+   "hits": 8,
+   "detail": {
+    "CrashCrypto": 2,
+    "CrashBITS": 2,
+    "CrashWUAU": 2,
+    "CrashSvc": 1,
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/scm_create.c",
+   "hits": 26,
+   "detail": {
+    "CrashCrypto": 2,
+    "CrashRpcSs": 1,
+    "CrashBITS": 1,
+    "CrashWUAU": 1,
+    "CrashSvc": 5,
+    "CrashApi_": 13,
+    "crashsvc": 3
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/scm_notify.c",
+   "hits": 1,
+   "detail": {
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/scm_query.c",
+   "hits": 10,
+   "detail": {
+    "CrashCrypto": 1,
+    "CrashBITS": 1,
+    "CrashWUAU": 1,
+    "CrashSvc": 6,
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/secure.c",
+   "hits": 17,
+   "detail": {
+    "CrashRpcSs": 1,
+    "CrashSvc": 4,
+    "CrashApi_": 12
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/setup.c",
+   "hits": 2,
+   "detail": {
+    "CrashApi_": 2
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/sh.c",
+   "hits": 5,
+   "detail": {
+    "CrashApi_": 5
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/support.c",
+   "hits": 16,
+   "detail": {
+    "CrashSvc": 3,
+    "CrashMsg": 8,
+    "CrashDll": 1,
+    "CrashApi_": 4
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/sxs.c",
+   "hits": 21,
+   "detail": {
+    "CrashRpcSs": 7,
+    "CrashSvc": 6,
+    "CrashApi_": 8
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/sysinfo.c",
+   "hits": 10,
+   "detail": {
+    "CrashApi_": 10
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/taskbar.c",
+   "hits": 7,
+   "detail": {
+    "CrashApi_": 7
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/terminal.c",
+   "hits": 7,
+   "detail": {
+    "CrashRpcSs": 2,
+    "CrashApi_": 5
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/trace.c",
+   "hits": 19,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 3,
+    "CrashDll": 1,
+    "CrashApi_": 13
+   }
+  },
+  {
+   "file": "Sandboxie/core/dll/Win32.c",
+   "hits": 50,
+   "detail": {
+    "CrashApi_": 50
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/api.c",
+   "hits": 2,
+   "detail": {
+    "CrashDrv": 1,
+    "CrashSvc": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/api.h",
+   "hits": 1,
+   "detail": {
+    "CrashSvc": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/conf_user.c",
+   "hits": 2,
+   "detail": {
+    "CrashSvc": 2
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/CrashDrv.inf",
+   "hits": 4,
+   "detail": {
+    "CrashDrv": 4
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/CrashDrv_x32.ddf",
+   "hits": 3,
+   "detail": {
+    "CrashDrv": 3
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/CrashDrv_x64.ddf",
+   "hits": 3,
+   "detail": {
+    "CrashDrv": 3
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/driver.c",
+   "hits": 8,
+   "detail": {
+    "CrashDrv": 8
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/dyn_data.c",
+   "hits": 2,
+   "detail": {
+    "CrashDrv": 2
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/file.c",
+   "hits": 6,
+   "detail": {
+    "CrashRpcSs": 1,
+    "CrashSvc": 1,
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/file_flt.c",
+   "hits": 2,
+   "detail": {
+    "CrashSvc": 2
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/gui.c",
+   "hits": 3,
+   "detail": {
+    "CrashSvc": 3
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/ipc_sam.c",
+   "hits": 1,
+   "detail": {
+    "CrashCrypto": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/key.c",
+   "hits": 4,
+   "detail": {
+    "CrashSvc": 2,
+    "CrashDll": 2
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/key_xp.c",
+   "hits": 1,
+   "detail": {
+    "CrashSvc": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/log.c",
+   "hits": 2,
+   "detail": {
+    "CrashSvc": 2
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/process.c",
+   "hits": 5,
+   "detail": {
+    "CrashSvc": 4,
+    "CrashDll": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/process.h",
+   "hits": 1,
+   "detail": {
+    "CrashSvc": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/process_api.c",
+   "hits": 1,
+   "detail": {
+    "CrashDll": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/process_low.c",
+   "hits": 6,
+   "detail": {
+    "CrashSvc": 5,
+    "CrashDll": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/resource.rc",
+   "hits": 2,
+   "detail": {
+    "CrashDrv": 2
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/SboxDrv.vcxproj",
+   "hits": 6,
+   "detail": {
+    "CrashDrv": 6
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/syscall.c",
+   "hits": 3,
+   "detail": {
+    "CrashSvc": 3
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/syscall_open.c",
+   "hits": 2,
+   "detail": {
+    "CrashBITS": 1,
+    "CrashDll": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/syscall_win32.c",
+   "hits": 1,
+   "detail": {
+    "CrashSvc": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/thread.c",
+   "hits": 3,
+   "detail": {
+    "crashsvc": 3
+   }
+  },
+  {
+   "file": "Sandboxie/core/drv/thread_token.c",
+   "hits": 10,
+   "detail": {
+    "CrashDcomLaunch": 2,
+    "CrashDll": 8
+   }
+  },
+  {
+   "file": "Sandboxie/core/low/init.c",
+   "hits": 17,
+   "detail": {
+    "CrashDll": 4,
+    "CrashApi_": 13
+   }
+  },
+  {
+   "file": "Sandboxie/core/low/inject.c",
+   "hits": 33,
+   "detail": {
+    "CrashDll": 22,
+    "CrashApi_": 11
+   }
+  },
+  {
+   "file": "Sandboxie/core/low/lowdata.h",
+   "hits": 2,
+   "detail": {
+    "CrashDll": 2
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/comserver.cpp",
+   "hits": 11,
+   "detail": {
+    "CrashSvc": 6,
+    "CrashApi_": 5
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/comserver9.c",
+   "hits": 2,
+   "detail": {
+    "CrashApi_": 2
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/DriverAssist.cpp",
+   "hits": 15,
+   "detail": {
+    "CrashDrv": 1,
+    "CrashApi_": 14
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/DriverAssistInject.cpp",
+   "hits": 13,
+   "detail": {
+    "CrashApi_": 13
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/DriverAssistLog.cpp",
+   "hits": 3,
+   "detail": {
+    "CrashApi_": 3
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/DriverAssistSid.cpp",
+   "hits": 1,
+   "detail": {
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/DriverAssistStart.cpp",
+   "hits": 8,
+   "detail": {
+    "CrashApi_": 8
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/EpMapperServer.cpp",
+   "hits": 8,
+   "detail": {
+    "CrashApi_": 8
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/fileserver.cpp",
+   "hits": 10,
+   "detail": {
+    "CrashApi_": 10
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/GuiServer.cpp",
+   "hits": 40,
+   "detail": {
+    "CrashSvc": 2,
+    "CrashApi_": 38
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/HostInjectProcessUtil.cpp",
+   "hits": 3,
+   "detail": {
+    "CrashApi_": 3
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/iphlpserver.cpp",
+   "hits": 3,
+   "detail": {
+    "CrashApi_": 3
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/main.cpp",
+   "hits": 4,
+   "detail": {
+    "CrashApi_": 4
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/MountManager.cpp",
+   "hits": 36,
+   "detail": {
+    "CrashApi_": 36
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/msgids.h",
+   "hits": 1,
+   "detail": {
+    "CrashSvc": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/namedpipeserver.cpp",
+   "hits": 1,
+   "detail": {
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/namedpipewire.h",
+   "hits": 1,
+   "detail": {
+    "CrashSvc": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/netapiserver.cpp",
+   "hits": 1,
+   "detail": {
+    "CrashSvc": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/PipeServer.cpp",
+   "hits": 1,
+   "detail": {
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/ProcessServer.cpp",
+   "hits": 51,
+   "detail": {
+    "CrashSvc": 2,
+    "CrashApi_": 48,
+    "L\"Crash\"": 1
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/queueserver.cpp",
+   "hits": 4,
+   "detail": {
+    "CrashApi_": 4
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/resource.rc",
+   "hits": 2,
+   "detail": {
+    "CrashSvc": 2
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/sbieiniserver.cpp",
+   "hits": 29,
+   "detail": {
+    "CrashApi_": 29
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/SboxSvc.vcxproj",
+   "hits": 16,
+   "detail": {
+    "CrashSvc": 8,
+    "CrashDll": 8
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/serviceserver2.cpp",
+   "hits": 38,
+   "detail": {
+    "CrashDcomLaunch": 1,
+    "CrashRpcSs": 1,
+    "CrashSvc": 2,
+    "CrashDll": 2,
+    "CrashApi_": 32
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/terminalserver.cpp",
+   "hits": 8,
+   "detail": {
+    "CrashApi_": 8
+   }
+  },
+  {
+   "file": "Sandboxie/core/svc/UserServer.cpp",
+   "hits": 12,
+   "detail": {
+    "CrashSvc": 1,
+    "CrashApi_": 11
+   }
+  },
+  {
+   "file": "Sandboxie/CrashHostDll/CrashHostDll.cpp",
+   "hits": 8,
+   "detail": {
+    "CrashHostDll": 3,
+    "CrashDll": 2,
+    "CrashApi_": 3
+   }
+  },
+  {
+   "file": "Sandboxie/CrashHostDll/CrashHostDll.h",
+   "hits": 1,
+   "detail": {
+    "CrashHostDll": 1
+   }
+  },
+  {
+   "file": "Sandboxie/CrashHostDll/CrashHostDll.rc",
+   "hits": 2,
+   "detail": {
+    "CrashHostDll": 2
+   }
+  },
+  {
+   "file": "Sandboxie/CrashHostDll/CrashHostDll.vcxproj",
+   "hits": 10,
+   "detail": {
+    "CrashHostDll": 4,
+    "CrashDll": 6
+   }
+  },
+  {
+   "file": "Sandboxie/CrashHostDll/dllmain.cpp",
+   "hits": 4,
+   "detail": {
+    "CrashHostDll": 1,
+    "CrashDll": 3
+   }
+  },
+  {
+   "file": "Sandboxie/CrashHostDll/resource.h",
+   "hits": 1,
+   "detail": {
+    "CrashHostDll": 1
+   }
+  },
+  {
+   "file": "Sandboxie/CrashHostDll/stdafx.cpp",
+   "hits": 1,
+   "detail": {
+    "CrashHostDll": 1
+   }
+  },
+  {
+   "file": "Sandboxie/install/build.bat",
+   "hits": 9,
+   "detail": {
+    "CrashDcomLaunch": 1,
+    "CrashCrypto": 1,
+    "CrashRpcSs": 1,
+    "CrashBITS": 1,
+    "CrashWUAU": 1,
+    "CrashDrv": 2,
+    "CrashSvc": 1,
+    "CrashMsg": 1
+   }
+  },
+  {
+   "file": "Sandboxie/install/SandboxieVS.nsi",
+   "hits": 21,
+   "detail": {
+    "CrashDcomLaunch": 1,
+    "CrashCrypto": 1,
+    "CrashRpcSs": 1,
+    "CrashBITS": 1,
+    "CrashWUAU": 1,
+    "CrashHostDll": 3,
+    "CrashDrv": 8,
+    "CrashSvc": 3,
+    "CrashMsg": 2
+   }
+  },
+  {
+   "file": "Sandboxie/install/Templates.ini",
+   "hits": 4,
+   "detail": {
+    "CrashHostDll": 3,
+    "CrashSvc": 1
+   }
+  },
+  {
+   "file": "Sandboxie/install/kmdutil/fixdacls.cpp",
+   "hits": 1,
+   "detail": {
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/install/kmdutil/kmdutil.c",
+   "hits": 6,
+   "detail": {
+    "CrashDrv": 4,
+    "CrashMsg": 1,
+    "CrashApi_": 1
+   }
+  },
+  {
+   "file": "Sandboxie/install/kmdutil/kmdutil.vcxproj",
+   "hits": 6,
+   "detail": {
+    "CrashDll": 6
+   }
+  },
+  {
+   "file": "Sandboxie/install/kmdutil/sbiedrv.c",
+   "hits": 10,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashApi_": 8
+   }
+  },
+  {
+   "file": "Sandboxie/msgs/resource.rc",
+   "hits": 2,
+   "detail": {
+    "CrashMsg": 2
+   }
+  },
+  {
+   "file": "Sandboxie/msgs/sbiemsg.def",
+   "hits": 1,
+   "detail": {
+    "CrashMsg": 1
+   }
+  },
+  {
+   "file": "Sandboxie/msgs/SboxMsg.vcxproj",
+   "hits": 3,
+   "detail": {
+    "CrashMsg": 3
+   }
+  },
+  {
+   "file": "SandboxiePlus/QSbieAPI/SbieAPI.cpp",
+   "hits": 14,
+   "detail": {
+    "CrashSvc": 1,
+    "CrashMsg": 13
+   }
+  },
+  {
+   "file": "SandboxiePlus/QSbieAPI/SbieDefs.h",
+   "hits": 6,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 3,
+    "CrashMsg": 1
+   }
+  },
+  {
+   "file": "SandboxiePlus/QSbieAPI/SbieStatus.h",
+   "hits": 4,
+   "detail": {
+    "CrashMsg": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/QSbieAPI/SbieTrace.cpp",
+   "hits": 1,
+   "detail": {
+    "crashsvc": 1
+   }
+  },
+  {
+   "file": "SandboxiePlus/QSbieAPI/SbieUtils.cpp",
+   "hits": 1,
+   "detail": {
+    "CrashSvc": 1
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/main.cpp",
+   "hits": 1,
+   "detail": {
+    "CrashDll": 1
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/SandMan.cpp",
+   "hits": 11,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashMsg": 5,
+    "CrashDll": 2
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/SandMan.h",
+   "hits": 3,
+   "detail": {
+    "CrashMsg": 3
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_ar.ts",
+   "hits": 8,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_de.ts",
+   "hits": 8,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_en.ts",
+   "hits": 4,
+   "detail": {
+    "CrashDrv": 1,
+    "CrashSvc": 1,
+    "CrashDll": 2
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_es.ts",
+   "hits": 8,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_fr.ts",
+   "hits": 8,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_hu.ts",
+   "hits": 8,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_id.ts",
+   "hits": 8,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_it.ts",
+   "hits": 5,
+   "detail": {
+    "CrashDrv": 1,
+    "CrashSvc": 1,
+    "CrashDll": 3
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_ja.ts",
+   "hits": 8,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_ko.ts",
+   "hits": 8,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_nl.ts",
+   "hits": 4,
+   "detail": {
+    "CrashDrv": 1,
+    "CrashSvc": 1,
+    "CrashDll": 2
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_pl.ts",
+   "hits": 8,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_pt_BR.ts",
+   "hits": 8,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_pt_PT.ts",
+   "hits": 8,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_ru.ts",
+   "hits": 8,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_sv_SE.ts",
+   "hits": 8,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_tr.ts",
+   "hits": 8,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_uk.ts",
+   "hits": 7,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashDll": 3
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_vi.ts",
+   "hits": 4,
+   "detail": {
+    "CrashDrv": 1,
+    "CrashSvc": 1,
+    "CrashDll": 2
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_zh_CN.ts",
+   "hits": 8,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/sandman_zh_TW.ts",
+   "hits": 8,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashSvc": 2,
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/SbiePlusAPI.cpp",
+   "hits": 7,
+   "detail": {
+    "CrashMsg": 7
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Forms/OptionsWindow.ui",
+   "hits": 1,
+   "detail": {
+    "CrashDll": 1
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/lang_de.json",
+   "hits": 4,
+   "detail": {
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/lang_es.json",
+   "hits": 4,
+   "detail": {
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/lang_fr.json",
+   "hits": 4,
+   "detail": {
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/lang_hu.json",
+   "hits": 4,
+   "detail": {
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/lang_it.json",
+   "hits": 4,
+   "detail": {
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/lang_ja.json",
+   "hits": 4,
+   "detail": {
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/lang_ko.json",
+   "hits": 4,
+   "detail": {
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/lang_nl.json",
+   "hits": 4,
+   "detail": {
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/lang_pl.json",
+   "hits": 4,
+   "detail": {
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/lang_pt_BR.json",
+   "hits": 4,
+   "detail": {
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/lang_pt_PT.json",
+   "hits": 4,
+   "detail": {
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/lang_ru.json",
+   "hits": 4,
+   "detail": {
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/lang_sv.json",
+   "hits": 4,
+   "detail": {
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/lang_tr.json",
+   "hits": 4,
+   "detail": {
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/lang_uk.json",
+   "hits": 4,
+   "detail": {
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/lang_vi.json",
+   "hits": 4,
+   "detail": {
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/lang_zh_CN.json",
+   "hits": 4,
+   "detail": {
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/lang_zh_TW.json",
+   "hits": 4,
+   "detail": {
+    "CrashDll": 4
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Troubleshooting/Sandboxing/SBIEMSG/SBIE2181.js",
+   "hits": 2,
+   "detail": {
+    "CrashDll": 2
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Windows/OptionsForce.cpp",
+   "hits": 1,
+   "detail": {
+    "crashsvc": 1
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Windows/PopUpWindow.cpp",
+   "hits": 1,
+   "detail": {
+    "CrashMsg": 1
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Windows/SettingsWindow.cpp",
+   "hits": 4,
+   "detail": {
+    "CrashShellExt": 3,
+    "CrashSvc": 1
+   }
+  },
+  {
+   "file": "SandboxiePlus/SandMan/Wizards/BoxAssistant.cpp",
+   "hits": 1,
+   "detail": {
+    "CrashMsg": 1
+   }
+  },
+  {
+   "file": "SandboxiePlus/SbieShell/SbieShell.sln",
+   "hits": 3,
+   "detail": {
+    "CrashShellExt": 3
+   }
+  },
+  {
+   "file": "SandboxiePlus/SbieShell/CrashShellExt/dllmain.cpp",
+   "hits": 1,
+   "detail": {
+    "CrashShellExt": 1
+   }
+  },
+  {
+   "file": "SandboxiePlus/SbieShell/SbieShell/main.cpp",
+   "hits": 1,
+   "detail": {
+    "CrashShellExt": 1
+   }
+  },
+  {
+   "file": "SandboxiePlus/SbieShell/SbieShellPkg/AppxManifest.xml",
+   "hits": 7,
+   "detail": {
+    "CrashShellExt": 7
+   }
+  },
+  {
+   "file": "SandboxieTools/UpdUtil/UpdUtil.cpp",
+   "hits": 19,
+   "detail": {
+    "CrashDrv": 3,
+    "CrashSvc": 3,
+    "CrashApi_": 12,
+    "crashsvc": 1
+   }
+  },
+  {
+   "file": "SandboxieTools/UpdUtil/UpdUtil.h",
+   "hits": 8,
+   "detail": {
+    "CrashHostDll": 1,
+    "CrashDrv": 1,
+    "CrashSvc": 2,
+    "CrashMsg": 1,
+    "CrashDll": 3
+   }
+  },
+  {
+   "file": "SbieKey/mainlib.cpp",
+   "hits": 3,
+   "detail": {
+    "CrashDrv": 2,
+    "CrashManager": 1
+   }
+  },
+  {
+   "file": "SbieKey/README.md",
+   "hits": 4,
+   "detail": {
+    "CrashDrv": 3,
+    "CrashSvc": 1
+   }
+  },
+  {
+   "file": "SbieKey/wtsapi32.vcxproj",
+   "hits": 1,
+   "detail": {
+    "Crash* build": 1
+   }
+  }
+ ]
+}

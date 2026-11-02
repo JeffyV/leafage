@@ -30,8 +30,8 @@
 #include "common/my_version.h"
 #include "core/low/lowdata.h"
 
-extern SBIELOW_DATA* CrashApi_data;
-#define SBIELOW_CALL(x) ((P_##x)&CrashApi_data->x##_code)
+extern SBIELOW_DATA* LeafApi_data;
+#define SBIELOW_CALL(x) ((P_##x)&LeafApi_data->x##_code)
 
 extern P_NtDeviceIoControlFile __sys_NtDeviceIoControlFile;
 
@@ -43,7 +43,7 @@ extern P_NtDeviceIoControlFile __sys_NtDeviceIoControlFile;
 //---------------------------------------------------------------------------
 
 
-static NTSTATUS CrashApi_Ioctl(ULONG64 *parms);
+static NTSTATUS LeafApi_Ioctl(ULONG64 *parms);
 
 
 //---------------------------------------------------------------------------
@@ -51,7 +51,7 @@ static NTSTATUS CrashApi_Ioctl(ULONG64 *parms);
 //---------------------------------------------------------------------------
 
 
-HANDLE CrashApi_DeviceHandle = INVALID_HANDLE_VALUE;
+HANDLE LeafApi_DeviceHandle = INVALID_HANDLE_VALUE;
 
 // SboxDll does not link in the CRT. Instead, it piggybacks onto the CRT routines that are in ntdll.dll.
 // However, the ntdll.lib from the 7600 DDK does not export everything we need. So we must use runtime dynamic linking.
@@ -91,11 +91,11 @@ int __CRTDECL Sbie_snprintf(char *_Buffer, size_t Count, const char * const _For
 }
 
 //---------------------------------------------------------------------------
-// CrashApi_Ioctl
+// LeafApi_Ioctl
 //---------------------------------------------------------------------------
 
 
-_FX NTSTATUS CrashApi_Ioctl(ULONG64 *parms)
+_FX NTSTATUS LeafApi_Ioctl(ULONG64 *parms)
 {
     NTSTATUS status;
     OBJECT_ATTRIBUTES objattrs;
@@ -103,26 +103,26 @@ _FX NTSTATUS CrashApi_Ioctl(ULONG64 *parms)
     IO_STATUS_BLOCK MyIoStatusBlock;
 
     if (parms == NULL) { // close request as used by kmdutil
-        if(CrashApi_DeviceHandle != INVALID_HANDLE_VALUE)
-            NtClose(CrashApi_DeviceHandle);
-        CrashApi_DeviceHandle = INVALID_HANDLE_VALUE;
+        if(LeafApi_DeviceHandle != INVALID_HANDLE_VALUE)
+            NtClose(LeafApi_DeviceHandle);
+        LeafApi_DeviceHandle = INVALID_HANDLE_VALUE;
     }
 
     if (Dll_SbieTrace && parms[0] != API_MONITOR_PUT2) {
         WCHAR dbg[1024];
-        extern const wchar_t* Trace_CrashDrvFunc2Str(ULONG func);
-        Sbie_snwprintf(dbg, 1024, L"CrashApi_Ioctl: %s %s", Dll_ImageName, Trace_CrashDrvFunc2Str((ULONG)parms[0]));
-        CrashApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, dbg);
+        extern const wchar_t* Trace_LeafDrvFunc2Str(ULONG func);
+        Sbie_snwprintf(dbg, 1024, L"LeafApi_Ioctl: %s %s", Dll_ImageName, Trace_LeafDrvFunc2Str((ULONG)parms[0]));
+        LeafApi_MonitorPutMsg(MONITOR_OTHER | MONITOR_TRACE, dbg);
     }
 
-    if (CrashApi_DeviceHandle == INVALID_HANDLE_VALUE) {
+    if (LeafApi_DeviceHandle == INVALID_HANDLE_VALUE) {
 
         RtlInitUnicodeString(&uni, API_DEVICE_NAME);
         InitializeObjectAttributes(
             &objattrs, &uni, OBJ_CASE_INSENSITIVE, NULL, NULL);
 
         status = NtOpenFile(
-            &CrashApi_DeviceHandle, FILE_GENERIC_READ, &objattrs,
+            &LeafApi_DeviceHandle, FILE_GENERIC_READ, &objattrs,
             &MyIoStatusBlock,
             FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
             0);
@@ -136,17 +136,17 @@ _FX NTSTATUS CrashApi_Ioctl(ULONG64 *parms)
 
     if (status != STATUS_SUCCESS) {
 
-        CrashApi_DeviceHandle = INVALID_HANDLE_VALUE;
+        LeafApi_DeviceHandle = INVALID_HANDLE_VALUE;
 
     } else {
 
         //
         // note that all requests are synchronous which means
-        // NtDeviceIoControlFile will wait until CrashDrv has finished
+        // NtDeviceIoControlFile will wait until LeafDrv has finished
         // processing a request before sending the next request
         //
 
-        /*BOOLEAN IsNative = CrashApi_data && !CrashApi_data->flags.bNoSysHooks
+        /*BOOLEAN IsNative = LeafApi_data && !LeafApi_data->flags.bNoSysHooks
 #ifndef _WIN64
             && !Dll_IsWow64
 #endif
@@ -162,7 +162,7 @@ _FX NTSTATUS CrashApi_Ioctl(ULONG64 *parms)
             //
 
             status = SBIELOW_CALL(NtDeviceIoControlFile)(
-                CrashApi_DeviceHandle, NULL, NULL, NULL, &MyIoStatusBlock,
+                LeafApi_DeviceHandle, NULL, NULL, NULL, &MyIoStatusBlock,
                 API_SBIEDRV_CTLCODE, parms, sizeof(ULONG64) * 8, NULL, 0);
 
         } else*/ if (__sys_NtDeviceIoControlFile) {
@@ -172,13 +172,13 @@ _FX NTSTATUS CrashApi_Ioctl(ULONG64 *parms)
             //
         
             status = __sys_NtDeviceIoControlFile(
-                CrashApi_DeviceHandle, NULL, NULL, NULL, &MyIoStatusBlock,
+                LeafApi_DeviceHandle, NULL, NULL, NULL, &MyIoStatusBlock,
                 API_SBIEDRV_CTLCODE, parms, sizeof(ULONG64) * 8, NULL, 0);
         
         } else {
         
             status = NtDeviceIoControlFile(
-                CrashApi_DeviceHandle, NULL, NULL, NULL, &MyIoStatusBlock,
+                LeafApi_DeviceHandle, NULL, NULL, NULL, &MyIoStatusBlock,
                 API_SBIEDRV_CTLCODE, parms, sizeof(ULONG64) * 8, NULL, 0);
         }
 
@@ -189,11 +189,11 @@ _FX NTSTATUS CrashApi_Ioctl(ULONG64 *parms)
 
 
 //---------------------------------------------------------------------------
-// CrashApi_CallFunc
+// LeafApi_CallFunc
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_Call(ULONG api_code, LONG arg_num, ...) 
+_FX LONG LeafApi_Call(ULONG api_code, LONG arg_num, ...) 
 {
     va_list valist;
     NTSTATUS status;
@@ -210,30 +210,30 @@ _FX LONG CrashApi_Call(ULONG api_code, LONG arg_num, ...)
         parms[i] = (ULONG64)va_arg(valist, ULONG_PTR);
     va_end(valist);
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_GetVersion
+// LeafApi_GetVersion
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_GetVersion(
+_FX LONG LeafApi_GetVersion(
     WCHAR *out_version)     // WCHAR [16]
 {
-    return CrashApi_GetVersionEx(out_version, NULL);
+    return LeafApi_GetVersionEx(out_version, NULL);
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_GetVersionEx
+// LeafApi_GetVersionEx
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_GetVersionEx(
+_FX LONG LeafApi_GetVersionEx(
     WCHAR* version_string,  // WCHAR [16]
     ULONG* abi_version)
 {
@@ -246,7 +246,7 @@ _FX LONG CrashApi_GetVersionEx(
     args->string.val = version_string;
     args->abi_ver.val = abi_version;
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (! NT_SUCCESS(status)){
         if (version_string) wcscpy(version_string, L"unknown");
@@ -264,11 +264,11 @@ _FX LONG CrashApi_GetVersionEx(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_GetWork
+// LeafApi_GetWork
 //---------------------------------------------------------------------------
 
 /*
-_FX LONG CrashApi_GetWork(
+_FX LONG LeafApi_GetWork(
     ULONG SessionId,
     void *Buffer,
     ULONG *Length)
@@ -284,18 +284,18 @@ _FX LONG CrashApi_GetWork(
     args->buffer_len.val64 = *Length;
     args->result_len_ptr.val64 = (ULONG64)(ULONG_PTR)Length;
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     return status;
 }
 */
 
 //---------------------------------------------------------------------------
-// CrashApi_GetMessage
+// LeafApi_GetMessage
 //---------------------------------------------------------------------------
 
 
-_FX ULONG CrashApi_GetMessage(
+_FX ULONG LeafApi_GetMessage(
 	ULONG* MessageNum,
 	ULONG SessionId,
 	ULONG *MessageId,
@@ -320,36 +320,36 @@ _FX ULONG CrashApi_GetMessage(
 	args->msgtext.val = &msgtext;
 	args->process_id.val = Pid;
 
-	status = CrashApi_Ioctl(parms);
+	status = LeafApi_Ioctl(parms);
 
 	return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_Log
+// LeafApi_Log
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_Log(
+_FX LONG LeafApi_Log(
     ULONG msgid,
     const WCHAR *format, ...)
 {
     ULONG status;
     va_list va_args;
     va_start(va_args, format);
-    status = CrashApi_vLogEx(-1, msgid, format, va_args);
+    status = LeafApi_vLogEx(-1, msgid, format, va_args);
     va_end(va_args);
     return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_LogEx
+// LeafApi_LogEx
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_LogEx(
+_FX LONG LeafApi_LogEx(
     ULONG session_id,
     ULONG msgid,
     const WCHAR *format, ...)
@@ -357,18 +357,18 @@ _FX LONG CrashApi_LogEx(
     ULONG status;
     va_list va_args;
     va_start(va_args, format);
-    status = CrashApi_vLogEx(session_id, msgid, format, va_args);
+    status = LeafApi_vLogEx(session_id, msgid, format, va_args);
     va_end(va_args);
     return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_vLogEx
+// LeafApi_vLogEx
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_vLogEx(
+_FX LONG LeafApi_vLogEx(
     ULONG session_id,
     ULONG msgid,
     const WCHAR *format,
@@ -392,7 +392,7 @@ _FX LONG CrashApi_vLogEx(
 
     Sbie_snwprintf((WCHAR *)tmp1, 510, L"%S", tmp2);
 
-	status = CrashApi_LogMsgEx(session_id, msgid, (WCHAR*)tmp1, (USHORT)wcslen((WCHAR *)tmp1) * sizeof(WCHAR));
+	status = LeafApi_LogMsgEx(session_id, msgid, (WCHAR*)tmp1, (USHORT)wcslen((WCHAR *)tmp1) * sizeof(WCHAR));
 
     Dll_Free(tmp1);
 
@@ -401,11 +401,11 @@ _FX LONG CrashApi_vLogEx(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_LogMsgEx
+// LeafApi_LogMsgEx
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_LogMsgEx(
+_FX LONG LeafApi_LogMsgEx(
 	ULONG session_id,
 	ULONG msgid,
 	const WCHAR* msg_data,
@@ -430,18 +430,18 @@ _FX LONG CrashApi_LogMsgEx(
 	args->msgid.val = msgid;
 	args->msgtext.val = &msgtext;
 	//args->process_id.val = 
-	status = CrashApi_Ioctl(parms);
+	status = LeafApi_Ioctl(parms);
 
 	return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_LogMsgExt
+// LeafApi_LogMsgExt
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_LogMsgExt(
+_FX LONG LeafApi_LogMsgExt(
 	ULONG session_id,
 	ULONG msgid,
 	const WCHAR** strings)
@@ -463,7 +463,7 @@ _FX LONG CrashApi_LogMsgExt(
 			temp += len;
 		}
 
-		status = CrashApi_LogMsgEx(session_id, msgid, buff, (USHORT)size);
+		status = LeafApi_LogMsgEx(session_id, msgid, buff, (USHORT)size);
 
 		Dll_Free(buff);
 
@@ -476,11 +476,11 @@ _FX LONG CrashApi_LogMsgExt(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_GetHomePath
+// LeafApi_GetHomePath
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_GetHomePath(
+_FX LONG LeafApi_GetHomePath(
     WCHAR *NtPath, ULONG NtPathMaxLen, WCHAR *DosPath, ULONG DosPathMaxLen)
 {
     NTSTATUS status;
@@ -503,7 +503,7 @@ _FX LONG CrashApi_GetHomePath(
         args->nt_path.val64     = (ULONG64)(ULONG_PTR)&nt_path_uni;
     if (DosPath)
         args->dos_path.val64    = (ULONG64)(ULONG_PTR)&dos_path_uni;
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (! NT_SUCCESS(status)) {
         if (NtPath)
@@ -517,29 +517,29 @@ _FX LONG CrashApi_GetHomePath(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_QueryProcess
+// LeafApi_QueryProcess
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_QueryProcess(
+_FX LONG LeafApi_QueryProcess(
     HANDLE ProcessId,
     WCHAR *out_box_name_wchar34,
     WCHAR *out_image_name_wchar96,
     WCHAR *out_sid_wchar96,
     ULONG *out_session_id)
 {
-    return CrashApi_QueryProcessEx2(
+    return LeafApi_QueryProcessEx2(
         ProcessId, 96, out_box_name_wchar34, out_image_name_wchar96,
         out_sid_wchar96, out_session_id, NULL);
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_QueryProcessEx
+// LeafApi_QueryProcessEx
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_QueryProcessEx(
+_FX LONG LeafApi_QueryProcessEx(
     HANDLE ProcessId,
     ULONG image_name_len_in_wchars,
     WCHAR *out_box_name_wchar34,
@@ -547,18 +547,18 @@ _FX LONG CrashApi_QueryProcessEx(
     WCHAR *out_sid_wchar96,
     ULONG *out_session_id)
 {
-    return CrashApi_QueryProcessEx2(
+    return LeafApi_QueryProcessEx2(
         ProcessId, image_name_len_in_wchars, out_box_name_wchar34,
         out_image_name_wcharXXX, out_sid_wchar96, out_session_id, NULL);
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_QueryProcessEx2
+// LeafApi_QueryProcessEx2
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_QueryProcessEx2(
+_FX LONG LeafApi_QueryProcessEx2(
     HANDLE ProcessId,
     ULONG image_name_len_in_wchars,
     WCHAR *out_box_name_wchar34,
@@ -607,7 +607,7 @@ _FX LONG CrashApi_QueryProcessEx2(
     if (out_create_time)
         args->create_time.val64 = (ULONG64)(ULONG_PTR)out_create_time;
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (! NT_SUCCESS(status)) {
 
@@ -635,23 +635,23 @@ _FX LONG CrashApi_QueryProcessEx2(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_QueryProcessInfo
+// LeafApi_QueryProcessInfo
 //---------------------------------------------------------------------------
 
 
-_FX ULONG64 CrashApi_QueryProcessInfo(
+_FX ULONG64 LeafApi_QueryProcessInfo(
     HANDLE ProcessId,
     ULONG info_type)
 {
-    return CrashApi_QueryProcessInfoEx(ProcessId, info_type, 0);
+    return LeafApi_QueryProcessInfoEx(ProcessId, info_type, 0);
 }
 
 //---------------------------------------------------------------------------
-// CrashApi_QueryProcessInfoEx
+// LeafApi_QueryProcessInfoEx
 //---------------------------------------------------------------------------
 
 
-_FX ULONG64 CrashApi_QueryProcessInfoEx(
+_FX ULONG64 LeafApi_QueryProcessInfoEx(
     HANDLE ProcessId,
     ULONG info_type,
     ULONG64 ext_data)
@@ -669,7 +669,7 @@ _FX ULONG64 CrashApi_QueryProcessInfoEx(
     args->info_data.val64       = (ULONG64)(ULONG_PTR)&ResultValue;
     args->ext_data.val64        = (ULONG64)(ULONG_PTR)ext_data;
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (! NT_SUCCESS(status))
         ResultValue = 0;
@@ -679,11 +679,11 @@ _FX ULONG64 CrashApi_QueryProcessInfoEx(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_QueryProcessInfoStr
+// LeafApi_QueryProcessInfoStr
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_QueryProcessInfoStr(
+_FX LONG LeafApi_QueryProcessInfoStr(
     HANDLE ProcessId,
     ULONG info_type,
     WCHAR *out_str,
@@ -708,7 +708,7 @@ _FX LONG CrashApi_QueryProcessInfoStr(
         args->ext_data.val64 = (ULONG64)(ULONG_PTR)&UniStr;
     }
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (!NT_SUCCESS(status)) {
         if (out_str)
@@ -720,11 +720,11 @@ _FX LONG CrashApi_QueryProcessInfoStr(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_QueryBoxPath
+// LeafApi_QueryBoxPath
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_QueryBoxPath(
+_FX LONG LeafApi_QueryBoxPath(
     const WCHAR *box_name,              // WCHAR [BOXNAME_COUNT]
     WCHAR *out_file_path,
     WCHAR *out_key_path,
@@ -770,7 +770,7 @@ _FX LONG CrashApi_QueryBoxPath(
     args->key_path_len.val  = inout_key_path_len;
     args->ipc_path_len.val  = inout_ipc_path_len;
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (! NT_SUCCESS(status)) {
         if (out_file_path)
@@ -786,11 +786,11 @@ _FX LONG CrashApi_QueryBoxPath(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_QueryProcessPath
+// LeafApi_QueryProcessPath
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_QueryProcessPath(
+_FX LONG LeafApi_QueryProcessPath(
     HANDLE ProcessId,
     WCHAR *out_file_path,
     WCHAR *out_key_path,
@@ -836,7 +836,7 @@ _FX LONG CrashApi_QueryProcessPath(
     args->key_path_len.val  = inout_key_path_len;
     args->ipc_path_len.val  = inout_ipc_path_len;
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (! NT_SUCCESS(status)) {
         if (out_file_path)
@@ -852,11 +852,11 @@ _FX LONG CrashApi_QueryProcessPath(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_QueryPathList
+// LeafApi_QueryPathList
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_QueryPathList(
+_FX LONG LeafApi_QueryPathList(
     ULONG path_code,
     ULONG *path_len,
     WCHAR *path_str,
@@ -874,18 +874,18 @@ _FX LONG CrashApi_QueryPathList(
     args->path_str.val64 = (ULONG64)(ULONG_PTR)path_str;
     args->process_id.val64 = (ULONG64)(ULONG_PTR)process_id;
     args->prepend_level.val = prepend_level;
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_EnumProcessEx
+// LeafApi_EnumProcessEx
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_EnumProcessEx(
+_FX LONG LeafApi_EnumProcessEx(
     const WCHAR *box_name,          // WCHAR [BOXNAME_COUNT]
     BOOLEAN all_sessions,
     ULONG which_session,            // -1 for current session
@@ -902,7 +902,7 @@ _FX LONG CrashApi_EnumProcessEx(
     parms[3] = (ULONG64)(ULONG_PTR)all_sessions;
     parms[4] = (ULONG64)(LONG_PTR)which_session;
     parms[5] = (ULONG64)(LONG_PTR)boxed_count;
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (!NT_SUCCESS(status) && boxed_pids)
         boxed_pids[0] = 0;
@@ -912,11 +912,11 @@ _FX LONG CrashApi_EnumProcessEx(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_DisableForceProcess
+// LeafApi_DisableForceProcess
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_DisableForceProcess(
+_FX LONG LeafApi_DisableForceProcess(
     ULONG *NewState,
     ULONG *OldState)
 {
@@ -929,7 +929,7 @@ _FX LONG CrashApi_DisableForceProcess(
     args->func_code               = API_DISABLE_FORCE_PROCESS;
     args->set_flag.val64          = (ULONG64)(ULONG_PTR)NewState;
     args->get_flag.val64          = (ULONG64)(ULONG_PTR)OldState;
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (! NT_SUCCESS(status)) {
         if (OldState)
@@ -941,11 +941,11 @@ _FX LONG CrashApi_DisableForceProcess(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_HookTramp
+// LeafApi_HookTramp
 //---------------------------------------------------------------------------
 
 
-/*_FX LONG CrashApi_HookTramp(void *Source, void *Trampoline)
+/*_FX LONG LeafApi_HookTramp(void *Source, void *Trampoline)
 {
     NTSTATUS status;
     __declspec(align(8)) ULONG64 parms[API_NUM_ARGS];
@@ -954,18 +954,18 @@ _FX LONG CrashApi_DisableForceProcess(
     parms[0] = API_HOOK_TRAMP;
     parms[1] = (ULONG64)(ULONG_PTR)Source;
     parms[2] = (ULONG64)(ULONG_PTR)Trampoline;
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     return status;
 }*/
 
 
 //---------------------------------------------------------------------------
-// CrashApi_RenameFile
+// LeafApi_RenameFile
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_RenameFile(
+_FX LONG LeafApi_RenameFile(
     HANDLE FileHandle,
     const WCHAR *TargetDir, const WCHAR *TargetName,
     BOOLEAN ReplaceIfExists)
@@ -991,18 +991,18 @@ _FX LONG CrashApi_RenameFile(
     args->target_name.val64       = (ULONG64)(ULONG_PTR)&name_uni;
     args->replace_if_exists.val64 = (ULONG64)(ULONG_PTR)ReplaceIfExists;
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_GetFileName
+// LeafApi_GetFileName
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_GetFileName(
+_FX LONG LeafApi_GetFileName(
     HANDLE FileHandle,
     WCHAR *NameBuf,
     ULONG *NameLen,
@@ -1018,7 +1018,7 @@ _FX LONG CrashApi_GetFileName(
     args->name_len.val64          = (ULONG64)(ULONG_PTR)NameLen;
     args->name_buf.val64          = (ULONG64)(ULONG_PTR)NameBuf;
     args->type_buf.val64          = (ULONG64)(ULONG_PTR)ObjType;
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (! NT_SUCCESS(status)) {
         if (NameBuf)
@@ -1030,11 +1030,11 @@ _FX LONG CrashApi_GetFileName(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_OpenFile
+// LeafApi_OpenFile
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_OpenFile(
+_FX LONG LeafApi_OpenFile(
     HANDLE *FileHandle,
     const WCHAR *Path)
 {
@@ -1049,7 +1049,7 @@ _FX LONG CrashApi_OpenFile(
     args->path_str.val64          = (ULONG64)(ULONG_PTR)Path;
     args->file_handle.val64       = (ULONG64)(ULONG_PTR)&ResultHandle;
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
     if (! NT_SUCCESS(status))
         ResultHandle = 0;
     *FileHandle = (HANDLE *)ResultHandle;
@@ -1059,11 +1059,11 @@ _FX LONG CrashApi_OpenFile(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_CheckInternetAccess
+// LeafApi_CheckInternetAccess
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_CheckInternetAccess(
+_FX LONG LeafApi_CheckInternetAccess(
     HANDLE ProcessId,
     const WCHAR *DeviceName32,
     BOOLEAN IssueMessage)
@@ -1150,18 +1150,18 @@ _FX LONG CrashApi_CheckInternetAccess(
     args->device_name.val64       = (ULONG64)(ULONG_PTR)(DeviceName32 ? MyDeviceName : NULL);
     args->issue_message.val64     = (ULONG64)(ULONG_PTR)IssueMessage;
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_GetBlockedDll
+// LeafApi_GetBlockedDll
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_GetBlockedDll(
+_FX LONG LeafApi_GetBlockedDll(
     WCHAR *DllNameBuf,
     ULONG DllNameLen)
 {
@@ -1174,7 +1174,7 @@ _FX LONG CrashApi_GetBlockedDll(
     args->dll_name_buf.val64    = (ULONG64)(ULONG_PTR)DllNameBuf;
     args->dll_name_len.val64    = (ULONG64)(ULONG_PTR)DllNameLen;
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (! NT_SUCCESS(status)) {
         if (DllNameBuf)
@@ -1186,11 +1186,11 @@ _FX LONG CrashApi_GetBlockedDll(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_CreateDirOrLink
+// LeafApi_CreateDirOrLink
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_CreateDirOrLink(
+_FX LONG LeafApi_CreateDirOrLink(
     const WCHAR *ObjectName,
     const WCHAR *TargetName)
 {
@@ -1217,18 +1217,18 @@ _FX LONG CrashApi_CreateDirOrLink(
     if (TargetName)
         args->target.val64  = (ULONG64)(ULONG_PTR)&target;
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_DuplicateObject
+// LeafApi_DuplicateObject
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_DuplicateObject(
+_FX LONG LeafApi_DuplicateObject(
     HANDLE *TargetHandle,
     HANDLE OtherProcessHandle,
     HANDLE SourceHandle,
@@ -1249,7 +1249,7 @@ _FX LONG CrashApi_DuplicateObject(
     args->desired_access.val    = DesiredAccess;
     args->options.val           = Options;
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (! NT_SUCCESS(status))
         ResultHandle = 0;
@@ -1261,11 +1261,11 @@ _FX LONG CrashApi_DuplicateObject(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_OpenProcess
+// LeafApi_OpenProcess
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_OpenProcess(
+_FX LONG LeafApi_OpenProcess(
     HANDLE *ProcessHandle,
     HANDLE ProcessId)
 {
@@ -1280,7 +1280,7 @@ _FX LONG CrashApi_OpenProcess(
     args->process_id.val64      = (ULONG64)(ULONG_PTR)ProcessId;
     args->process_handle.val64  = (ULONG64)(ULONG_PTR)&ResultHandle;
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (! NT_SUCCESS(status))
         ResultHandle = 0;
@@ -1292,11 +1292,11 @@ _FX LONG CrashApi_OpenProcess(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_OpenDeviceMap
+// LeafApi_OpenDeviceMap
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_OpenDeviceMap(
+_FX LONG LeafApi_OpenDeviceMap(
     HANDLE *DirectoryHandle)
 {
     NTSTATUS status;
@@ -1307,7 +1307,7 @@ _FX LONG CrashApi_OpenDeviceMap(
     memset(parms, 0, sizeof(parms));
     args->func_code               = API_OPEN_DEVICE_MAP;
     args->handle.val64            = (ULONG64)(ULONG_PTR)&ResultHandle;
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (! NT_SUCCESS(status))
         ResultHandle = 0;
@@ -1319,11 +1319,11 @@ _FX LONG CrashApi_OpenDeviceMap(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_QuerySymbolicLink
+// LeafApi_QuerySymbolicLink
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_QuerySymbolicLink(
+_FX LONG LeafApi_QuerySymbolicLink(
     WCHAR *NameBuf,
     ULONG NameLen)
 {
@@ -1337,7 +1337,7 @@ _FX LONG CrashApi_QuerySymbolicLink(
     args->name_buf.val64    = (ULONG64)(ULONG_PTR)NameBuf;
     args->name_len.val64    = (ULONG64)(ULONG_PTR)NameLen;
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (! NT_SUCCESS(status)) {
         if (NameBuf)
@@ -1349,11 +1349,11 @@ _FX LONG CrashApi_QuerySymbolicLink(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_QueryDrvInfo
+// LeafApi_QueryDrvInfo
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_QueryDrvInfo(ULONG info_class, VOID* info_data, ULONG info_size)
+_FX LONG LeafApi_QueryDrvInfo(ULONG info_class, VOID* info_data, ULONG info_size)
 {
     NTSTATUS status;
     __declspec(align(8)) ULONG64 parms[API_NUM_ARGS];
@@ -1363,18 +1363,18 @@ _FX LONG CrashApi_QueryDrvInfo(ULONG info_class, VOID* info_data, ULONG info_siz
     parms[1] = info_class;
     parms[2] = (ULONG64)(ULONG_PTR)info_data;
     parms[3] = info_size;
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_ReloadConf
+// LeafApi_ReloadConf
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_ReloadConf(ULONG session_id, ULONG flags)
+_FX LONG LeafApi_ReloadConf(ULONG session_id, ULONG flags)
 {
     NTSTATUS status;
     __declspec(align(8)) ULONG64 parms[API_NUM_ARGS];
@@ -1383,18 +1383,18 @@ _FX LONG CrashApi_ReloadConf(ULONG session_id, ULONG flags)
     parms[0] = API_RELOAD_CONF;
     parms[1] = session_id;
     parms[2] = flags;
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_UpdateConf
+// LeafApi_UpdateConf
 //---------------------------------------------------------------------------
 
 
-_FX ULONG CrashApi_UpdateConf(
+_FX ULONG LeafApi_UpdateConf(
     ULONG op, 
     const WCHAR *section_name,
     const WCHAR *setting_name, 
@@ -1423,18 +1423,18 @@ _FX ULONG CrashApi_UpdateConf(
     parms[2] = (ULONG64)(ULONG_PTR)x_section;
     parms[3] = (ULONG64)(ULONG_PTR)x_setting;
     parms[4] = (ULONG64)(ULONG_PTR)(value_ptr ? &Input : NULL);
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_QueryConf
+// LeafApi_QueryConf
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_QueryConf(
+_FX LONG LeafApi_QueryConf(
     const WCHAR *section_name,      // WCHAR [66]
     const WCHAR *setting_name,      // WCHAR [66]
     ULONG setting_index,
@@ -1464,7 +1464,7 @@ _FX LONG CrashApi_QueryConf(
     parms[2] = (ULONG64)(ULONG_PTR)x_setting;
     parms[3] = (ULONG64)(ULONG_PTR)&setting_index;
     parms[4] = (ULONG64)(ULONG_PTR)&Output;
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (! NT_SUCCESS(status)) {
         if (buffer_len > sizeof(WCHAR))
@@ -1476,37 +1476,37 @@ _FX LONG CrashApi_QueryConf(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_QueryConf
+// LeafApi_QueryConf
 //---------------------------------------------------------------------------
 
 
-/*_FX LONG CrashApi_QueryConf(
+/*_FX LONG LeafApi_QueryConf(
     const WCHAR* section_name,      // WCHAR [66]
     const WCHAR* setting_name,      // WCHAR [66]
     ULONG setting_index,
     WCHAR* out_buffer,
     ULONG buffer_len)
 {
-    //if(CrashApi_DeviceHandle != INVALID_HANDLE_VALUE)
-        return CrashApi_QueryConfDrv(section_name, setting_name, setting_index, out_buffer, buffer_len);
+    //if(LeafApi_DeviceHandle != INVALID_HANDLE_VALUE)
+        return LeafApi_QueryConfDrv(section_name, setting_name, setting_index, out_buffer, buffer_len);
     // else try service    
     //return STATUS_CONNECTION_INVALID;
 }*/
 
 
 //---------------------------------------------------------------------------
-// CrashApi_QueryConfBool
+// LeafApi_QueryConfBool
 //---------------------------------------------------------------------------
 
 
-_FX BOOLEAN CrashApi_QueryConfBool(
+_FX BOOLEAN LeafApi_QueryConfBool(
     const WCHAR *section_name,      // WCHAR [66]
     const WCHAR *setting_name,      // WCHAR [66]
     BOOLEAN def)
 {
     WCHAR value[16];
     *value = L'\0';
-    CrashApi_QueryConfAsIs(
+    LeafApi_QueryConfAsIs(
                     section_name, setting_name, 0, value, sizeof(value));
     if (*value == L'y' || *value == L'Y')
         return TRUE;
@@ -1517,18 +1517,18 @@ _FX BOOLEAN CrashApi_QueryConfBool(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_QueryConfNumber
+// LeafApi_QueryConfNumber
 //---------------------------------------------------------------------------
 
 
-_FX ULONG CrashApi_QueryConfNumber(
+_FX ULONG LeafApi_QueryConfNumber(
     const WCHAR *section_name,      // WCHAR [66]
     const WCHAR *setting_name,      // WCHAR [66]
     ULONG def)
 {
     WCHAR value[32];
     *value = L'\0';
-    if (!NT_SUCCESS(CrashApi_QueryConfAsIs(
+    if (!NT_SUCCESS(LeafApi_QueryConfAsIs(
                     section_name, setting_name, 0, value, sizeof(value)))
         || *value == L'\0') // empty string
         return def;
@@ -1547,18 +1547,18 @@ _FX ULONG CrashApi_QueryConfNumber(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_QueryConfNumber64
+// LeafApi_QueryConfNumber64
 //---------------------------------------------------------------------------
 
 
-_FX ULONG64 CrashApi_QueryConfNumber64(
+_FX ULONG64 LeafApi_QueryConfNumber64(
     const WCHAR *section_name,      // WCHAR [66]
     const WCHAR *setting_name,      // WCHAR [66]
     ULONG64 def)
 {
     WCHAR value[64];
     *value = L'\0';
-    if (!NT_SUCCESS(CrashApi_QueryConfAsIs(
+    if (!NT_SUCCESS(LeafApi_QueryConfAsIs(
                     section_name, setting_name, 0, value, sizeof(value)))
         || *value == L'\0') // empty string
         return def;
@@ -1577,24 +1577,24 @@ _FX ULONG64 CrashApi_QueryConfNumber64(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_EnumBoxes
+// LeafApi_EnumBoxes
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_EnumBoxes(
+_FX LONG LeafApi_EnumBoxes(
     LONG index,                     // initialize to -1
     WCHAR *box_name)                // WCHAR [BOXNAME_COUNT]
 {
-    return CrashApi_EnumBoxesEx(index, box_name, FALSE);
+    return LeafApi_EnumBoxesEx(index, box_name, FALSE);
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_EnumBoxes
+// LeafApi_EnumBoxes
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_EnumBoxesEx(
+_FX LONG LeafApi_EnumBoxesEx(
     LONG index,                     // initialize to -1
     WCHAR *box_name,                // WCHAR [BOXNAME_COUNT]
     BOOLEAN return_all_sections)
@@ -1602,25 +1602,25 @@ _FX LONG CrashApi_EnumBoxesEx(
     LONG rc;
     while (1) {
         ++index;
-        rc = CrashApi_QueryConf(NULL, NULL, index | CONF_GET_NO_TEMPLS | CONF_GET_NO_EXPAND,
+        rc = LeafApi_QueryConf(NULL, NULL, index | CONF_GET_NO_TEMPLS | CONF_GET_NO_EXPAND,
                                box_name, sizeof(WCHAR) * BOXNAME_COUNT);
         if (rc == STATUS_BUFFER_TOO_SMALL)
             continue;
         if (! box_name[0])
             return -1;
         if (return_all_sections ||
-                (CrashApi_IsBoxEnabled(box_name) == STATUS_SUCCESS))
+                (LeafApi_IsBoxEnabled(box_name) == STATUS_SUCCESS))
             return index;
     }
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_SetUserName
+// LeafApi_SetUserName
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_SetUserName(
+_FX LONG LeafApi_SetUserName(
     const WCHAR *SidString,
     const WCHAR *UserName)
 {
@@ -1643,18 +1643,18 @@ _FX LONG CrashApi_SetUserName(
     args->sidstring.val64   = (ULONG64)(ULONG_PTR)&uni_sid;
     args->username.val64    = (ULONG64)(ULONG_PTR)&uni_name;
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_MonitorControl
+// LeafApi_MonitorControl
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_MonitorControl(
+_FX LONG LeafApi_MonitorControl(
     ULONG *NewState,
     ULONG *OldState)
 {
@@ -1666,7 +1666,7 @@ _FX LONG CrashApi_MonitorControl(
     args->func_code               = API_MONITOR_CONTROL;
     args->set_flag.val64          = (ULONG64)(ULONG_PTR)NewState;
     args->get_flag.val64          = (ULONG64)(ULONG_PTR)OldState;
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (! NT_SUCCESS(status)) {
         if (OldState)
@@ -1678,11 +1678,11 @@ _FX LONG CrashApi_MonitorControl(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_MonitorPut
+// LeafApi_MonitorPut
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_MonitorPut(
+_FX LONG LeafApi_MonitorPut(
     ULONG Type,
     const WCHAR *Name)
 {
@@ -1695,47 +1695,47 @@ _FX LONG CrashApi_MonitorPut(
     //args->log_type.val           = Type;
     //args->log_len.val64          = wcslen(Name) * sizeof(WCHAR);
     //args->log_ptr.val64          = (ULONG64)(ULONG_PTR)Name;
-    //status = CrashApi_Ioctl(parms);
+    //status = LeafApi_Ioctl(parms);
 
     //return status;
 
-    return CrashApi_MonitorPut2(Type, Name, TRUE);
+    return LeafApi_MonitorPut2(Type, Name, TRUE);
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_MonitorPut2
+// LeafApi_MonitorPut2
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_MonitorPut2(
+_FX LONG LeafApi_MonitorPut2(
     ULONG Type,
     const WCHAR *Name,
     BOOLEAN bCheckObjectExists)
 {
-    return CrashApi_MonitorPut2Ex(Type, wcslen(Name), Name, bCheckObjectExists, FALSE);
+    return LeafApi_MonitorPut2Ex(Type, wcslen(Name), Name, bCheckObjectExists, FALSE);
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_MonitorPutMsg
+// LeafApi_MonitorPutMsg
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_MonitorPutMsg(
+_FX LONG LeafApi_MonitorPutMsg(
     ULONG Type,
     const WCHAR* Message)
 {
-    return CrashApi_MonitorPut2Ex(Type, wcslen(Message), Message, FALSE, TRUE);
+    return LeafApi_MonitorPut2Ex(Type, wcslen(Message), Message, FALSE, TRUE);
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_MonitorPut2Ex
+// LeafApi_MonitorPut2Ex
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_MonitorPut2Ex(
+_FX LONG LeafApi_MonitorPut2Ex(
     ULONG Type,
     ULONG NameLen,
     const WCHAR *Name,
@@ -1753,18 +1753,18 @@ _FX LONG CrashApi_MonitorPut2Ex(
     args->log_ptr.val64             = (ULONG64)(ULONG_PTR)Name;
     args->check_object_exists.val64 = bCheckObjectExists;
     args->is_message.val64          = bIsMessage;
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_MonitorGetEx
+// LeafApi_MonitorGetEx
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_MonitorPutEx(
+_FX LONG LeafApi_MonitorPutEx(
     ULONG Type,
     ULONG Pid,
     ULONG Tid,
@@ -1781,17 +1781,17 @@ _FX LONG CrashApi_MonitorPutEx(
     args->log_ptr.val64          = (ULONG64)(ULONG_PTR)Message;
     args->log_pid.val            = Pid;
     args->log_tid.val            = Tid;
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     return status;
 }
 
 //---------------------------------------------------------------------------
-// CrashApi_MonitorGet
+// LeafApi_MonitorGet
 //---------------------------------------------------------------------------
 
 
-//_FX LONG CrashApi_MonitorGet(
+//_FX LONG LeafApi_MonitorGet(
 //    ULONG *Type,
 //    WCHAR *Name)                    // WCHAR [256]
 //{
@@ -1804,7 +1804,7 @@ _FX LONG CrashApi_MonitorPutEx(
 //    args->log_type.val64         = (ULONG64)(ULONG_PTR)Type;
 //    args->log_len.val64          = 256 * sizeof(WCHAR);
 //    args->log_ptr.val64          = (ULONG64)(ULONG_PTR)Name;
-//    status = CrashApi_Ioctl(parms);
+//    status = LeafApi_Ioctl(parms);
 //
 //    if (! NT_SUCCESS(status)) {
 //        if (Type)
@@ -1818,11 +1818,11 @@ _FX LONG CrashApi_MonitorPutEx(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_MonitorGetEx
+// LeafApi_MonitorGetEx
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_MonitorGetEx(
+_FX LONG LeafApi_MonitorGetEx(
 	ULONG *Type,
 	ULONG *Pid,
     ULONG *Tid,
@@ -1840,7 +1840,7 @@ _FX LONG CrashApi_MonitorGetEx(
 	args->log_pid.val = Pid;
     args->log_tid.val = Tid;
     args->log_data.val = &log_buffer;
-	status = CrashApi_Ioctl(parms);
+	status = LeafApi_Ioctl(parms);
 
 	if (!NT_SUCCESS(status)) {
 		if (Type)
@@ -1854,11 +1854,11 @@ _FX LONG CrashApi_MonitorGetEx(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_GetUnmountHive
+// LeafApi_GetUnmountHive
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_GetUnmountHive(
+_FX LONG LeafApi_GetUnmountHive(
     WCHAR *path)                    // WCHAR [256]
 {
     NTSTATUS status;
@@ -1868,7 +1868,7 @@ _FX LONG CrashApi_GetUnmountHive(
     memset(parms, 0, sizeof(parms));
     args->func_code               = API_GET_UNMOUNT_HIVE;
     args->path.val64              = (ULONG64)(ULONG_PTR)path;
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (! NT_SUCCESS(status)) {
         if (path)
@@ -1880,11 +1880,11 @@ _FX LONG CrashApi_GetUnmountHive(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_SessionLeader
+// LeafApi_SessionLeader
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_SessionLeader(ULONG session_id, HANDLE *ProcessId)
+_FX LONG LeafApi_SessionLeader(ULONG session_id, HANDLE *ProcessId)
 {
     NTSTATUS status;
     __declspec(align(8)) ULONG64 ResultValue;
@@ -1902,7 +1902,7 @@ _FX LONG CrashApi_SessionLeader(ULONG session_id, HANDLE *ProcessId)
         args->token_handle.val64  = 0;
         args->process_id.val64    = 0;
     }
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     if (! NT_SUCCESS(status))
         ResultValue = 0;
@@ -1914,11 +1914,11 @@ _FX LONG CrashApi_SessionLeader(ULONG session_id, HANDLE *ProcessId)
 
 
 //---------------------------------------------------------------------------
-// CrashApi_IsBoxEnabled
+// LeafApi_IsBoxEnabled
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_IsBoxEnabled(
+_FX LONG LeafApi_IsBoxEnabled(
     const WCHAR *box_name)          // WCHAR [BOXNAME_COUNT]
 {
     NTSTATUS status;
@@ -1930,18 +1930,18 @@ _FX LONG CrashApi_IsBoxEnabled(
 
     args->box_name.val64   = (ULONG64)(ULONG_PTR)box_name;
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_OpenKey
+// LeafApi_OpenKey
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_OpenKey(
+_FX LONG LeafApi_OpenKey(
     HANDLE *KeyHandle,
     const WCHAR *Path)
 {
@@ -1956,7 +1956,7 @@ _FX LONG CrashApi_OpenKey(
     args->path_str.val64          = (ULONG64)(ULONG_PTR)Path;
     args->key_handle.val64        = (ULONG64)(ULONG_PTR)&ResultHandle;
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
     if (! NT_SUCCESS(status))
         ResultHandle = 0;
     *KeyHandle = (HANDLE *)ResultHandle;
@@ -1966,11 +1966,11 @@ _FX LONG CrashApi_OpenKey(
 
 
 //---------------------------------------------------------------------------
-// CrashApi_SetLowLabelKey
+// LeafApi_SetLowLabelKey
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_SetLowLabelKey(
+_FX LONG LeafApi_SetLowLabelKey(
     const WCHAR *Path)
 {
     NTSTATUS status;
@@ -1982,18 +1982,18 @@ _FX LONG CrashApi_SetLowLabelKey(
     args->path_len.val64          = (ULONG64)(wcslen(Path) * sizeof(WCHAR));
     args->path_str.val64          = (ULONG64)(ULONG_PTR)Path;
 
-    status = CrashApi_Ioctl(parms);
+    status = LeafApi_Ioctl(parms);
 
     return status;
 }
 
 
 //---------------------------------------------------------------------------
-// CrashApi_MonitorControl
+// LeafApi_MonitorControl
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_ProcessExemptionControl(
+_FX LONG LeafApi_ProcessExemptionControl(
 	HANDLE process_id,
 	ULONG action_id,
 	ULONG *NewState,
@@ -2009,7 +2009,7 @@ _FX LONG CrashApi_ProcessExemptionControl(
 	args->action_id.val = action_id;
 	args->set_flag.val64 = (ULONG64)(ULONG_PTR)NewState;
 	args->get_flag.val64 = (ULONG64)(ULONG_PTR)OldState;
-	status = CrashApi_Ioctl(parms);
+	status = LeafApi_Ioctl(parms);
 
 	if (!NT_SUCCESS(status)) {
 		if (OldState)
@@ -2024,7 +2024,7 @@ _FX LONG CrashApi_ProcessExemptionControl(
 // SbieDll_GetSysFunction
 //---------------------------------------------------------------------------
 
-extern HANDLE                       CrashApi_DeviceHandle;
+extern HANDLE                       LeafApi_DeviceHandle;
 extern P_NtCreateFile               __sys_NtCreateFile;
 extern P_NtQueryDirectoryFile       __sys_NtQueryDirectoryFile;
 extern P_NtOpenKey                  __sys_NtOpenKey;
@@ -2034,7 +2034,7 @@ extern P_NtDeviceIoControlFile      __sys_NtDeviceIoControlFile;
 
 void* SbieDll_GetSysFunction(const WCHAR* name)
 {
-    if (name == NULL)                                       return CrashApi_DeviceHandle;
+    if (name == NULL)                                       return LeafApi_DeviceHandle;
     if (_wcsicmp(name, L"NtCreateFile") == 0)               return __sys_NtCreateFile;
     if (_wcsicmp(name, L"NtQueryDirectoryFile") == 0)       return __sys_NtQueryDirectoryFile;
     if (_wcsicmp(name, L"NtOpenKey") == 0)                  return __sys_NtOpenKey;

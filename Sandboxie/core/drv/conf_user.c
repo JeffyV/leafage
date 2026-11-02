@@ -175,7 +175,7 @@ _FX BOOLEAN Conf_GetUserNameForSid(
             return TRUE;
 
         //
-        // we couldn't find the SID, so ask CrashSvc to translate
+        // we couldn't find the SID, so ask LeafSvc to translate
         //
 
         if (! message_sent) {
@@ -200,7 +200,7 @@ _FX BOOLEAN Conf_GetUserNameForSid(
         }
 
         //
-        // now wait for CrashSvc to report back
+        // now wait for LeafSvc to report back
         //
 
         /*Conf_AdjustUseCount(TRUE);

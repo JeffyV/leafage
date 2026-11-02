@@ -574,7 +574,7 @@ _FX void BuildMenu(HMENU hMenu, MENU_DIR *menu, WCHAR *fullpath)
         // top level menu, create the title label
         //
 
-        CrashApi_QueryProcess(NULL, boxname, NULL, NULL, NULL);
+        LeafApi_QueryProcess(NULL, boxname, NULL, NULL, NULL);
         wsprintf(
             title, SbieDll_FormatMessage1(MSG_3111, boxname));
 
@@ -1030,7 +1030,7 @@ _FX BOOL WriteStartMenuResult(const WCHAR *MapName, const WCHAR *Command)
     // write sandbox
     //
 
-    CrashApi_QueryProcess(NULL, buf, NULL, NULL, NULL);
+    LeafApi_QueryProcess(NULL, buf, NULL, NULL, NULL);
 
     if (run_elevated_2)
         buf[63] = L'$';

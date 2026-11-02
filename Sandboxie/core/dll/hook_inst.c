@@ -25,7 +25,7 @@
 #include "dll.h"
 #include "msgs/msgs.h"
 #define MSG_HOOK_ANALYZE    MSG_1151
-#define Log_Msg1			CrashApi_Log
+#define Log_Msg1			LeafApi_Log
 #define HOOK_WITH_PRIVATE_PARTS
 #include "hook.h"
 #endif

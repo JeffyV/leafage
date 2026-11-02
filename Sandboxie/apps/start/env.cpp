@@ -95,7 +95,7 @@ _FX void Env_DoRefresh_1_Common(
     //      Control\Session Manager\Environment
     //
 
-    status = CrashApi_QueryBoxPath(
+    status = LeafApi_QueryBoxPath(
                 BoxName, NULL, NULL, NULL, &len1, &len2, &len3);
     if (status != 0)
         return;
@@ -104,7 +104,7 @@ _FX void Env_DoRefresh_1_Common(
     if (! path)
         return;
 
-    status = CrashApi_QueryBoxPath(
+    status = LeafApi_QueryBoxPath(
                 BoxName, NULL, path, NULL, &len1, &len2, &len3);
     if (status == 0) {
 
@@ -421,7 +421,7 @@ _FX void Env_Refresh(const WCHAR *BoxName)
     if (BoxName[0] == L'-') {
 
         HANDLE pid = (HANDLE)(ULONG_PTR)_wtoi(BoxName + 1);
-        LONG rc = CrashApi_QueryProcess(pid, BoxNameSpace, NULL, NULL, NULL);
+        LONG rc = LeafApi_QueryProcess(pid, BoxNameSpace, NULL, NULL, NULL);
         if (rc != 0)
             return;
         BoxName = BoxNameSpace;

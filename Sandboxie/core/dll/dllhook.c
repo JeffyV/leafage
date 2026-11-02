@@ -103,7 +103,7 @@ static const WCHAR *_fmt2 = L"%s (%d, %d)";
 
 
 //---------------------------------------------------------------------------
-// CrashApi_HookInit
+// LeafApi_HookInit
 //---------------------------------------------------------------------------
 
 
@@ -112,7 +112,7 @@ _FX void SbieDll_HookInit()
     InitializeCriticalSection(&Dll_ModuleHooks_CritSec);
     List_Init(&Dll_ModuleHooks);
 
-    Dll_HookTrace = CrashApi_QueryConfBool(NULL, L"HookTrace", FALSE);
+    Dll_HookTrace = LeafApi_QueryConfBool(NULL, L"HookTrace", FALSE);
 
 #ifdef _M_ARM64EC
     __sys_NtAllocateVirtualMemoryEx = (P_NtAllocateVirtualMemoryEx)GetProcAddress(Dll_Ntdll, "NtAllocateVirtualMemoryEx");
@@ -217,7 +217,7 @@ _FX VECTOR_TABLE* SbieDll_GetHookTable(MODULE_HOOK* mod_hook, ULONG_PTR target, 
 
                 ptrVTable = Pool_Alloc(mod_hook->pool, sizeof(VECTOR_TABLE));
                 if (!ptrVTable) {
-                    //CrashApi_Log(2303, _fmt1, SourceFuncName, 53);
+                    //LeafApi_Log(2303, _fmt1, SourceFuncName, 53);
                     break;
                 }
 
@@ -299,7 +299,7 @@ _FX VECTOR_TABLE* SbieDll_GetHookTable(MODULE_HOOK* mod_hook, ULONG_PTR target, 
             }
         }
         else { // fail and disable vtable if it could not be initialized
-            //CrashApi_Log(2303, _fmt1, SourceFuncName, 888);
+            //LeafApi_Log(2303, _fmt1, SourceFuncName, 888);
             ptrVTable = NULL;
             break;
         }
@@ -316,11 +316,11 @@ _FX VECTOR_TABLE* SbieDll_GetHookTable(MODULE_HOOK* mod_hook, ULONG_PTR target, 
 #ifndef _M_ARM64
 
 //---------------------------------------------------------------------------
-// CrashApi_HookTramp
+// LeafApi_HookTramp
 //---------------------------------------------------------------------------
 
 
-_FX LONG CrashApi_HookTramp(void *Source, void *Trampoline)
+_FX LONG LeafApi_HookTramp(void *Source, void *Trampoline)
 {
 	NTSTATUS status;
 #ifdef _WIN64
@@ -362,7 +362,7 @@ _FX void *SbieDll_Hook_x86(
     //
 
     if (! SourceFunc) {
-        CrashApi_Log(2303, _fmt1, SourceFuncName, 1);
+        LeafApi_Log(2303, _fmt1, SourceFuncName, 1);
         return NULL;
     }
 
@@ -389,7 +389,7 @@ _FX void *SbieDll_Hook_x86(
         diff = *(LONG *)((ULONG_PTR)SourceFunc + 1);
         target = (ULONG_PTR)SourceFunc + diff + 5;
         if (target == (ULONG_PTR)DetourFunc) {
-            CrashApi_Log(2303, _fmt1, SourceFuncName, 4);
+            LeafApi_Log(2303, _fmt1, SourceFuncName, 4);
             return NULL;
         }
 
@@ -410,7 +410,7 @@ _FX void *SbieDll_Hook_x86(
         ++func;
         if (! VirtualProtect(func, 4, PAGE_EXECUTE_READWRITE, &prot)) {
             ULONG err = GetLastError();
-            CrashApi_Log(2303, _fmt2, SourceFuncName, 31, err);
+            LeafApi_Log(2303, _fmt2, SourceFuncName, 31, err);
             return NULL;
         }
         *(ULONG *)func = (ULONG)diff;
@@ -470,14 +470,14 @@ skip_e9_rewrite: ;
         target = (ULONG_PTR)SourceFunc + 6 + diff;
         orig_addr = (void *)*(ULONG_PTR *)target;
         if (orig_addr == DetourFunc) {
-            CrashApi_Log(2303, _fmt1, SourceFuncName, 4);
+            LeafApi_Log(2303, _fmt1, SourceFuncName, 4);
             return NULL;
         }
 
         func = (UCHAR *)target;
         if (! VirtualProtect(func, 8, PAGE_EXECUTE_READWRITE, &prot)) {
             ULONG err = GetLastError();
-            CrashApi_Log(2303, _fmt2, SourceFuncName, 32, err);
+            LeafApi_Log(2303, _fmt2, SourceFuncName, 32, err);
             return NULL;
         }
         *(ULONG_PTR *)target = (ULONG_PTR)DetourFunc;
@@ -495,7 +495,7 @@ skip_e9_rewrite: ;
 
     MODULE_HOOK* mod_hook = SbieDll_GetModuleHookAndLock(module, tzuk | 0xFF); // 0xFF - executable
     if (!mod_hook) {
-        CrashApi_Log(2303, _fmt1, SourceFuncName, 5);
+        LeafApi_Log(2303, _fmt1, SourceFuncName, 5);
         goto finish;
     }
     
@@ -516,7 +516,7 @@ skip_e9_rewrite: ;
         //UCHAR *NewDetour = Dll_AllocCode128();
         UCHAR *NewDetour = Pool_Alloc(mod_hook->pool, 128);
         if (! NewDetour) {
-            CrashApi_Log(2305, NULL);
+            LeafApi_Log(2305, NULL);
             goto finish;
         }
 
@@ -565,12 +565,12 @@ skip_e9_rewrite: ;
     //tramp = Dll_AllocCode128();
     tramp = Pool_Alloc(mod_hook->pool, 128);
     if (! tramp /*|| !VirtualProtect(tramp, 128, PAGE_EXECUTE_READWRITE, &dummy_prot)*/) {
-        CrashApi_Log(2305, NULL);
+        LeafApi_Log(2305, NULL);
         goto finish;
     }
 
-    if (CrashApi_HookTramp(SourceFunc, tramp) != 0) {
-        CrashApi_Log(2303, _fmt1, SourceFuncName, 2);
+    if (LeafApi_HookTramp(SourceFunc, tramp) != 0) {
+        LeafApi_Log(2303, _fmt1, SourceFuncName, 2);
         goto finish;
     }
 
@@ -600,7 +600,7 @@ skip_e9_rewrite: ;
 
         if (!VirtualProtect(RegionBase, RegionSize, PAGE_EXECUTE_READWRITE, &prot)) {
             ULONG err = GetLastError();
-            CrashApi_Log(2303, _fmt2, SourceFuncName, 33, err);
+            LeafApi_Log(2303, _fmt2, SourceFuncName, 33, err);
             func = NULL;
             goto finish;
         }
@@ -658,7 +658,7 @@ skip_e9_rewrite: ;
         VECTOR_TABLE* ptrVTable = SbieDll_GetHookTable(mod_hook, target, 0x80000000, TRUE);
         if (!ptrVTable) {
             // OutputDebugStringA("Memory alloc failed: 12 Byte Patch Disabled\n");
-            CrashApi_Log(2303, _fmt1, SourceFuncName, 999);
+            LeafApi_Log(2303, _fmt1, SourceFuncName, 999);
             func = NULL;
             goto finish;
         }
@@ -880,7 +880,7 @@ void* SbieDll_Hook_arm(
     //
 
     if (! SourceFunc) {
-        CrashApi_Log(2303, _fmt1, SourceFuncName, 1);
+        LeafApi_Log(2303, _fmt1, SourceFuncName, 1);
         return NULL;
     }
 
@@ -894,7 +894,7 @@ void* SbieDll_Hook_arm(
     MODULE_HOOK* mod_hook = SbieDll_GetModuleHookAndLock(module, tzuk | 0xFF); // 0xFF - executable
 #endif
     if (!mod_hook) {
-        CrashApi_Log(2303, _fmt1, SourceFuncName, 5);
+        LeafApi_Log(2303, _fmt1, SourceFuncName, 5);
         goto finish;
     }
 
@@ -903,7 +903,7 @@ void* SbieDll_Hook_arm(
     //
     tramp = Pool_Alloc(mod_hook->pool, sizeof(DETOUR_TRAMPOLINE));
     if (! tramp /*|| !VirtualProtect(tramp, sizeof(DETOUR_TRAMPOLINE), PAGE_EXECUTE_READWRITE, &dummy_prot)*/) {
-        CrashApi_Log(2305, NULL);
+        LeafApi_Log(2305, NULL);
         goto finish;
     }
 
@@ -1025,7 +1025,7 @@ void* SbieDll_Hook_arm(
     //if (cbTarget < cbJump || nAlign > ARRAYSIZE(pTrampoline->rAlign)) {
     if (nAlign > ARRAYSIZE(pTrampoline->rAlign)) {
         // Too few instructions.
-        CrashApi_Log(2303, _fmt1, SourceFuncName, 2);
+        LeafApi_Log(2303, _fmt1, SourceFuncName, 2);
         goto finish;
     }
 
@@ -1035,7 +1035,7 @@ void* SbieDll_Hook_arm(
 
     if (cbTarget > sizeof(pTrampoline->rbCode) - cbJump) {
         // Too many instructions.
-        CrashApi_Log(2303, _fmt1, SourceFuncName, 3);
+        LeafApi_Log(2303, _fmt1, SourceFuncName, 3);
         goto finish;
     }
 
@@ -1063,7 +1063,7 @@ void* SbieDll_Hook_arm(
 
     if (!VirtualProtect(RegionBase, RegionSize, PAGE_EXECUTE_READWRITE, &prot)) {
         ULONG err = GetLastError();
-        CrashApi_Log(2303, _fmt2, SourceFuncName, 33, err);
+        LeafApi_Log(2303, _fmt2, SourceFuncName, 33, err);
         func = NULL;
         goto finish;
     }
@@ -1101,7 +1101,7 @@ void* SbieDll_Hook_arm(
         VECTOR_TABLE* ptrVTable = SbieDll_GetHookTable(mod_hook, target, 0x08000000, FALSE); // +/-128MB
         if (!ptrVTable) {
             // OutputDebugStringA("Memory alloc failed: 12 Byte Patch Disabled\n");
-            CrashApi_Log(2303, _fmt1, SourceFuncName, 999);
+            LeafApi_Log(2303, _fmt1, SourceFuncName, 999);
             func = NULL;
             goto finish;
         }
@@ -1180,7 +1180,7 @@ _FX void *SbieDll_HookFunc(
         if (ChromeFunc != (void*)-1)
             SourceFunc = ChromeFunc;
         else {
-            //CrashApi_Log(2328, _fmt1, SourceFuncName, 1);
+            //LeafApi_Log(2328, _fmt1, SourceFuncName, 1);
             if (pHookStats) *pHookStats |= HOOK_STAT_CHROME_FAIL;
         }
     }
@@ -1204,8 +1204,8 @@ _FX void *SbieDll_HookFunc(
     // therefore any Nt function hooks must be set up from the get go
     //
 
-    extern ULONG* CrashApi_SyscallPtr;
-    if (module == Dll_Ntdll && *(USHORT*)&SourceFuncName[0] == 'tN' && CrashApi_SyscallPtr) {
+    extern ULONG* LeafApi_SyscallPtr;
+    if (module == Dll_Ntdll && *(USHORT*)&SourceFuncName[0] == 'tN' && LeafApi_SyscallPtr) {
 
         if (pHookStats) *pHookStats |= HOOK_STAT_SYSCALL;
 
@@ -1213,17 +1213,17 @@ _FX void *SbieDll_HookFunc(
         if (index != 0xFFFF) {
 
             ULONG SbieDll_GetSysCallOffset(const ULONG *SyscallPtr, ULONG syscall_index);
-            ULONG offset = SbieDll_GetSysCallOffset(CrashApi_SyscallPtr, index);
+            ULONG offset = SbieDll_GetSysCallOffset(LeafApi_SyscallPtr, index);
             if (offset) {
 
                 void* SourceFuncEC = (void*)((UINT_PTR)Dll_Ntdll + offset);
                 return SbieDll_Hook_arm(SourceFuncName, SourceFuncEC, DetourFunc, module);
             }
             //else // hook disabled in driver like NtTerminateProcess
-            //    CrashApi_Log(2303, _fmt2, SourceFuncName, 69, 2);
+            //    LeafApi_Log(2303, _fmt2, SourceFuncName, 69, 2);
         }
         else
-            CrashApi_Log(2303, _fmt2, SourceFuncName, 69, 1);
+            LeafApi_Log(2303, _fmt2, SourceFuncName, 69, 1);
     }
     else
     {
@@ -1236,7 +1236,7 @@ _FX void *SbieDll_HookFunc(
         {
             
             if(strcmp(SourceFuncName, "ShellExecuteExW") != 0) // for these functions its fine
-                CrashApi_Log(2329, _fmt1, SourceFuncName, 1);
+                LeafApi_Log(2329, _fmt1, SourceFuncName, 1);
             if (pHookStats) *pHookStats |= HOOK_STAT_NO_FFS;
         }
     }
@@ -1410,7 +1410,7 @@ finish:
             dbg_size -= len;
         }
 #endif
-        CrashApi_MonitorPutMsg(MONITOR_HOOK | MONITOR_TRACE | ((HookStats & HOOK_STAT_SKIPPED) ? MONITOR_OPEN : 0), dbg);
+        LeafApi_MonitorPutMsg(MONITOR_HOOK | MONITOR_TRACE | ((HookStats & HOOK_STAT_SKIPPED) ? MONITOR_OPEN : 0), dbg);
     }
 
     return func;
@@ -1573,7 +1573,7 @@ BOOLEAN SbieDll_FuncSkipHook(const char* func)
     WCHAR buf[66];
     ULONG index = 0;
     while (1) {
-        NTSTATUS status = CrashApi_QueryConfAsIs(NULL, setting, index, buf, 64 * sizeof(WCHAR));
+        NTSTATUS status = LeafApi_QueryConfAsIs(NULL, setting, index, buf, 64 * sizeof(WCHAR));
         if (NT_SUCCESS(status)) {
             WCHAR* ptr = buf;
             for (const char* tmp = func; *ptr && *tmp && *ptr == *tmp; ptr++, tmp++);
@@ -1805,7 +1805,7 @@ _FX void Dll_FixWow64Syscall(void)
     static UCHAR *_code = NULL;
 
     // NoSysCallHooks BEGIN
-    if(Dll_CompartmentMode || CrashApi_QueryConfBool(NULL, L"NoSysCallHooks", FALSE))
+    if(Dll_CompartmentMode || LeafApi_QueryConfBool(NULL, L"NoSysCallHooks", FALSE))
         return;
     // NoSysCallHooks END
 

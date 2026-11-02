@@ -318,7 +318,7 @@ void Secure_InitSecurityDescriptors(void)
     // build Normal Security Descriptor used for files, keys, etc
     //
 
-    if (CrashApi_QueryConfBool(NULL, L"LockBoxToUser", FALSE)) {
+    if (LeafApi_QueryConfBool(NULL, L"LockBoxToUser", FALSE)) {
         MyAllocAndInitACL(MyAcl, 512);
         MyAddAccessAllowedAce(MyAcl, &SystemLogonSid);
         MyAddAccessAllowedAce(MyAcl, &AdministratorsSid);
@@ -408,7 +408,7 @@ _FX BOOLEAN Secure_Init(void)
     //
     // intercept NTDLL entry points
     //
-    if (!Dll_CompartmentMode && !CrashApi_QueryConfBool(NULL, L"NoSysCallHooks", FALSE)) {
+    if (!Dll_CompartmentMode && !LeafApi_QueryConfBool(NULL, L"NoSysCallHooks", FALSE)) {
         SBIEDLL_HOOK(Secure_, NtOpenProcess);
         SBIEDLL_HOOK(Secure_, NtOpenThread);
         SBIEDLL_HOOK(Secure_, NtDuplicateObject);
@@ -418,7 +418,7 @@ _FX BOOLEAN Secure_Init(void)
     SBIEDLL_HOOK(Secure_,NtSetInformationToken);
     SBIEDLL_HOOK(Secure_,NtAdjustPrivilegesToken);
     // OriginalToken BEGIN
-    if (!Dll_CompartmentMode && !CrashApi_QueryConfBool(NULL, L"OriginalToken", FALSE))
+    if (!Dll_CompartmentMode && !LeafApi_QueryConfBool(NULL, L"OriginalToken", FALSE))
     // OriginalToken END
     if (Dll_OsBuild >= 21286) {    // Windows 11
         SBIEDLL_HOOK(Secure_, NtDuplicateToken);
@@ -433,7 +433,7 @@ _FX BOOLEAN Secure_Init(void)
 
     SBIEDLL_HOOK(Ldr_, RtlEqualSid);
 
-    Secure_CopyACLs = CrashApi_QueryConfBool(NULL, L"UseOriginalACLs", FALSE);
+    Secure_CopyACLs = LeafApi_QueryConfBool(NULL, L"UseOriginalACLs", FALSE);
 
     //
     // install hooks to fake administrator privileges
@@ -552,7 +552,7 @@ _FX HANDLE SbieDll_OpenProcess(ACCESS_MASK DesiredAccess, HANDLE idProcess)
     HANDLE hProcess = OpenProcess(DesiredAccess, FALSE, (DWORD)(UINT_PTR)idProcess);
     if (! hProcess) {
         if (!Dll_CompartmentMode) // NoDriverAssist
-        if (! NT_SUCCESS(CrashApi_OpenProcess(&hProcess, (HANDLE)idProcess)))
+        if (! NT_SUCCESS(LeafApi_OpenProcess(&hProcess, (HANDLE)idProcess)))
             hProcess = NULL;
     }
     return hProcess;
@@ -580,7 +580,7 @@ _FX NTSTATUS Secure_NtOpenProcess(
     if (ClientId) {
 
         ULONG64 OtherProcessFlags =
-                        CrashApi_QueryProcessInfo(ClientId->UniqueProcess, 0);
+                        LeafApi_QueryProcessInfo(ClientId->UniqueProcess, 0);
         if (OtherProcessFlags) {
             if (! Secure_IsSameBox(ClientId->UniqueProcess))
                 OtherProcessFlags = 0;
@@ -619,7 +619,7 @@ _FX NTSTATUS Secure_NtOpenProcess(
             // debug privileges
             //
 
-            return CrashApi_OpenProcess(
+            return LeafApi_OpenProcess(
                         ProcessHandle, ClientId->UniqueProcess);
         }
 
@@ -722,7 +722,7 @@ _FX NTSTATUS Secure_NtDuplicateObject(
             HANDLE OtherProcessId =
                             (HANDLE)(ULONG_PTR)GetProcessId(SourceHandle);
             ULONG64 OtherProcessFlags =
-                            CrashApi_QueryProcessInfo(OtherProcessId, 0);
+                            LeafApi_QueryProcessInfo(OtherProcessId, 0);
             if (OtherProcessFlags) {
                 if (! Secure_IsSameBox(OtherProcessId))
                     OtherProcessFlags = 0;
@@ -815,7 +815,7 @@ _FX NTSTATUS Secure_NtDuplicateObject(
             if (HandleAttributes & OBJ_INHERIT)
                 Options |= DUPLICATE_INHERIT;
 
-            status = CrashApi_DuplicateObject(
+            status = LeafApi_DuplicateObject(
                 TargetHandle, OtherProcessHandle, SourceHandle,
                 DesiredAccess, Options);
         }
@@ -980,7 +980,7 @@ _FX void Ldr_TestToken(HANDLE token, PHANDLE hTokenReal, BOOLEAN bImpersonate)
         return;
 
     // OriginalToken BEGIN
-    if (Dll_CompartmentMode || CrashApi_QueryConfBool(NULL, L"OriginalToken", FALSE))
+    if (Dll_CompartmentMode || LeafApi_QueryConfBool(NULL, L"OriginalToken", FALSE))
         return;
     // OriginalToken END
 
@@ -1052,7 +1052,7 @@ _FX NTSTATUS Ldr_NtQueryInformationToken(
     // we also ensure that the token belongs to the current process
     //
 
-    if ((Secure_FakeAdmin || TlsData->proc_create_process_fake_admin) && (CrashApi_QueryProcessInfoEx(0, 'ippt', (LONG_PTR)(hTokenReal ? hTokenReal : TokenHandle))))
+    if ((Secure_FakeAdmin || TlsData->proc_create_process_fake_admin) && (LeafApi_QueryProcessInfoEx(0, 'ippt', (LONG_PTR)(hTokenReal ? hTokenReal : TokenHandle))))
     {
         FakeAdmin = TRUE;
     }
@@ -1409,7 +1409,7 @@ _FX NTSTATUS Secure_RtlQueryElevationFlags(ULONG *Flags)
         } else if (Dll_ImageType == DLL_IMAGE_SANDBOXIE_SBIESVC) {
 
             //
-            // RtlQueryElevationFlags hook for CrashSvc UAC elevation process:
+            // RtlQueryElevationFlags hook for LeafSvc UAC elevation process:
             //
             // even when running as Administrator, in some cases the
             // kernel32!CheckElevationEnabled function (called by
@@ -1423,7 +1423,7 @@ _FX NTSTATUS Secure_RtlQueryElevationFlags(ULONG *Flags)
             // InstallerDetectEnabled (returning zero flags is also ok), as
             // this disables the checks in kernel32!CheckElevationEnabled
             //
-            // we do this only for the CrashSvc UAC elevator process, because
+            // we do this only for the LeafSvc UAC elevator process, because
             // we know that process is already running as Administrator.
             //
 
@@ -1435,7 +1435,7 @@ _FX NTSTATUS Secure_RtlQueryElevationFlags(ULONG *Flags)
             //
             // RtlQueryElevationFlags hook for anything else:
             //
-            // - CrashRpcSs, which is used to run elevated COM objects,
+            // - LeafRpcSs, which is used to run elevated COM objects,
             // for example the Internet Explorer Protected Mode ActiveX
             // Installation Broker, or elevated Control Panel applets.
             // we return zero flags and the COM object runs without elevation.
@@ -1701,7 +1701,7 @@ _FX BOOLEAN Secure_IsSameBox(HANDLE idProcess)
     WCHAR boxname[BOXNAME_COUNT];
     ULONG session_id;
     NTSTATUS status =
-        CrashApi_QueryProcess(idProcess, boxname, NULL, NULL, &session_id);
+        LeafApi_QueryProcess(idProcess, boxname, NULL, NULL, &session_id);
     if (! NT_SUCCESS(status))
         return FALSE;
     if (session_id != Dll_SessionId)
@@ -1786,7 +1786,7 @@ typedef struct _SECURE_UAC_ARGS {
 typedef struct _SECURE_UAC_PACKET {
 
     //
-    // keep in sync with CrashSvc.exe / ServiceServer2
+    // keep in sync with LeafSvc.exe / ServiceServer2
     //
 
     ULONG   tzuk;
@@ -2064,7 +2064,7 @@ ALIGNED ULONG_PTR __cdecl Secure_HandleElevation(
 
     //
     // signal Sandboxie Service
-    // processing continues in CrashSvc::ServiceServer::UacHandler
+    // processing continues in LeafSvc::ServiceServer::UacHandler
     //
 
     req.h.length = sizeof(SERVICE_UAC_REQ);

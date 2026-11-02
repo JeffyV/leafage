@@ -381,7 +381,7 @@ _FX SC_HANDLE Scm_CreateServiceW(
     }
 
     //
-    // add the service to CrashSvc list of sandboxed services
+    // add the service to LeafSvc list of sandboxed services
     //
 
     status = Scm_AddBoxedService(lpServiceName);
@@ -764,7 +764,7 @@ _FX BOOL Scm_DeleteService(SC_HANDLE hService)
     }
 
     //
-    // open keys for the service itself and for CrashSvc
+    // open keys for the service itself and for LeafSvc
     //
 
     hkey = Scm_OpenKeyForService(ServiceName, TRUE);
@@ -795,7 +795,7 @@ _FX BOOL Scm_DeleteService(SC_HANDLE hService)
     }
 
     //
-    // delete the service from CrashSvc list of sandboxed services
+    // delete the service from LeafSvc list of sandboxed services
     //
 
     hMutex = Scm_AcquireMutex();
@@ -839,10 +839,10 @@ _FX BOOL SbieDll_StartBoxedService(const WCHAR *ServiceName, BOOLEAN WithAdd)
 
 	WCHAR text[130];
 	Sbie_snwprintf(text, 130, L"StartBoxedService; name: '%s'", ServiceName); 
-    CrashApi_MonitorPutMsg(MONITOR_SCM, text);
+    LeafApi_MonitorPutMsg(MONITOR_SCM, text);
 
     //
-    // when invoked from CrashRpcSs to handle StartProcess,
+    // when invoked from LeafRpcSs to handle StartProcess,
     // specify WithAdd to add the service to the sandbox
     //
 
@@ -867,7 +867,7 @@ _FX BOOL SbieDll_StartBoxedService(const WCHAR *ServiceName, BOOLEAN WithAdd)
 
     if (rpl->service_status.dwServiceType & SERVICE_DRIVER) {
 
-        CrashApi_Log(2103, L"%S [%S] (StartService)", ServiceName, Dll_BoxName);
+        LeafApi_Log(2103, L"%S [%S] (StartService)", ServiceName, Dll_BoxName);
         Dll_Free(rpl);
         SetLastError(ERROR_ACCESS_DENIED);
         return FALSE;
@@ -979,7 +979,7 @@ _FX ULONG Scm_StartBoxedService2(const WCHAR *name, SERVICE_QUERY_RPL *qrpl)
 
     //
     // special handling for Sandboxie services:
-    // either run directly (for CrashCrypto)
+    // either run directly (for LeafCrypto)
     // or build a path to the Sandboxie executable
     //
 
@@ -993,22 +993,22 @@ _FX ULONG Scm_StartBoxedService2(const WCHAR *name, SERVICE_QUERY_RPL *qrpl)
         STARTUPINFO si;
 
         const WCHAR *ProcessName;
-        //BOOLEAN use_crashsvc = TRUE;
+        //BOOLEAN use_leafsvc = TRUE;
 
         if (_wcsicmp(name, _bits) == 0) {
-            ProcessName = CrashBITS;
+            ProcessName = LeafBITS;
             Scm_DeletePermissions(L"69AD4AEE-51BE-439B-A92C-86AE490E8B30");
         } else if (_wcsicmp(name, _wuauserv) == 0) {
-            ProcessName = CrashWUAU;
+            ProcessName = LeafWUAU;
             Scm_DeletePermissions(L"653C5148-4DCE-4905-9CFD-1B23662D3D9E");
         }
         else if (_wcsicmp(name, Scm_CryptSvc) == 0) {
-            ProcessName = CrashCrypto;
-            //use_crashsvc = FALSE;
+            ProcessName = LeafCrypto;
+            //use_leafsvc = FALSE;
         } else
             ProcessName = NULL;
 
-        /*if (! use_crashsvc) {
+        /*if (! use_leafsvc) {
 
             memzero(&si, sizeof(STARTUPINFO));
             si.cb = sizeof(STARTUPINFO);
@@ -1038,7 +1038,7 @@ _FX ULONG Scm_StartBoxedService2(const WCHAR *name, SERVICE_QUERY_RPL *qrpl)
     }
 
     //
-    // otherwise start service through CrashSvc
+    // otherwise start service through LeafSvc
     //
 
     path_len = (wcslen(path) + 1) * sizeof(WCHAR);
@@ -1110,7 +1110,7 @@ _FX BOOL Scm_StartServiceWImpl(
 
     WCHAR text[130];
 	Sbie_snwprintf(text, 130, L"StartService: %s", ServiceName);
-    CrashApi_MonitorPutMsg(MONITOR_SCM, text);
+    LeafApi_MonitorPutMsg(MONITOR_SCM, text);
 
     if (Scm_IsBoxedService(ServiceName))
         return SbieDll_StartBoxedService(ServiceName, FALSE);
@@ -1185,13 +1185,13 @@ _FX ULONG Scm_ServiceMainThread(ULONG_PTR *args)
 {
     WCHAR text[130];
     Sbie_snwprintf(text, 130, L"ServiceMainThread; begin");
-    CrashApi_MonitorPutMsg(MONITOR_SCM, text);
+    LeafApi_MonitorPutMsg(MONITOR_SCM, text);
 
     typedef void (*P_Main)(ULONG argc, void **argv);
     ((P_Main)args[0])(1, (void **)&args[1]);
 
     Sbie_snwprintf(text, 130, L"ServiceMainThread; end");
-    CrashApi_MonitorPutMsg(MONITOR_SCM, text);
+    LeafApi_MonitorPutMsg(MONITOR_SCM, text);
 
     //
     // if this is the MSI Server, then wait for all our callers to end
@@ -1230,7 +1230,7 @@ _FX BOOL Scm_StartServiceCtrlDispatcherX(
     //
     // SERVICE_WIN32_OWN_PROCESS service is not required to pass the
     // correct service name, so we have Scm_StartBoxedService2 pass
-    // the service name to CrashSvc, which passes that name to us
+    // the service name to LeafSvc, which passes that name to us
     // through an environment variable
     //
 
@@ -1275,7 +1275,7 @@ _FX BOOL Scm_StartServiceCtrlDispatcherX(
 
             if (TooMany) {
 
-                CrashApi_Log(2205, L"StartServiceCtrlDispatcher");
+                LeafApi_Log(2205, L"StartServiceCtrlDispatcher");
                 //SetLastError(ERROR_INVALID_PARAMETER);
                 //return FALSE;
             }
@@ -1289,7 +1289,7 @@ _FX BOOL Scm_StartServiceCtrlDispatcherX(
 
     WCHAR text[130];
 	Sbie_snwprintf(text, 130, L"StartServiceCtrlDispatcher; name: '%s'", ServiceName);
-    CrashApi_MonitorPutMsg(MONITOR_SCM, text);
+    LeafApi_MonitorPutMsg(MONITOR_SCM, text);
 
     //
     // open the key for the service
@@ -1347,7 +1347,7 @@ _FX BOOL Scm_StartServiceCtrlDispatcherX(
 
     hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
     if (! hEvent) {
-        CrashApi_Log(2211, ServiceName);
+        LeafApi_Log(2211, ServiceName);
         return FALSE;
     }
 
@@ -1359,7 +1359,7 @@ _FX BOOL Scm_StartServiceCtrlDispatcherX(
         REG_NOTIFY_CHANGE_LAST_SET, FALSE, Buffer, 1024, TRUE);
 
     if (!NT_SUCCESS(status)) {
-        CrashApi_Log(2211, ServiceName);
+        LeafApi_Log(2211, ServiceName);
         return FALSE;
     }
 
@@ -1407,10 +1407,10 @@ _FX BOOL Scm_StartServiceCtrlDispatcherX(
     //
 
     Sbie_snwprintf(text, 130, L"StartServiceCtrlDispatcher; result: %s", Scm_Started ? L"success" : L"failure");
-    CrashApi_MonitorPutMsg(MONITOR_SCM, text);
+    LeafApi_MonitorPutMsg(MONITOR_SCM, text);
 
     if (! Scm_Started) {
-        CrashApi_Log(2211, ServiceName);
+        LeafApi_Log(2211, ServiceName);
         return FALSE;
     }
 
@@ -1539,7 +1539,7 @@ _FX SERVICE_STATUS_HANDLE Scm_RegisterServiceCtrlHandlerHelp(
         Scm_HandlerEx = (LPHANDLER_FUNCTION_EX)HandlerProc;
         Scm_HandlerContext = Context;
     } else {
-        CrashApi_Log(2205, L"RegisterServiceCtrlHandlerHelp");
+        LeafApi_Log(2205, L"RegisterServiceCtrlHandlerHelp");
         SetLastError(ERROR_SERVICE_NOT_IN_EXE);
         return NULL;
     }
@@ -1570,7 +1570,7 @@ _FX BOOL Scm_SetServiceStatus_Internal(
 
     WCHAR text[130];
     Sbie_snwprintf(text, 130, L"SetServiceStatus; status: <%08X>", lpServiceStatus->dwCurrentState);
-    CrashApi_MonitorPutMsg(MONITOR_SCM, text);
+    LeafApi_MonitorPutMsg(MONITOR_SCM, text);
 
 #define MySetValueKey()                         \
     NtSetValueKey(ServiceKeyHandle, &uni,       \

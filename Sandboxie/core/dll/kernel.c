@@ -184,7 +184,7 @@ _FX BOOLEAN Kernel_Init()
 
 			NTSTATUS status;
 			WCHAR CustomChromiumFlags[CONF_LINE_LEN];
-			status = CrashApi_QueryConfAsIs(NULL, L"CustomChromiumFlags", 0, CustomChromiumFlags, ARRAYSIZE(CustomChromiumFlags));
+			status = LeafApi_QueryConfAsIs(NULL, L"CustomChromiumFlags", 0, CustomChromiumFlags, ARRAYSIZE(CustomChromiumFlags));
 			if (NT_SUCCESS(status)) {
 
 				const WCHAR* lpCommandLine = ProcessParms->CommandLine.Buffer;
@@ -221,12 +221,12 @@ _FX BOOLEAN Kernel_Init()
 		}
 	}
 
-	if (CrashApi_QueryConfBool(NULL, L"BlockInterferePower", FALSE)) {
+	if (LeafApi_QueryConfBool(NULL, L"BlockInterferePower", FALSE)) {
 
         SBIEDLL_HOOK(Kernel_, SetThreadExecutionState);
     }
 
-	if (CrashApi_QueryConfBool(NULL, L"UseChangeSpeed", FALSE)) {
+	if (LeafApi_QueryConfBool(NULL, L"UseChangeSpeed", FALSE)) {
 
 		SBIEDLL_HOOK(Kernel_, GetTickCount);
 		Dll_FirstGetTickCountValue = __sys_GetTickCount();
@@ -244,7 +244,7 @@ _FX BOOLEAN Kernel_Init()
 		SBIEDLL_HOOK(Kernel_, SleepEx);	
 	}
 
-	Kernel_CustomLCID = (LCID)CrashApi_QueryConfNumber(NULL, L"CustomLCID", 0); // use 1033 for en-US
+	Kernel_CustomLCID = (LCID)LeafApi_QueryConfNumber(NULL, L"CustomLCID", 0); // use 1033 for en-US
 	if (Kernel_CustomLCID) {
 	
 		SBIEDLL_HOOK(Kernel_, GetUserDefaultUILanguage);
@@ -267,7 +267,7 @@ _FX BOOLEAN Kernel_Init()
 		SBIEDLL_HOOK(Kernel_, GetSystemDefaultLangID);
 	}
 
-	if (CrashApi_QueryConfBool(NULL, L"HideDiskSerialNumber", FALSE)) {
+	if (LeafApi_QueryConfBool(NULL, L"HideDiskSerialNumber", FALSE)) {
 
 		InitializeCriticalSection(&Kernel_DiskSN_CritSec);
 		map_init(&Kernel_DiskSN, Dll_Pool);
@@ -325,8 +325,8 @@ _FX EXECUTION_STATE Kernel_SetThreadExecutionState(EXECUTION_STATE esFlags)
 
 _FX DWORD Kernel_GetTickCount() 
 {
-	ULONG add = CrashApi_QueryConfNumber(NULL, L"AddTickSpeed", 1);
-	ULONG low = CrashApi_QueryConfNumber(NULL, L"LowTickSpeed", 1);
+	ULONG add = LeafApi_QueryConfNumber(NULL, L"AddTickSpeed", 1);
+	ULONG low = LeafApi_QueryConfNumber(NULL, L"LowTickSpeed", 1);
 	ULONG64 count = __sys_GetTickCount();
 	
 	if(add != 0 && low != 0) {
@@ -344,8 +344,8 @@ _FX DWORD Kernel_GetTickCount()
 
 _FX ULONGLONG Kernel_GetTickCount64() 
 {
-	ULONG add = CrashApi_QueryConfNumber(NULL, L"AddTickSpeed", 1);
-	ULONG low = CrashApi_QueryConfNumber(NULL, L"LowTickSpeed", 1);
+	ULONG add = LeafApi_QueryConfNumber(NULL, L"AddTickSpeed", 1);
+	ULONG low = LeafApi_QueryConfNumber(NULL, L"LowTickSpeed", 1);
 	if (add != 0 && low != 0)
 		return __sys_GetTickCount64() * add / low;
 	return __sys_GetTickCount64() * add;
@@ -360,8 +360,8 @@ _FX ULONGLONG Kernel_GetTickCount64()
 _FX BOOL Kernel_QueryUnbiasedInterruptTime(PULONGLONG UnbiasedTime)
 {
 	BOOL rtn = __sys_QueryUnbiasedInterruptTime(UnbiasedTime);
-	ULONG add = CrashApi_QueryConfNumber(NULL, L"AddTickSpeed", 1);
-	ULONG low = CrashApi_QueryConfNumber(NULL, L"LowTickSpeed", 1);
+	ULONG add = LeafApi_QueryConfNumber(NULL, L"AddTickSpeed", 1);
+	ULONG low = LeafApi_QueryConfNumber(NULL, L"LowTickSpeed", 1);
 	if (add != 0 && low != 0)
 		*UnbiasedTime *= add / low;
 	else
@@ -377,8 +377,8 @@ _FX BOOL Kernel_QueryUnbiasedInterruptTime(PULONGLONG UnbiasedTime)
 
 _FX DWORD Kernel_SleepEx(DWORD dwMiSecond, BOOL bAlert) 
 {
-	ULONG add = CrashApi_QueryConfNumber(NULL, L"AddSleepSpeed", 1);
-	ULONG low = CrashApi_QueryConfNumber(NULL, L"LowSleepSpeed", 1);
+	ULONG add = LeafApi_QueryConfNumber(NULL, L"AddSleepSpeed", 1);
+	ULONG low = LeafApi_QueryConfNumber(NULL, L"LowSleepSpeed", 1);
 	if (add != 0 && low != 0)
 		return __sys_SleepEx(dwMiSecond * low / add, bAlert);
 	return __sys_SleepEx(dwMiSecond, bAlert);
@@ -393,8 +393,8 @@ _FX DWORD Kernel_SleepEx(DWORD dwMiSecond, BOOL bAlert)
 _FX BOOL Kernel_QueryPerformanceCounter(LARGE_INTEGER* lpPerformanceCount)
 {
 	BOOL rtn = __sys_QueryPerformanceCounter(lpPerformanceCount);
-	ULONG add = CrashApi_QueryConfNumber(NULL, L"AddTickSpeed", 1);
-	ULONG low = CrashApi_QueryConfNumber(NULL, L"LowTickSpeed", 1);
+	ULONG add = LeafApi_QueryConfNumber(NULL, L"AddTickSpeed", 1);
+	ULONG low = LeafApi_QueryConfNumber(NULL, L"LowTickSpeed", 1);
 	if (add != 0 && low != 0)
 		lpPerformanceCount->QuadPart = lpPerformanceCount->QuadPart * add / low;
 	return rtn;

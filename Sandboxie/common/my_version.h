@@ -60,11 +60,11 @@
 
 #define SANDBOXIE_INI           L"Sandboxie.ini"
 
-#define SBIEDRV                 L"CrashDrv"
-#define SBIEDRV_SYS             L"CrashDrv.sys"
+#define SBIEDRV                 L"LeafDrv"
+#define SBIEDRV_SYS             L"LeafDrv.sys"
 
-#define SBIESVC                 L"CrashSvc"
-#define SBIESVC_EXE             L"CrashSvc.exe"
+#define SBIESVC                 L"LeafSvc"
+#define SBIESVC_EXE             L"LeafSvc.exe"
 
 #define SANDBOXIE_CONTROL       L"SandboxieControl"
 #define SBIECTRL_EXE            L"SbieCtrl.exe"
@@ -72,9 +72,9 @@
 
 #define START_EXE               L"Start.exe"
 
-#define SBIEDLL                 L"CrashDll"
+#define SBIEDLL                 L"LeafDll"
 
-#define SBIEMSG_DLL             L"CrashMsg.dll"
+#define SBIEMSG_DLL             L"LeafMsg.dll"
 #define SBIE_IN_MSGS            L"SBIE"
 
 #define SBIEINI                 L"SbieIni"

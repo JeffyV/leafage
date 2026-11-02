@@ -252,7 +252,7 @@ _FX void Key_HookWaitForSingleObject(void)
     //
     // on Windows XP with ZoneAlarm installed, we have to hook
     // KeWaitForSingleObject to intercept waits for 86400 seconds
-    // occurring within the CrashSvc process
+    // occurring within the LeafSvc process
     //
 
     if (Driver_OsVersion != DRIVER_WINDOWS_XP)

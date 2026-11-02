@@ -67,11 +67,11 @@ ALIGNED void EnablePriv(void)
 
 
 //---------------------------------------------------------------------------
-// Kmd_Stop_CrashDrv
+// Kmd_Stop_LeafDrv
 //---------------------------------------------------------------------------
 
 
-ALIGNED BOOLEAN Kmd_Stop_CrashDrv(void)
+ALIGNED BOOLEAN Kmd_Stop_LeafDrv(void)
 {
     //extern void Display_Error(PWSTR SubFuncName, DWORD LastError);
 
@@ -79,17 +79,17 @@ ALIGNED BOOLEAN Kmd_Stop_CrashDrv(void)
     UNICODE_STRING uni;
     LONG rc;
 
-    rc = CrashApi_GetVersion(driver_version);
+    rc = LeafApi_GetVersion(driver_version);
     if (rc == 0) {
 
-        rc = CrashApi_Call(API_UNLOAD_DRIVER, 0);
+        rc = LeafApi_Call(API_UNLOAD_DRIVER, 0);
         if (rc == STATUS_CONNECTION_IN_USE) {
             Sleep(2500);
-            rc = CrashApi_Call(API_UNLOAD_DRIVER, 0);
+            rc = LeafApi_Call(API_UNLOAD_DRIVER, 0);
         }
         if (rc == STATUS_CONNECTION_IN_USE) {
             Sleep(2500);
-            rc = CrashApi_Call(API_UNLOAD_DRIVER, 0);
+            rc = LeafApi_Call(API_UNLOAD_DRIVER, 0);
         }
     }
 
@@ -100,7 +100,7 @@ ALIGNED BOOLEAN Kmd_Stop_CrashDrv(void)
         L"\\Services\\" SBIEDRV);
     rc = NtUnloadDriver(&uni);
 
-    CrashApi_Ioctl(NULL); // disconnect from driver
+    LeafApi_Ioctl(NULL); // disconnect from driver
 
     if (rc == 0 || rc == STATUS_OBJECT_NAME_NOT_FOUND)
         return TRUE;
@@ -122,11 +122,11 @@ void Kmd_Stop_Host_Injected_Svcs()
     int i = 0;
 
     // Loop through every section, searching for "HostInjectProcess", and stop them if they are services.
-    while (CrashApi_QueryConf(NULL, NULL, i++, wszConfigLine, sizeof(wszConfigLine)) == STATUS_SUCCESS)
+    while (LeafApi_QueryConf(NULL, NULL, i++, wszConfigLine, sizeof(wszConfigLine)) == STATUS_SUCCESS)
     {
-        if (CrashApi_IsBoxEnabled(wszConfigLine) == STATUS_SUCCESS)
+        if (LeafApi_IsBoxEnabled(wszConfigLine) == STATUS_SUCCESS)
         {
-            if (CrashApi_QueryConf(wszConfigLine, L"HostInjectProcess", 0, wszConfigLine, sizeof(wszConfigLine)) == STATUS_SUCCESS)
+            if (LeafApi_QueryConf(wszConfigLine, L"HostInjectProcess", 0, wszConfigLine, sizeof(wszConfigLine)) == STATUS_SUCCESS)
             {
                 WCHAR   wszProcName[261];
                 WCHAR   wszSvcName[261];

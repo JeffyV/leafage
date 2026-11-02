@@ -1112,7 +1112,7 @@ _FX BOOLEAN Process_NotifyProcess_Create(
     //
     // determine if new process should be sandboxed:
     //
-    // 1.  if process was created by the thread in CrashSvc which called
+    // 1.  if process was created by the thread in LeafSvc which called
     //     Process_Api_Start, in this case we are called by this API
     //     handler function, and the box argument is valid
     //
@@ -1130,7 +1130,7 @@ _FX BOOLEAN Process_NotifyProcess_Create(
     if (ParentId == Api_ServiceProcessId) {
 
         //
-        // 1.  process created by CrashSvc
+        // 1.  process created by LeafSvc
         //
 
         add_process_to_job = TRUE;
@@ -1423,7 +1423,7 @@ _FX BOOLEAN Process_NotifyProcess_Create(
 
                     //
                     // on windows 8 and later we can have nested jobs so assigning a 
-                    // boxed job to a process will not interfere with the job assigned by CrashSvc
+                    // boxed job to a process will not interfere with the job assigned by LeafSvc
                     //
 
                     new_proc->can_use_jobs = Conf_Get_Boolean(new_proc->box->name, L"AllowBoxedJobs", 0, FALSE);
@@ -1433,8 +1433,8 @@ _FX BOOLEAN Process_NotifyProcess_Create(
                 // on Windows Vista, a forced process may start inside a
                 // Program Compatibility Assistant (PCA) job, if its parent
                 // process was in a PCA job.  in this case we can't put it
-                // into a job in CrashSvc GuiServer::InitProcess, instead
-                // we have CrashDll restart the process without a job.
+                // into a job in LeafSvc GuiServer::InitProcess, instead
+                // we have LeafDll restart the process without a job.
                 // see also Proc_RestartProcessOutOfPcaJob in core/dll/proc.c
                 //
 

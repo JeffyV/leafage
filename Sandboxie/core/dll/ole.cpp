@@ -121,7 +121,7 @@ extern "C" _FX BOOLEAN Ole_Init(HMODULE module)
     void *RevokeDragDrop;
 
     // DisableComProxy BEGIN
-    if (!CrashApi_QueryConfBool(NULL, L"DisableComProxy", FALSE))
+    if (!LeafApi_QueryConfBool(NULL, L"DisableComProxy", FALSE))
     // DisableComProxy END
     if (! SbieDll_IsOpenCOM()) {
 

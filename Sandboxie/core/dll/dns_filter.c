@@ -302,7 +302,7 @@ _FX BOOLEAN WSA_InitNetDnsFilter(HMODULE module)
     WCHAR conf_buf[256];
     for (ULONG index = 0; ; ++index) {
 
-        NTSTATUS status = CrashApi_QueryConf(
+        NTSTATUS status = LeafApi_QueryConf(
             NULL, L"NetworkDnsFilter", index, conf_buf, sizeof(conf_buf) - 16 * sizeof(WCHAR));
         if (!NT_SUCCESS(status))
             break;
@@ -375,10 +375,10 @@ _FX BOOLEAN WSA_InitNetDnsFilter(HMODULE module)
         map_init(&WSA_LookupMap, Dll_Pool);
 
         SCertInfo CertInfo = { 0 };
-        if (!NT_SUCCESS(CrashApi_QueryDrvInfo(-1, &CertInfo, sizeof(CertInfo))) || !(CertInfo.active && CertInfo.opt_net)) {
+        if (!NT_SUCCESS(LeafApi_QueryDrvInfo(-1, &CertInfo, sizeof(CertInfo))) || !(CertInfo.active && CertInfo.opt_net)) {
 
             const WCHAR* strings[] = { L"NetworkDnsFilter" , NULL };
-            CrashApi_LogMsgExt(-1, 6009, strings);
+            LeafApi_LogMsgExt(-1, 6009, strings);
 
             WSA_FilterEnabled = FALSE;
         }
@@ -405,7 +405,7 @@ _FX BOOLEAN WSA_InitNetDnsFilter(HMODULE module)
 
     // If there are any DnsTrace options set, then output this debug string
     WCHAR wsTraceOptions[4];
-    if (CrashApi_QueryConf(NULL, L"DnsTrace", 0, wsTraceOptions, sizeof(wsTraceOptions)) == STATUS_SUCCESS && wsTraceOptions[0] != L'\0')
+    if (LeafApi_QueryConf(NULL, L"DnsTrace", 0, wsTraceOptions, sizeof(wsTraceOptions)) == STATUS_SUCCESS && wsTraceOptions[0] != L'\0')
         WSA_DnsTraceFlag = TRUE;
 
     return TRUE;
@@ -478,7 +478,7 @@ _FX int WSA_WSALookupServiceBeginW(
                 Sbie_snwprintf(msg, 512, L"DNS Request Intercepted: %s%s (NS: %d, Type: %s, Hdl: 0x%x) - Using filtered response",
                     lpqsRestrictions->lpszServiceInstanceName, ClsId, lpqsRestrictions->dwNameSpace,
                     WSA_IsIPv6Query(lpqsRestrictions->lpServiceClassId) ? L"IPv6" : L"IPv4", fakeHandle);
-                CrashApi_MonitorPutMsg(MONITOR_DNS | MONITOR_DENY, msg);
+                LeafApi_MonitorPutMsg(MONITOR_DNS | MONITOR_DENY, msg);
             }
 
             Dll_Free(path_lwr);
@@ -505,7 +505,7 @@ _FX int WSA_WSALookupServiceBeginW(
             lpqsRestrictions->lpszServiceInstanceName ? lpqsRestrictions->lpszServiceInstanceName : L"Unnamed",
             ClsId, lpqsRestrictions->dwNameSpace, isIPv6 ? L"IPv6" : L"IPv4",
             lphLookup ? *lphLookup : NULL, ret == SOCKET_ERROR ? GetLastError() : 0);
-        CrashApi_MonitorPutMsg(MONITOR_DNS, msg);
+        LeafApi_MonitorPutMsg(MONITOR_DNS, msg);
     }
 
     return ret;
@@ -550,7 +550,7 @@ _FX int WSA_WSALookupServiceNextW(
                             WSA_DumpIP(lpqsResults->lpcsaBuffer[i].RemoteAddr.lpSockaddr->sa_family, &ip, msg);
                     }
 
-                    CrashApi_MonitorPutMsg(MONITOR_DNS, msg);
+                    LeafApi_MonitorPutMsg(MONITOR_DNS, msg);
                 }
 
                 return NO_ERROR;
@@ -660,7 +660,7 @@ _FX int WSA_WSALookupServiceNextW(
             }
         }
 
-        CrashApi_MonitorPutMsg(MONITOR_DNS, msg);
+        LeafApi_MonitorPutMsg(MONITOR_DNS, msg);
     }
 
     return ret;
@@ -691,7 +691,7 @@ _FX int WSA_WSALookupServiceEnd(HANDLE hLookup)
             if (WSA_DnsTraceFlag) {
                 WCHAR msg[256];
                 Sbie_snwprintf(msg, 256, L"DNS Filtered Request End (Hdl: 0x%x)", hLookup);
-                CrashApi_MonitorPutMsg(MONITOR_DNS, msg);
+                LeafApi_MonitorPutMsg(MONITOR_DNS, msg);
             }
 
             return NO_ERROR;
@@ -703,7 +703,7 @@ _FX int WSA_WSALookupServiceEnd(HANDLE hLookup)
     if (WSA_DnsTraceFlag) {
         WCHAR msg[256];
         Sbie_snwprintf(msg, 256, L"DNS Request End (Hdl: 0x%x)", hLookup);
-        CrashApi_MonitorPutMsg(MONITOR_DNS, msg);
+        LeafApi_MonitorPutMsg(MONITOR_DNS, msg);
     }
 
     return __sys_WSALookupServiceEnd(hLookup);

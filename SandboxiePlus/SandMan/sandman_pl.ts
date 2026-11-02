@@ -5211,8 +5211,8 @@ Ten plik jest częścią Sandboxie i wszystkie zmiany w nim dokonane zostaną co
     </message>
     <message>
         <location filename="SandMan.cpp" line="4471"/>
-        <source>Sandboxie-Plus is an open source continuation of Sandboxie.&lt;br /&gt;Visit &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; for more information.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Features: %3&lt;br /&gt;&lt;br /&gt;Installation: %1&lt;br /&gt;CrashDrv.sys: %4&lt;br /&gt; CrashSvc.exe: %5&lt;br /&gt; CrashDll.dll: %6&lt;br /&gt;&lt;br /&gt;Icons from &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</source>
-        <translation>Sandboxie-Plus jest kontynuacją Sandboxie o otwartym kodzie źródłowym.&lt;br /&gt;Więcej informacji można znaleźć na stronie &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Funkcje: %3&lt;br /&gt;&lt;br /&gt;Instalacja: %1&lt;br /&gt;CrashDrv.sys: %4&lt;br /&gt; CrashSvc.exe:  %5&lt;br /&gt; CrashDll.dll: %6&lt;br /&gt;&lt;br /&gt;Ikony z &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</translation>
+        <source>Sandboxie-Plus is an open source continuation of Sandboxie.&lt;br /&gt;Visit &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt; for more information.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Features: %3&lt;br /&gt;&lt;br /&gt;Installation: %1&lt;br /&gt;LeafDrv.sys: %4&lt;br /&gt; LeafSvc.exe: %5&lt;br /&gt; LeafDll.dll: %6&lt;br /&gt;&lt;br /&gt;Icons from &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</source>
+        <translation>Sandboxie-Plus jest kontynuacją Sandboxie o otwartym kodzie źródłowym.&lt;br /&gt;Więcej informacji można znaleźć na stronie &lt;a href=&quot;https://sandboxie-plus.com&quot;&gt;sandboxie-plus.com&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;%2&lt;br /&gt;&lt;br /&gt;Funkcje: %3&lt;br /&gt;&lt;br /&gt;Instalacja: %1&lt;br /&gt;LeafDrv.sys: %4&lt;br /&gt; LeafSvc.exe:  %5&lt;br /&gt; LeafDll.dll: %6&lt;br /&gt;&lt;br /&gt;Ikony z &lt;a href=&quot;https://icons8.com&quot;&gt;icons8.com&lt;/a&gt;</translation>
     </message>
     <message>
         <source>Do you want to open %1 in a sandboxed (yes) or unsandboxed (no) Web browser?</source>
@@ -10498,9 +10498,9 @@ Częściowo zaznaczone: Żadne grupy nie będą dodawane do nowo utworzonego tok
     </message>
     <message>
         <location filename="Forms/OptionsWindow.ui" line="4517"/>
-        <source>Sandboxie&apos;s functionality can be enhanced by using optional DLLs which can be loaded into each sandboxed process on start by the CrashDll.dll file, the add-on manager in the global settings offers a couple of useful extensions, once installed they can be enabled here for the current box.</source>
+        <source>Sandboxie&apos;s functionality can be enhanced by using optional DLLs which can be loaded into each sandboxed process on start by the LeafDll.dll file, the add-on manager in the global settings offers a couple of useful extensions, once installed they can be enabled here for the current box.</source>
         <oldsource>Sandboxies functionality can be enhanced using optional dll’s which can be loaded into each sandboxed process on start by the SbieDll.dll, the add-on manager in the global settings offers a couple useful extensions, once installed they can be enabled here for the current box.</oldsource>
-        <translation>Funkcjonalność Sandboxie można rozszerzyć za pomocą opcjonalnych bibliotek DLL, które mogą być ładowane do każdego procesu sandboxie podczas uruchamiania przez plik CrashDll.dll, menedżer dodatków w ustawieniach globalnych oferuje kilka przydatnych rozszerzeń, po zainstalowaniu można je tutaj włączyć dla bieżącej skrzynki.</translation>
+        <translation>Funkcjonalność Sandboxie można rozszerzyć za pomocą opcjonalnych bibliotek DLL, które mogą być ładowane do każdego procesu sandboxie podczas uruchamiania przez plik LeafDll.dll, menedżer dodatków w ustawieniach globalnych oferuje kilka przydatnych rozszerzeń, po zainstalowaniu można je tutaj włączyć dla bieżącej skrzynki.</translation>
     </message>
     <message>
         <location filename="Forms/OptionsWindow.ui" line="4622"/>

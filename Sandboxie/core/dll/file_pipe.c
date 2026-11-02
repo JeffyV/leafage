@@ -256,8 +256,8 @@ _FX ULONG File_IsNamedPipe(const WCHAR *path, const WCHAR **server)
 
     if (len >= 10 && _wcsnicmp(path, File_Mup, 8) == 0) { // match \device\ only
 
-		BOOLEAN prompt = CrashApi_QueryConfBool(NULL, L"PromptForInternetAccess", FALSE);
-		if (CrashApi_CheckInternetAccess(0, path + 8, !prompt) == STATUS_ACCESS_DENIED
+		BOOLEAN prompt = LeafApi_QueryConfBool(NULL, L"PromptForInternetAccess", FALSE);
+		if (LeafApi_CheckInternetAccess(0, path + 8, !prompt) == STATUS_ACCESS_DENIED
 			&& (!prompt || !File_InternetBlockade_ManualBypass())) {
 
 			return TYPE_NET_DEVICE;
@@ -291,8 +291,8 @@ _FX const BOOLEAN File_InternetBlockade_ManualBypass()
 		ok = rpl->retval != 0;
 		Dll_Free(rpl);
 	}
-	else if(CrashApi_QueryConfBool(NULL, L"NotifyInternetAccessDenied", TRUE))
-		CrashApi_Log(1307, L"%S [%S]", Dll_ImageName, Dll_BoxName);
+	else if(LeafApi_QueryConfBool(NULL, L"NotifyInternetAccessDenied", TRUE))
+		LeafApi_Log(1307, L"%S [%S]", Dll_ImageName, Dll_BoxName);
 
 	//
 	// Note: the granting process must notify the driver about the exemption 
@@ -619,9 +619,9 @@ _FX NTSTATUS File_NtCreateFilePipe(
     // as an OpenFilePath, de-administrator-ize and open the true path
     //
     // keep list of permitted pipes in sync with
-    // CrashSvc::NamedPipeServer::OpenHandler
+    // LeafSvc::NamedPipeServer::OpenHandler
     // and with
-    // CrashDrv::openPipesCM
+    // LeafDrv::openPipesCM
     //
 
     if (PipeType == TYPE_NAMED_PIPE) {
@@ -680,7 +680,7 @@ _FX NTSTATUS File_NtCreateFilePipe(
         ULONG monflag = MONITOR_PIPE;
         if (status == STATUS_ACCESS_DENIED)
             monflag |= MONITOR_DENY;
-        CrashApi_MonitorPut(monflag, TruePath);
+        LeafApi_MonitorPut(monflag, TruePath);
     }
     else if (NT_SUCCESS(status))
     {
@@ -771,7 +771,7 @@ _FX void *File_GetBoxedPipeName(
 
 //---------------------------------------------------------------------------
 //
-// Named Pipe using the Named Pipe Proxy Server in CrashSvc
+// Named Pipe using the Named Pipe Proxy Server in LeafSvc
 //
 // Some named pipes (lsarpc, and others; see File_NtCreateFilePipe) will
 // allow the caller to manage the computer if they are a member of the
@@ -783,8 +783,8 @@ _FX void *File_GetBoxedPipeName(
 // the token last used to communicate on the pipe, not the token used
 // to open the pipe.
 //
-// To work around these problems, the CrashDll will access these pipes via
-// a proxy in CrashSvc, which impersonates using a non-Administrator token.
+// To work around these problems, the LeafDll will access these pipes via
+// a proxy in LeafSvc, which impersonates using a non-Administrator token.
 //
 //---------------------------------------------------------------------------
 
@@ -965,7 +965,7 @@ _FX NTSTATUS File_SetProxyPipe(
     //
     // FilePipeInformation
     //
-    // forward the request to the CrashSvc named pipe server
+    // forward the request to the LeafSvc named pipe server
     //
 
     req_len = sizeof(NAMED_PIPE_SET_REQ) + Length;
@@ -1166,7 +1166,7 @@ _FX NTSTATUS File_NtFsControlFile(
 
         } else if (IoControlCode == FSCTL_PIPE_IMPERSONATE && !Dll_CompartmentMode) {
 
-            CrashApi_Log(2205, L"ImpersonateNamedPipe");
+            LeafApi_Log(2205, L"ImpersonateNamedPipe");
             if (Proc_ImpersonateSelf(TRUE))
                 status = STATUS_SUCCESS;
             else
@@ -1286,11 +1286,11 @@ _FX NTSTATUS File_WaitNamedPipe(
                     monflag |= MONITOR_DENY;
                 else
                     monflag |= MONITOR_OPEN;
-                CrashApi_MonitorPut2(monflag, (WCHAR *)ob, FALSE);
+                LeafApi_MonitorPut2(monflag, (WCHAR *)ob, FALSE);
 
             } else {
 
-                CrashApi_MonitorPut2(MONITOR_PIPE, (WCHAR *)ob, FALSE);
+                LeafApi_MonitorPut2(MONITOR_PIPE, (WCHAR *)ob, FALSE);
 
                 //
                 // create the sandboxed pipe name
@@ -1402,7 +1402,7 @@ _FX NTSTATUS File_NtDeviceIoControlFile(
         SetLastError(LastError);
 
         if (DenyAccess) {
-            CrashApi_Log(1314, Dll_ImageName);
+            LeafApi_Log(1314, Dll_ImageName);
             SetLastError(LastError);
             return STATUS_ACCESS_DENIED;
         }
@@ -1410,7 +1410,7 @@ _FX NTSTATUS File_NtDeviceIoControlFile(
 
     //
     // HACK HACK: when hooking NtDeviceIoControlFile the syscall instrumentation 
-    // will call CrashApi_MonitorPutMsg which will call NtDeviceIoControlFile
+    // will call LeafApi_MonitorPutMsg which will call NtDeviceIoControlFile
     // hence we need to check if the hooking is not yet done and just return
     // droppign the one log entry.
     //

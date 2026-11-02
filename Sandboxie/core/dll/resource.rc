@@ -50,10 +50,10 @@ BEGIN
             VALUE "CompanyName", MY_COMPANY_NAME_STRING "\0"
             VALUE "FileDescription", MY_PRODUCT_NAME_STRING " User Mode DLL\0"
             VALUE "FileVersion", MY_VERSION_STRING "\0"
-   OPTIONAL_VALUE("InternalName", "CrashDll\0")
+   OPTIONAL_VALUE("InternalName", "LeafDll\0")
             VALUE "LegalCopyright", MY_COPYRIGHT_STRING "\0"
             VALUE "LegalTrademarks", "\0"
-   OPTIONAL_VALUE("OriginalFilename", "CrashDll.dll\0")
+   OPTIONAL_VALUE("OriginalFilename", "LeafDll.dll\0")
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", MY_PRODUCT_NAME_STRING "\0"
             VALUE "ProductVersion", MY_VERSION_STRING "\0"

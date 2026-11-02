@@ -151,7 +151,7 @@ MSG_HEADER *IpHlpServer::Handler(void *_this, MSG_HEADER *msg)
         return NULL;
     }
 
-    if (0 != CrashApi_QueryProcess(idProcess, NULL, NULL, NULL, NULL))
+    if (0 != LeafApi_QueryProcess(idProcess, NULL, NULL, NULL, NULL))
         return SHORT_REPLY(ERROR_ACCESS_DENIED);
 
     if (PipeServer::ImpersonateCaller(&msg) != 0)
@@ -189,13 +189,13 @@ MSG_HEADER *IpHlpServer::CreateHandler(MSG_HEADER *msg, HANDLE idProcess)
 
     WCHAR boxname[BOXNAME_COUNT];
     WCHAR exename[99];
-    if (!NT_SUCCESS(CrashApi_QueryProcess(idProcess, boxname, exename, NULL, NULL)))
+    if (!NT_SUCCESS(LeafApi_QueryProcess(idProcess, boxname, exename, NULL, NULL)))
         return SHORT_REPLY(E_FAIL);
 
     if (!SbieDll_GetSettingsForName_bool(boxname, exename, L"AllowNetworkAccess", TRUE))
         return SHORT_REPLY(ERROR_ACCESS_DENIED);
 
-    if (0 != CrashApi_CheckInternetAccess(
+    if (0 != LeafApi_CheckInternetAccess(
                                 idProcess, req->ip6 ? L"Ip6" : L"Ip", TRUE))
         return SHORT_REPLY(ERROR_ACCESS_DENIED);
 

@@ -83,7 +83,7 @@ void CBoxProc::RefreshProcesses(void)
 
     WCHAR name[256];
     wcscpy(name, m_name);
-    CrashApi_EnumProcess(name, m_pids);
+    LeafApi_EnumProcess(name, m_pids);
 
     m_num = m_pids[0];
 
@@ -122,7 +122,7 @@ void CBoxProc::RefreshProcesses(void)
     int i = 1;
     for (i = 1; i <= m_num; ++i) {
 
-        CrashApi_QueryProcessEx(
+        LeafApi_QueryProcessEx(
                 (HANDLE)(ULONG_PTR)m_pids[i], 255, NULL, name, NULL, NULL);
 
         if (name[0])
@@ -147,7 +147,7 @@ void CBoxProc::RefreshProcesses(void)
     for (i = 1; i <= m_num; ++i) {
 
         ULONG64 ProcessFlags =
-            CrashApi_QueryProcessInfo((HANDLE)(ULONG_PTR)m_pids[i], 0);
+            LeafApi_QueryProcessInfo((HANDLE)(ULONG_PTR)m_pids[i], 0);
         if (! (ProcessFlags & SBIE_FLAG_IMAGE_FROM_SBIE_DIR)) {
 
             CString &exe1 = m_images[i];

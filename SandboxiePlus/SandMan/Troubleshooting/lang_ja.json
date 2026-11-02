@@ -79,9 +79,9 @@
 "SBIE2115: File is too large to copy into sandbox, opening in read only": "SBIE2115: ファイルが大きすぎるためサンドボックスにコピーできません。読み取り専用で開いています",
 "File is too large to copy into sandbox, opening in read only": "ファイルが大きすぎるためサンドボックスにコピーできません。読み取り専用で開いています",
 
-"SBIE2181: Failed to load CrashDll.dll": "SBIE2181: CrashDll.dllの読み込みに失敗しました",
+"SBIE2181: Failed to load LeafDll.dll": "SBIE2181: LeafDll.dllの読み込みに失敗しました",
 "Fix the DACLs of Sandboxie's home folder": "SandboxieのホームフォルダーのDACLを修正する",
-"Failures to load CrashDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.": "Chromeやアプリコンテナーを使用する他のソフトウェアでCrashDll.dllの読み込みに失敗する場合、多くはSandboxieのホームディレクトリのDACLエントリが無効であることが原因です。この緩和策はそれらを修正します。このため、kmdutil.exeに付与する必要がある管理者権限のプロンプトが表示されます。",
+"Failures to load LeafDll.dll when encountered by Chrome, or another software employing app containers, it is often caused by invalid DACL entries for the Sandboxie home directory. This mitigation measure will fix them, for this reason it will prompt for admin privileges which need to be granted for kmdutil.exe.": "Chromeやアプリコンテナーを使用する他のソフトウェアでLeafDll.dllの読み込みに失敗する場合、多くはSandboxieのホームディレクトリのDACLエントリが無効であることが原因です。この緩和策はそれらを修正します。このため、kmdutil.exeに付与する必要がある管理者権限のプロンプトが表示されます。",
 "The DACLs have been adjusted, please try to run your application again and indicate if the issue has been resolved.": "DACLが調整されました。アプリケーションを再度実行し、問題が解決したかどうかをお知らせください。",
 "DACLs fix did not resolve the issue": "DACLの修正では問題が解決しませんでした",
 

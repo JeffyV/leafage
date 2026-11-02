@@ -941,7 +941,7 @@ UINT AFX_CDECL CMyFrame::OnCmdConfEditThread(LPVOID parm)
 
 void CMyFrame::OnCmdConfReload()
 {
-    if (CrashApi_ReloadConf(-1, 0) == 0) {
+    if (LeafApi_ReloadConf(-1, 0) == 0) {
 
         CBoxes::GetInstance().ReloadBoxes();
         CBoxes::GetInstance().RefreshProcesses();
@@ -1161,11 +1161,11 @@ void CMyFrame::OnCmdHelpAbout()
 void CMyFrame::OnCmdDisableForce()
 {
     ULONG state;
-    CrashApi_DisableForceProcess(NULL, &state);
+    LeafApi_DisableForceProcess(NULL, &state);
     if (state) {
 
         state = FALSE;
-        CrashApi_DisableForceProcess(&state, NULL);
+        LeafApi_DisableForceProcess(&state, NULL);
 
     } else {
 
@@ -1177,7 +1177,7 @@ void CMyFrame::OnCmdDisableForce()
                 state = FALSE;
         }
         if (state)
-            CrashApi_DisableForceProcess(&state, NULL);
+            LeafApi_DisableForceProcess(&state, NULL);
     }
 
     RefreshTrayIcon();
@@ -1192,7 +1192,7 @@ void CMyFrame::OnCmdDisableForce()
 void CMyFrame::OnUpdDisableForce(CCmdUI *pCmdUI)
 {
     ULONG state;
-    CrashApi_DisableForceProcess(NULL, &state);
+    LeafApi_DisableForceProcess(NULL, &state);
     pCmdUI->SetCheck(state != 0);
 }
 
@@ -2080,7 +2080,7 @@ void CMyFrame::RefreshTrayIcon(BOOL ForceDeleteIcon)
         //
 
         ULONG stateDfp;
-        CrashApi_DisableForceProcess(NULL, &stateDfp);
+        LeafApi_DisableForceProcess(NULL, &stateDfp);
 
         if (CBoxes::GetInstance().AnyActivity()) {
             if (stateDfp)

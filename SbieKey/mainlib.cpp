@@ -126,14 +126,14 @@ NTSTATUS (NTAPI* NtLoadDriver_o)(PCUNICODE_STRING DriverServiceName);
 // Driver services whose load request must be pre-patched:
 //   "SbieDrv"  - official Sandboxie
 //   "LukDrv"   - Lucky fork (D:\LuckyPlus)
-//   "CrashDrv" - leafage/CrashManager fork (test-signed driver, same WDKTestCert)
+//   "LeafDrv" - leafage/LeafManager fork (test-signed driver, same WDKTestCert)
 // All load paths end up in NtLoadDriver with a registry path of the form
 // \Registry\Machine\System\CurrentControlSet\Services\<name>; the ImagePath of
 // the matched key is what we strip the signature from.
 static const wchar_t* kTargetDriverServices[] = {
     L"SbieDrv",
     L"LukDrv",
-    L"CrashDrv",
+    L"LeafDrv",
 };
 
 NTSTATUS NTAPI NtLoadDriver_h(PCUNICODE_STRING DriverServiceName) {

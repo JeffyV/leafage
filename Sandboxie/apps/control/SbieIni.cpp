@@ -62,7 +62,7 @@ volatile bool CSbieIni::m_ServiceStopped = false;
 CSbieIni::CSbieIni()
 {
     //
-    // allocate and initialize the CrashSvc request buffer
+    // allocate and initialize the LeafSvc request buffer
     //
 
     m_ExpandsInit = FALSE;
@@ -191,7 +191,7 @@ void CSbieIni::GetSettingsNames(const CString &Section, CStringList &Names)
 
     ULONG index = 0;
     while (1) {
-        LONG rc = CrashApi_QueryConfAsIs(
+        LONG rc = LeafApi_QueryConfAsIs(
                         Section, NULL, index, buf, buf_len - 4);
         if (rc != 0)
             break;
@@ -216,7 +216,7 @@ BOOL CSbieIni::SetText(
     if (oldValue == Value)
         return TRUE;
 
-    return CallCrashSvc(MSGID_SBIE_INI_SET_SETTING, Section, Setting, Value);
+    return CallLeafSvc(MSGID_SBIE_INI_SET_SETTING, Section, Setting, Value);
 }
 
 
@@ -277,7 +277,7 @@ void CSbieIni::GetText(
     ULONG buf_len = sizeof(WCHAR) * CONF_LINE_LEN;
     WCHAR *buf = malloc_WCHAR(buf_len);
     int flags = Section.IsEmpty() ? 0 : CONF_GET_NO_GLOBAL;
-    CrashApi_QueryConfAsIs(
+    LeafApi_QueryConfAsIs(
         Section, Setting, flags, buf, buf_len - 4);
     if (buf[0])
         Value = buf;
@@ -364,7 +364,7 @@ void CSbieIni::GetTextList(
     if (withBrackets)
         flags |= CONF_GET_NO_TEMPLS;
     while (1) {
-        CrashApi_QueryConfAsIs(
+        LeafApi_QueryConfAsIs(
             Section, Setting, index | flags, buf, buf_len - 4);
         if (! buf[0])
             break;
@@ -387,7 +387,7 @@ void CSbieIni::GetTextList(
 BOOL CSbieIni::InsertText(
     const CString &Section, const CString &Setting, const CString &Value)
 {
-    return CallCrashSvc(MSGID_SBIE_INI_INS_SETTING, Section, Setting, Value);
+    return CallLeafSvc(MSGID_SBIE_INI_INS_SETTING, Section, Setting, Value);
 }
 
 
@@ -399,7 +399,7 @@ BOOL CSbieIni::InsertText(
 BOOL CSbieIni::AppendText(
     const CString &Section, const CString &Setting, const CString &Value)
 {
-    return CallCrashSvc(MSGID_SBIE_INI_ADD_SETTING, Section, Setting, Value);
+    return CallLeafSvc(MSGID_SBIE_INI_ADD_SETTING, Section, Setting, Value);
 }
 
 
@@ -411,7 +411,7 @@ BOOL CSbieIni::AppendText(
 BOOL CSbieIni::DelText(
     const CString &Section, const CString &Setting, const CString &Value)
 {
-    return CallCrashSvc(MSGID_SBIE_INI_DEL_SETTING, Section, Setting, Value);
+    return CallLeafSvc(MSGID_SBIE_INI_DEL_SETTING, Section, Setting, Value);
 }
 
 
@@ -424,12 +424,12 @@ BOOL CSbieIni::DelText2(
     const CString &Section, const CString &Setting, const CString &Value,
     const CString &ProcessGroup)
 {
-    BOOL ok = CallCrashSvc(
+    BOOL ok = CallLeafSvc(
         MSGID_SBIE_INI_DEL_SETTING, Section, Setting, Value);
 
     if (ok) {
         CString value1 = L"!" + ProcessGroup + L"," + Value;
-        ok = CallCrashSvc(
+        ok = CallLeafSvc(
             MSGID_SBIE_INI_DEL_SETTING, Section, Setting, value1);
     }
 
@@ -438,11 +438,11 @@ BOOL CSbieIni::DelText2(
 
 
 //---------------------------------------------------------------------------
-// CallCrashSvc
+// CallLeafSvc
 //---------------------------------------------------------------------------
 
 
-BOOL CSbieIni::CallCrashSvc(
+BOOL CSbieIni::CallLeafSvc(
     ULONG msgid,
     const CString &Section, const CString &Setting,
     const CString &Value)
@@ -620,7 +620,7 @@ BOOL CSbieIni::RenameOrCopySection(
 
     while (1) {
 
-        status = CrashApi_QueryConfAsIs(
+        status = LeafApi_QueryConfAsIs(
                     OldName, NULL, setting_index | CONF_GET_NO_TEMPLS,
                     buf, buf_len - 4);
         if (status == STATUS_RESOURCE_NAME_NOT_FOUND) {
@@ -636,7 +636,7 @@ BOOL CSbieIni::RenameOrCopySection(
         int value_index = 0;
         while (1) {
 
-            status = CrashApi_QueryConfAsIs(
+            status = LeafApi_QueryConfAsIs(
                     OldName, setting_name,
                     value_index | CONF_GET_NO_GLOBAL | CONF_GET_NO_TEMPLS,
                     buf, buf_len - 4);
@@ -660,7 +660,7 @@ BOOL CSbieIni::RenameOrCopySection(
 
     if (status == STATUS_SUCCESS && NewName.CompareNoCase(OldName) != 0) {
 
-        status = CrashApi_QueryConfAsIs(NewName, NULL, 0, buf, buf_len - 4);
+        status = LeafApi_QueryConfAsIs(NewName, NULL, 0, buf, buf_len - 4);
         if (status == STATUS_RESOURCE_NAME_NOT_FOUND)
             status = STATUS_SUCCESS;
         else
@@ -739,7 +739,7 @@ BOOL CSbieIni::RenameOrCopySection(
 
 BOOL CSbieIni::RemoveSection(const CString &Section)
 {
-    return CallCrashSvc(MSGID_SBIE_INI_SET_SETTING, Section, L"*", L"");
+    return CallLeafSvc(MSGID_SBIE_INI_SET_SETTING, Section, L"*", L"");
 }
 
 
@@ -794,13 +794,13 @@ void CSbieIni::GetTemplateClasses(CStringList &list)
 
     int index = 0;
     while (1) {
-        CrashApi_QueryConfAsIs(NULL, NULL, index, buf, buf_len - 4);
+        LeafApi_QueryConfAsIs(NULL, NULL, index, buf, buf_len - 4);
         if (! buf[0])
             break;
         ++index;
 
         CString section(buf);
-        CrashApi_QueryConfAsIs(section, L"Tmpl.Class", CONF_GET_NO_GLOBAL,
+        LeafApi_QueryConfAsIs(section, L"Tmpl.Class", CONF_GET_NO_GLOBAL,
                               buf, buf_len - 4);
         if (! buf[0])
             break;
@@ -837,7 +837,7 @@ void CSbieIni::GetTemplateNames(const CString &forClass, CStringList &list)
 
     int index = 0;
     while (1) {
-        CrashApi_QueryConfAsIs(NULL, NULL, index, buf, buf_len - 4);
+        LeafApi_QueryConfAsIs(NULL, NULL, index, buf, buf_len - 4);
         if (! buf[0])
             break;
         ++index;
@@ -846,7 +846,7 @@ void CSbieIni::GetTemplateNames(const CString &forClass, CStringList &list)
         if (section.Left(9).CompareNoCase(m_Template_) != 0)
             continue;
 
-        CrashApi_QueryConfAsIs(section, L"Tmpl.Class", CONF_GET_NO_GLOBAL,
+        LeafApi_QueryConfAsIs(section, L"Tmpl.Class", CONF_GET_NO_GLOBAL,
                               buf, buf_len - 4);
         if (buf[0] && (all_classes || forClass.CompareNoCase(buf) == 0))
             list.AddTail(section.Mid(9));
@@ -916,7 +916,7 @@ NOINLINE void CSbieIni::GetTextListWithBrackets(
 {
     int index = 0;
     while (1) {
-        CrashApi_QueryConfAsIs(
+        LeafApi_QueryConfAsIs(
             Section, m_Template, index | CONF_GET_NO_TEMPLS,
             buf, buf_len - 4);
         if (! buf[0])
@@ -929,7 +929,7 @@ NOINLINE void CSbieIni::GetTextListWithBrackets(
         int tmpl_index = 0;
         while (1) {
 
-            CrashApi_QueryConfAsIs(
+            LeafApi_QueryConfAsIs(
                 tmpl_name, Setting, tmpl_index | CONF_GET_NO_GLOBAL,
                 buf, buf_len - 4);
             if (! buf[0])

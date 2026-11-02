@@ -469,7 +469,7 @@ void Process_LogMessage(PROCESS *proc, ULONG msgid);
 
 BOOLEAN Process_TerminateProcess(PROCESS *proc);
 
-// Cancel process through CrashSvc
+// Cancel process through LeafSvc
 
 BOOLEAN Process_CancelProcess(PROCESS *proc);
 

@@ -278,7 +278,7 @@ BOOLEAN CUpdater::QueryUpdateData(UPDATER_DATA* Context)
 	//CSbieIni::GetInstance().GetText(_GlobalSettings, L"UpdateKey", update_key);
 
     WCHAR CertPath[MAX_PATH];
-    CrashApi_GetHomePath(NULL, 0, CertPath, MAX_PATH);
+    LeafApi_GetHomePath(NULL, 0, CertPath, MAX_PATH);
     wcscat(CertPath, L"\\Certificate.dat");
 	HANDLE hFile = CreateFile(CertPath, FILE_GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile != INVALID_HANDLE_VALUE) {
@@ -302,11 +302,11 @@ BOOLEAN CUpdater::QueryUpdateData(UPDATER_DATA* Context)
 	Path += L"&update_key=" + update_key;
 
     QWORD RandID = 0;
-    CrashApi_Call(API_GET_SECURE_PARAM, 3, L"RandID", (ULONG_PTR)&RandID, sizeof(RandID));
+    LeafApi_Call(API_GET_SECURE_PARAM, 3, L"RandID", (ULONG_PTR)&RandID, sizeof(RandID));
     if (RandID == 0) {
 		srand(GetTickCount());
         RandID = QWORD(rand() & 0xFFFF) | (QWORD(rand() & 0xFFFF) << 16) | (QWORD(rand() & 0xFFFF) << 32) | (QWORD(rand() & 0xFFFF) << 48);
-        CrashApi_Call(API_SET_SECURE_PARAM, 3, L"RandID", (ULONG_PTR)&RandID, sizeof(RandID));
+        LeafApi_Call(API_SET_SECURE_PARAM, 3, L"RandID", (ULONG_PTR)&RandID, sizeof(RandID));
     }
 
 	CString Section;

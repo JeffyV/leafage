@@ -324,8 +324,8 @@ void PrepareRunAsAdmin(HWND hwnd, const WCHAR *BoxName, BOOLEAN JustAdmin)
     if (BoxName) {
 
         if ((BoxName == (WCHAR *)-1) ||
-                CrashApi_QueryConfBool(BoxName, L"UseSecurityMode", FALSE) ||
-                CrashApi_QueryConfBool(BoxName, L"DropAdminRights", FALSE)) {
+                LeafApi_QueryConfBool(BoxName, L"UseSecurityMode", FALSE) ||
+                LeafApi_QueryConfBool(BoxName, L"DropAdminRights", FALSE)) {
 
             run_elevated_2 = FALSE;
             disable_button = TRUE;
@@ -333,7 +333,7 @@ void PrepareRunAsAdmin(HWND hwnd, const WCHAR *BoxName, BOOLEAN JustAdmin)
 
     } else {
 
-        ULONG64 ProcessFlags = CrashApi_QueryProcessInfo(0, 0);
+        ULONG64 ProcessFlags = LeafApi_QueryProcessInfo(0, 0);
         if (ProcessFlags & SBIE_FLAG_DROP_RIGHTS) {
 
             run_elevated_2 = FALSE;
@@ -556,9 +556,9 @@ INT_PTR RunDialogProc(
             // set window title to include box name, unless BoxNameTitle=y
             //
 
-            if (! CrashApi_QueryConfBool(NULL, L"BoxNameTitle", FALSE)) {
+            if (! LeafApi_QueryConfBool(NULL, L"BoxNameTitle", FALSE)) {
 
-                CrashApi_QueryProcess(NULL, boxname, NULL, NULL, NULL);
+                LeafApi_QueryProcess(NULL, boxname, NULL, NULL, NULL);
 
                 if (layout_rtl) {
                     wcscpy(title, boxname);

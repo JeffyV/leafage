@@ -244,7 +244,7 @@ _FX BOOL SH_OpenFolder(const WCHAR *PathW, WCHAR verb, HANDLE *hProcess)
                 NULL, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
 
         ULONG err = GetLastError();
-        CrashApi_Log(2210, L"%S (%d)", PathW, err);
+        LeafApi_Log(2210, L"%S (%d)", PathW, err);
         return FALSE;
     }
 
@@ -967,7 +967,7 @@ _FX HRESULT SH32_SHGetFolderLocation(
         // in the sandbox, then issue an error message
         //
 
-        CrashApi_Log(2306, L"Documents");
+        LeafApi_Log(2306, L"Documents");
     }
 
     return hr;
@@ -1085,7 +1085,7 @@ _FX BOOLEAN SH32_Init(HMODULE module)
         ||  Dll_ImageType == DLL_IMAGE_INTERNET_EXPLORER) {
 
         WCHAR buf[8];
-        CrashApi_QueryConfAsIs(
+        LeafApi_QueryConfAsIs(
             NULL, L"NoAutoExitExplorer", 0, buf, sizeof(buf));
         if (! buf[0]) {
 
@@ -1624,7 +1624,7 @@ _FX ULONG SH_WindowMonitorCount(void)
                             (ULONG_PTR)info_ptr->InheritedFromProcessId) {
 
             WCHAR image[112];
-            status = CrashApi_QueryProcess(info_ptr->UniqueProcessId,
+            status = LeafApi_QueryProcess(info_ptr->UniqueProcessId,
                                           NULL, image, NULL, NULL);
             if (NT_SUCCESS(status) && _wcsicmp(image, L"iexplore.exe") == 0)
                 info_ptr->HandleCount = 1;
@@ -1904,7 +1904,7 @@ _FX void SH32_IContextMenu_Hook(REFCLSID rclsid, void *pContextMenu)
         return;
 
     while (1) {
-        NTSTATUS status = CrashApi_QueryConfAsIs(
+        NTSTATUS status = LeafApi_QueryConfAsIs(
                 NULL, L"IContextMenuClsid", index, buf, 90 * sizeof(WCHAR));
         if (! NT_SUCCESS(status))
             break;
