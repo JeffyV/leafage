@@ -638,6 +638,7 @@ BOOL Kmd_Stop_Service(
     SC_HANDLE service;
     SERVICE_STATUS service_status;
     ULONG retries;
+    ULONG retries2;
     BOOLEAN is_driver;
 
     is_driver = _wcsicmp(Driver_Name, SBIEDRV) == 0;
@@ -696,8 +697,38 @@ BOOL Kmd_Stop_Service(
 
         if (is_driver) {
             // stop the driver
-            if (! Kmd_Stop_CrashDrv())
-                continue;
+            if (! Kmd_Stop_CrashDrv()) {
+                //
+                // the running service holds a connection to the driver, so it
+                // refuses to unload (STATUS_CONNECTION_IN_USE in the driver,
+                // device busy for NtUnloadDriver). Stop the service first and
+                // retry once, so a plain "kmdutil stop <driver>" - and with it
+                // the UI's Uninstall Driver - does not need manual steps.
+                //
+                SC_HANDLE svc = OpenService(
+                                    ScMgr, SBIESVC,
+                                    SERVICE_STOP | SERVICE_INTERROGATE);
+                if (svc) {
+                    SERVICE_STATUS svc_status;
+                    retries2 = 0;
+                    if (ControlService(
+                            svc, SERVICE_CONTROL_STOP, &svc_status)) {
+                        for (retries2 = 0; retries2 < 20; ++retries2) {
+                            if (! ControlService(
+                                    svc, SERVICE_CONTROL_INTERROGATE,
+                                    &svc_status))
+                                break;
+                            if (svc_status.dwCurrentState == SERVICE_STOPPED)
+                                break;
+                            Sleep(500);
+                        }
+                    }
+                    CloseServiceHandle(svc);
+                }
+
+                if (! Kmd_Stop_CrashDrv())
+                    continue;
+            }
 
             // fallback to stopping through SCM, otherwise the
             // driver registry key does not always disappear
