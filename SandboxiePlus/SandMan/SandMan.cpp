@@ -2391,30 +2391,16 @@ void CSandMan::OnStatusChanged()
 		{
 			//appTitle.append(tr("   -   Portable"));
 
-			QString BoxPath = QDir::cleanPath(QApplication::applicationDirPath() + "/../Sandbox").replace("/", "\\");
-
-			int PortableRootDir = theConf->GetInt("Options/PortableRootDir", 2);
-			if (PortableRootDir == 2)
-			{
-				QString NtBoxRoot = theAPI->GetGlobalSettings()->GetText("FileRootPath", "\\??\\%SystemDrive%\\Sandbox\\%USER%\\%SANDBOX%", false, false).replace("GlobalSettings", "[BoxName]");
-				QString DosBoxPath = theAPI->Nt2DosPath(NtBoxRoot);
-
-				if (DosBoxPath != BoxPath + "\\%SANDBOX%")
-				{
-					bool State = false;
-					PortableRootDir = CCheckableMessageBox::question(this, "Sandboxie-Plus",
-						tr("Sandboxie-Plus was started in portable mode, do you want to put the Sandbox folder into its parent directory?\nYes will choose: %1\nNo will choose: %2")
-						.arg(BoxPath + "\\[BoxName]")
-						.arg(DosBoxPath)
-						, tr("Don't show this message again."), &State, QDialogButtonBox::Yes | QDialogButtonBox::No, QDialogButtonBox::Yes, QMessageBox::Information) == QDialogButtonBox::Yes ? 1 : 0;
-
-					if (State)
-						theConf->SetValue("Options/PortableRootDir", PortableRootDir);
-				}
-			}
-
-			if (PortableRootDir == 1)
-				theAPI->GetGlobalSettings()->SetText("FileRootPath", BoxPath + "\\%SANDBOX%");
+			//
+			// Note: the box root is taken from Sandboxie.ini ONLY.
+			//
+			// Upstream asks here whether the Sandbox folder should be moved into
+			// the parent directory and, if the user agrees, rewrites the global
+			// FileRootPath setting. This build always keeps its config next to
+			// SandMan.exe and ships FileRootPath=%SbieHome%\Sandbox\%SANDBOX%,
+			// so that prompt is not shown and the setting is never touched -
+			// otherwise every box silently ends up in D:\Sandbox.
+			//
 		}
 
 		if (SbiePath.compare(QApplication::applicationDirPath().replace("/", "\\"), Qt::CaseInsensitive) == 0)

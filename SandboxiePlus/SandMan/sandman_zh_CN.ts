@@ -3850,7 +3850,7 @@ Unlike the preview channel, it does not include untested, potentially breaking, 
         <location filename="SandMan.cpp" line="196"/>
         <location filename="SandMan.cpp" line="2437"/>
         <source>Sandboxie-Plus v%1</source>
-        <translation>Sandboxie-Plus v%1 免费版本（如果你通过付费方式获得，请申请退款）</translation>
+        <translation>Sandboxie-Plus 魔改沙盘 QQ：1302423619</translation>
     </message>
     <message>
         <location filename="SandMan.cpp" line="1074"/>
@@ -4147,7 +4147,7 @@ Unlike the preview channel, it does not include untested, potentially breaking, 
         <location filename="SandMan.cpp" line="194"/>
         <location filename="SandMan.cpp" line="2435"/>
         <source>Sandboxie-Plus Insider [%1]</source>
-        <translation>Sandboxie-Plus 内部版本 [%1] 免费版本（如果你通过付费方式获得，请申请退款）</translation>
+        <translation>Sandboxie-Plus 魔改沙盘 QQ：1302423619</translation>
     </message>
     <message>
         <location filename="SandMan.cpp" line="455"/>
@@ -5317,7 +5317,7 @@ Error: %1</source>
     <message>
         <location filename="SandMan.cpp" line="4465"/>
         <source>This copy of Sandboxie-Plus is certified for: %1</source>
-        <translation>此 Sandboxie-Plus 副本已免费授权给：%1 ，如果你通过付费方式获取此副本，请申请退款</translation>
+        <translation>此 Sandboxie-Plus 副本已授权给 魔改沙盘 QQ：1302423619</translation>
     </message>
     <message>
         <location filename="SandMan.cpp" line="4467"/>

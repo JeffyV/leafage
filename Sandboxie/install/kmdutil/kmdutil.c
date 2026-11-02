@@ -707,11 +707,25 @@ BOOL Kmd_Stop_Service(
                 service,
                 SERVICE_CONTROL_STOP, &service_status)) {
 
-            if (GetLastError() == ERROR_SERVICE_NOT_ACTIVE)
+            DWORD err = GetLastError();
+
+            if (err == ERROR_SERVICE_NOT_ACTIVE)
                 return TRUE;
 
-            if (!(GetLastError() == ERROR_SERVICE_REQUEST_TIMEOUT ||
-                 GetLastError() == ERROR_PIPE_BUSY)){
+            //
+            // the driver was already unloaded by Kmd_Stop_CrashDrv(), the SCM
+            // just can not stop a legacy filter driver on its own and reports
+            // ERROR_INVALID_SERVICE_CONTROL (1052); that is not a failure and
+            // must not trigger the retry loop below (it shows message boxes)
+            //
+
+            if (is_driver &&
+                    (err == ERROR_INVALID_SERVICE_CONTROL ||
+                     err == ERROR_SERVICE_MARKED_FOR_DELETE))
+                return TRUE;
+
+            if (!(err == ERROR_SERVICE_REQUEST_TIMEOUT ||
+                  err == ERROR_PIPE_BUSY)){
 
                 Display_Error(L"ControlService Stop", 0);
                 return FALSE;
