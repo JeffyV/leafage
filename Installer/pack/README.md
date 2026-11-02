@@ -49,3 +49,14 @@ CI（`.github/workflows/build.yml`）在绿色包阶段取
 `copy_build.cmd` 结尾会把本目录里**存在**的文件按 1:1 的名字拷进绿色包：
 `Certificate.dat`、`License.dat`、`wtsapi32.dll`，以及整个 `addons\` 子树。
 缺哪个就跳过哪个（不影响编译），所以本目录可以只放一部分。
+
+## 铺包到「已有安装目录」时：不要覆盖用户配置
+
+全新解压到空目录当然要带上 `Sandboxie.ini`；但**覆盖安装/升级**时必须跳过用户数据，否则
+每次铺包都会把用户手改的沙盘配置清空：
+
+```
+跳过：Sandboxie.ini   Sandboxie.ini.bak   Sandbox\   SandMan.exe.sig
+```
+
+（服务运行中这几个文件本来也常被占用；重点是别用随包版本去覆盖它们。）

@@ -83,6 +83,8 @@ protected:
 
     ULONG IsCallerAuthorized(HANDLE hToken, const WCHAR *Password, const WCHAR *Section = NULL);
 
+    ULONG EnsureFresh();
+
     void LockConf(WCHAR *IniPath);
 
     void UnlockConf();
@@ -108,6 +110,7 @@ protected:
     WCHAR m_username[256];
     WCHAR m_sectionname[128];
     class CIniFile* m_pSbieIni;
+    ULONGLONG m_iniStamp;       // last write time of the cached Sandboxie.ini
     HANDLE m_hLockFile;
     ULONG m_session_id;
 

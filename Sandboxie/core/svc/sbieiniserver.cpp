@@ -58,6 +58,7 @@ SbieIniServer::SbieIniServer(PipeServer *pipeServer)
     m_instance = this;
 
     m_pSbieIni = NULL;
+    m_iniStamp = 0;
 
     m_hLockFile = INVALID_HANDLE_VALUE;
     LockConf(NULL);
@@ -207,11 +208,8 @@ MSG_HEADER *SbieIniServer::Handler2(MSG_HEADER *msg)
     // the below opcodes require the ini to be cached
     //
 
-    if (m_pSbieIni == NULL) {
-
-        if (!NT_SUCCESS(status = CacheConfig()))
-            return SHORT_REPLY(status);
-    }
+    if (!NT_SUCCESS(status = EnsureFresh()))
+        return SHORT_REPLY(status);
 
     //
     // handle a MSGID_SBIE_INI_GET_SETTING request
@@ -794,6 +792,54 @@ void SbieIniServer::NotifyConfigReloaded()
 
 
 //---------------------------------------------------------------------------
+// EnsureFresh
+//---------------------------------------------------------------------------
+
+
+ULONG SbieIniServer::EnsureFresh()
+{
+    if (! m_pSbieIni)
+        return CacheConfig();
+
+    //
+    // Sandboxie.ini can be edited by hand while the service is running. The
+    // cached copy must not win over those edits when a setting is written
+    // back - otherwise connecting or touching any option silently restores
+    // the file to its pre-edit state.
+    //
+
+    WCHAR *IniPath;
+    if (! GetIniPath(&IniPath))
+        return STATUS_INSUFFICIENT_RESOURCES;
+
+    ULONGLONG stamp = 0;
+    HANDLE hIni = CreateFileW(
+        IniPath, FILE_READ_ATTRIBUTES,
+        FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+        NULL, OPEN_EXISTING, 0, NULL);
+    if (hIni != INVALID_HANDLE_VALUE) {
+        FILETIME ftLastWrite;
+        if (GetFileTime(hIni, NULL, NULL, &ftLastWrite))
+            stamp = ((ULONGLONG)ftLastWrite.dwHighDateTime << 32)
+                  | ftLastWrite.dwLowDateTime;
+        CloseHandle(hIni);
+    }
+
+    HeapFree(GetProcessHeap(), 0, IniPath);
+
+    if (stamp != 0 && stamp != m_iniStamp) {
+
+        delete m_pSbieIni;
+        m_pSbieIni = NULL;
+
+        return CacheConfig();
+    }
+
+    return STATUS_SUCCESS;
+}
+
+
+//---------------------------------------------------------------------------
 // CacheConfig
 //---------------------------------------------------------------------------
 
@@ -845,6 +891,21 @@ ULONG SbieIniServer::CacheConfig()
     status = m_pSbieIni->LoadIni(IniPath);
     if (!NT_SUCCESS(status)) {
         CrashApi_LogEx(m_session_id, 2322, L"[99 / 0x%08X]", status);
+    }
+
+    m_iniStamp = 0;
+    {
+        HANDLE hStamp = CreateFileW(
+            IniPath, FILE_READ_ATTRIBUTES,
+            FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+            NULL, OPEN_EXISTING, 0, NULL);
+        if (hStamp != INVALID_HANDLE_VALUE) {
+            FILETIME ftLastWrite;
+            if (GetFileTime(hStamp, NULL, NULL, &ftLastWrite))
+                m_iniStamp = ((ULONGLONG)ftLastWrite.dwHighDateTime << 32)
+                           | ftLastWrite.dwLowDateTime;
+            CloseHandle(hStamp);
+        }
     }
 
 finish:
@@ -1191,8 +1252,23 @@ ULONG SbieIniServer::RefreshConf()
     // create a backup copy
     //
 
-    if (CopyFile(IniPath, TmpPath, FALSE))
+    if (CopyFile(IniPath, TmpPath, FALSE)) {
         RestoreOnError = true;
+
+        //
+        // keep the version we are about to replace, so a bad write can always
+        // be rolled back by hand
+        //
+
+        WCHAR BackupPath[2048];
+        wcscpy(BackupPath, IniPath);
+        WCHAR *ext = wcsrchr(BackupPath, L'.');
+        if (ext)
+            wsprintf(ext, L".bak");
+        else
+            wcscat(BackupPath, L".bak");
+        CopyFile(IniPath, BackupPath, FALSE);
+    }
     else {
         if (GetLastError() != ERROR_FILE_NOT_FOUND) {
             CrashApi_LogEx(m_session_id, 2322, L"[14 / %d]", GetLastError());
